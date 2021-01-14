@@ -52,7 +52,7 @@ function DashboardNavigator() {
     <DashboardStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, padding: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <DashboardStack.Screen
@@ -68,7 +68,7 @@ function SettingsNavigator() {
     <SettingsStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, padding: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen} />
@@ -81,7 +81,7 @@ function CRM_Navigator() {
     <CRM_Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <CRM_Stack.Screen name="AccountsScreen" component={AccountsScreen} />
@@ -96,7 +96,7 @@ function ServicesNavigator() {
     <ServicesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <ServicesStack.Screen name="ServicesScreen" component={SmashScreen} />
@@ -109,7 +109,7 @@ function RoutesNavigator() {
     <RoutesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <RoutesStack.Screen name="RoutesScreen" component={MaintainScreen} />
@@ -122,7 +122,7 @@ function InvoicesNavigator() {
     <InvoicesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <InvoicesStack.Screen name="InvoicesScreen" component={InvoiceScreen} />
@@ -135,7 +135,7 @@ function ReportsNavigator() {
     <ReportsStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <ReportsStack.Screen name="ReportsScreen" component={ReportScreen} />

@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginBottom: 5,
+    marginTop: 10,
   },
   buttonNavStackContainer: {
     flex: 1,

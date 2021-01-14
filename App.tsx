@@ -1,12 +1,12 @@
 import 'react-native-gesture-handler';
 import React, { useEffect,useState } from "react";
-import { Button, StatusBar, View } from "react-native";
+import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useAsyncStorage from "./hooks/useAsyncStorage";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
-import AuthScreen from "./navigation/AuthScreen";
+import AuthScreen from "./screens/Authentication/AuthScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Configs from "./constants/Configs";
 
@@ -37,7 +37,6 @@ export default function App() {
   }, []);
 
   const isSignedIn = async () => {
-    
     await useAsyncStorage().getUserAsync()
             .then((user) => {
               // ToDo: Need to validate token by calling the server
@@ -57,7 +56,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <Navigation />
-        <StatusBar />
+        <StatusBar translucent backgroundColor="transparent" />
       </SafeAreaProvider>
     );
   }

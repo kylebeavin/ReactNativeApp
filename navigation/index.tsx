@@ -24,7 +24,7 @@ function Navigation() {
       //linking={LinkingConfiguration} ToDo: Will need to implement some linking config later on.
       ref={navigationRef}
       >
-      <View style={{flex: 1, marginTop: StatusBar.currentHeight}}>
+      <View style={{flex: 1}}>
         <RootNavigator />
       </View>
     </NavigationContainer>

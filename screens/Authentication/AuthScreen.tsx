@@ -1,36 +1,16 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, Button } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
-import Colors from "../constants/Colors";
-import AppButton from "../components/Layout/AppButton";
-import Configs from "../constants/Configs";
-import useAsyncStorage from "../hooks/useAsyncStorage";
-import { SMT_User } from "../types";
+import Colors from "../../constants/Colors";
+import AppButton from "../../components/Layout/AppButton";
+import Configs from "../../constants/Configs";
+import useAsyncStorage from "../../hooks/useAsyncStorage";
 
 interface Props {
   isSignedIn: () => void;
 }
 
 const AuthScreen: React.FC<Props> = (props) => {
-  // Remove or Refactor when we get clarity on authentication.
-  // const googleSignIn = async () => {
-  //   const config = {
-  //     androidClientId: Configs.OAUTH2_GOOGLE_ANDROID_KEY,
-  //     scopes: ["profile", "email"],
-  //   };
-  //   const result = await Google.logInAsync(config);
-  //   if (result.type === "success") {
-  //     // const test = useAsyncStorage().setUserAsync({
-  //     //   signedIn: true,
-  //     //   accessToken: result.accessToken!,
-  //     //   idToken: result.idToken!,
-  //     //   refreshToken: result.refreshToken!,
-  //     //   user: result.user,
-  //     // });
-
-  //     props.isSignedIn();
-  //   }
-  // };
 
   const signIn = async (props: Props) => {
     // ToDo: Add Fields for user to sign in instead of being hard coded and auth header value
@@ -83,16 +63,15 @@ const AuthScreen: React.FC<Props> = (props) => {
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
-          source={require("../assets/images/trashy_logo.jpg")}
+          source={require("../../assets/images/trashy_logo.jpg")}
         />
         <Text style={styles.title}>Smash My Trash</Text>
       </View>
 
       <View style={styles.buttonContainer}>
         <AppButton
-          title="Sign In with G Suite"
+          title="Sign In with Button"
           onPress={() => signIn(props)}
-          icon={{type: "IonIcons", name:"logo-google"}}
         />
       </View>
     </View>

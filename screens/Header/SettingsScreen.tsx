@@ -35,7 +35,7 @@ const SettingsScreen: React.FC<Props> = (props) => {
 }
 
 const logOutButton = async (props:Props) => {
-    await AsyncStorage.removeItem('@google_user');
+    await AsyncStorage.removeItem('@smt_user');
     props.logOut();
 }
 

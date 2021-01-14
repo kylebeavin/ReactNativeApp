@@ -1,12 +1,4 @@
 //=== Auth Types ===//
-export type GoogleUser = {
-  signedIn: boolean;
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
-  user: {};
-};
-
 export type SMT_User = {
   _id: string;
   first_name: string;
@@ -90,14 +82,4 @@ export type Meeting = {
   created: string;
   meeting_time: Date;
   is_active: boolean;
-}
-
-//=== Remove These ===//
-  
-export type ToDoItemType = { id: string; toDo?: string; complete?: boolean };
-
-export enum ActionType {
-  add = "ADD",
-  delete = "DELETE",
-  updateStatus = "UPDATE"
 }

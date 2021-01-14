@@ -31,10 +31,10 @@ const AppTabBar = (props: any) => {
 
 const styles = StyleSheet.create({
   tabBarContainer: {
-    height: 80,
+    height: 55,
     paddingTop: 5,
-    paddingLeft: 20,
-    paddingRight: 10,
+    paddingLeft: 10,
+    //paddingRight: 10,
     backgroundColor: Colors.SMT_Primary_2,
     flexDirection: "row",
     alignItems: "center",
