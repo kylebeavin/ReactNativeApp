@@ -1,18 +1,18 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import { ScrollView, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 
-import Configs from '../../constants/Configs';
-import AppButton from '../../components/Layout/AppButton';
-import Colors from '../../constants/Colors';
-import AppTitle from '../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../components/Layout/AppNavBtnGrp';
-import LinkConfig from '../../navigation/LinkingConfiguration';
-import AppAddNew from '../../components/Layout/AppAddNew';
-import {Location} from '../../types/index';
-import AppEmptyCard from '../../components/Layout/AppEmptyCard';
+import Configs from '../../../constants/Configs';
+import AppButton from '../../../components/Layout/AppButton';
+import Colors from '../../../constants/Colors';
+import AppTitle from '../../../components/Layout/AppTitle';
+import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import LinkConfig from '../../../navigation/LinkingConfiguration';
+import AppAddNew from '../../../components/Layout/AppAddNew';
+import {Location} from '../../../types/index';
+import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { useIsFocused } from '@react-navigation/native';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import { getRequestHeadersAsync } from '../../utils/Helpers';
+import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import { getRequestHeadersAsync } from '../../../utils/Helpers';
 
 interface Props {
     navigation: any;

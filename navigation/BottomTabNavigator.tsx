@@ -16,13 +16,13 @@ import {
 import Colors from "../constants/Colors";
 import DashboardScreen from "../screens/Header/DashboardScreen";
 import SettingsScreen from "../screens/Header/SettingsScreen";
-import AccountsScreen from "../screens/CRM_Tab/AccountsScreen";
-import SmashScreen from "../screens/ServicesScreen";
-import MaintainScreen from "../screens/RoutesScreen";
-import InvoiceScreen from "../screens/InvoicesScreen";
-import ReportScreen from "../screens/ReportsScreen";
-import MeetingsScreen from "../screens/CRM_Tab/MeetingsScreen";
-import MapScreen from "../screens/CRM_Tab/MapScreen";
+import AccountsScreen from "../screens/BottomTabs/CRM_Tab/AccountsScreen";
+import SmashScreen from "../screens/BottomTabs/Services_Tab/ServicesScreen";
+import MaintainScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
+import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
+import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
+import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
+import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();

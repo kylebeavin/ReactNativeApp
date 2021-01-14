@@ -2,16 +2,16 @@ import React, {useState, useEffect} from 'react';
 import { View, ActivityIndicator, FlatList} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
-import Colors from '../../constants/Colors';
-import Configs from '../../constants/Configs';
-import LinkConfig from '../../navigation/LinkingConfiguration';
-import { Account, Contact } from '../../types/index';
-import AppTitle from '../../components/Layout/AppTitle';
-import AppAddNew from '../../components/Layout/AppAddNew';
-import AppNavBtnGrp from '../../components/Layout/AppNavBtnGrp';
-import AppCard from '../../components/Layout/AppCard';
-import AppEmptyCard from '../../components/Layout/AppEmptyCard';
-import { getRequestHeadersAsync } from '../../utils/Helpers';
+import Colors from '../../../constants/Colors';
+import Configs from '../../../constants/Configs';
+import LinkConfig from '../../../navigation/LinkingConfiguration';
+import { Account, Contact } from '../../../types/index';
+import AppTitle from '../../../components/Layout/AppTitle';
+import AppAddNew from '../../../components/Layout/AppAddNew';
+import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import AppCard from '../../../components/Layout/AppCard';
+import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
+import { getRequestHeadersAsync } from '../../../utils/Helpers';
 
 interface Props {
 }
@@ -25,7 +25,7 @@ const AccountScreen: React.FC<Props> = () => {
   useEffect(() => {
     getAccounts();
   }, [isFocused]);
-
+  
   const getAccounts = async () => {
     fetch(`${Configs.TCMC_URI}/api/accounts`, {
       headers: await getRequestHeadersAsync().then(header => header)

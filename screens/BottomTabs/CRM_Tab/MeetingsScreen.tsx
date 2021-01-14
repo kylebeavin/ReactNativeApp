@@ -2,17 +2,17 @@ import React, {useEffect, useState} from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { ScrollView, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 
-import {Meeting} from '../../types/index';
-import Configs from '../../constants/Configs';
-import AppButton from '../../components/Layout/AppButton';
-import Colors from '../../constants/Colors';
-import AppTitle from '../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../components/Layout/AppNavBtnGrp';
-import LinkConfig from '../../navigation/LinkingConfiguration';
-import AppAddNew from '../../components/Layout/AppAddNew';
-import AppEmptyCard from '../../components/Layout/AppEmptyCard';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
-import { getRequestHeadersAsync } from '../../utils/Helpers';
+import {Meeting} from '../../../types/index';
+import Configs from '../../../constants/Configs';
+import AppButton from '../../../components/Layout/AppButton';
+import Colors from '../../../constants/Colors';
+import AppTitle from '../../../components/Layout/AppTitle';
+import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import LinkConfig from '../../../navigation/LinkingConfiguration';
+import AppAddNew from '../../../components/Layout/AppAddNew';
+import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
+import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import { getRequestHeadersAsync } from '../../../utils/Helpers';
 
 interface Props {
   navigation: any;

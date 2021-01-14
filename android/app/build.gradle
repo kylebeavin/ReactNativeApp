@@ -1,6 +1,6 @@
 project.ext.envConfigFiles = [
         debug: ".env",
-        release: ".env",
+        release: ".env.staging",
         stagingrelease: ".env.staging",
         productionrelease: ".env.production"
 ]
