@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 
 function ServicesScreen() {
   return (
-    <View><Text>Hello World!</Text></View>
+    <View><Text>Hello World !</Text></View>
   );
 }
 
