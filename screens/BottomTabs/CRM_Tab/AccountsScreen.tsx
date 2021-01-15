@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { View, ActivityIndicator, FlatList} from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { StyleSheet, View, ActivityIndicator, FlatList, ScrollView} from 'react-native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import LinkConfig from '../../../navigation/LinkingConfiguration';
 import { Account, Contact } from '../../../types/index';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppAddNew from '../../../components/Layout/AppAddNew';
@@ -12,11 +11,13 @@ import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppCard from '../../../components/Layout/AppCard';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import AppButton from '../../../components/Layout/AppButton';
 
 interface Props {
 }
 
 const AccountScreen: React.FC<Props> = () => {
+  const navigation = useNavigation();
   const [isLoading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [toggle, setToggle] = useState(false);
@@ -77,7 +78,30 @@ const AccountScreen: React.FC<Props> = () => {
     <View style={{ flex: 1 }}>
       <AppTitle title="CRM" help search />
 
-      <AppNavBtnGrp selected={LinkConfig.config.screens.Root.screens.CRM.screens.AccountsScreen} />
+      <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.contentContainer}
+      >
+
+      <AppNavBtnGrp>
+            <AppButton
+              title="CLIENTS"
+              onPress={() => navigation.navigate("AccountsScreen")}
+              outlined={false}
+            />
+            <AppButton
+              title="MEETINGS"
+              onPress={() => navigation.navigate("MeetingsScreen")}
+              outlined={true}
+            />
+            <View style={{marginRight: -10}}>
+            <AppButton
+              title="MAP"
+              onPress={() => navigation.navigate("MapScreen")}
+              outlined={true}
+            />
+            </View>
+      </AppNavBtnGrp>
 
       {accounts.length === 0 ? null : (
         <AppAddNew title="ACCOUNT" modal="CreateAccountModal" />
@@ -90,23 +114,31 @@ const AccountScreen: React.FC<Props> = () => {
           {accounts.length === 0 ? (
             <AppEmptyCard entity="accounts" modal="CreateAccountModal" />
           ) : (
-            <FlatList
-              data={accounts}
-              extraData={toggle}
-              keyExtractor={({ _id }, index) => _id}
-              renderItem={({ item, index }) => (
+            accounts.map((u, i) => {
+              return (
                 <AppCard
-                  item={item}
-                  index={index}
-                  onToggleCardDrawer={onToggleCardDrawer}
-                ></AppCard>
-              )}
-            />
+                  key={i}
+                  item={u}
+                  index={i}
+                  onToggleCardDrawer={onToggleCardDrawer}></AppCard>
+              );})
           )}
         </View>
       )}
+      </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    // This is the scrollable part
+  },
+  scrollView: {
+    height: "100%",
+    width: "100%",
+    paddingHorizontal: 10
+  },
+});
 
 export default AccountScreen;

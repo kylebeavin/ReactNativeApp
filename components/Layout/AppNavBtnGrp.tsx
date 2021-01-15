@@ -1,49 +1,33 @@
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Text } from 'react-native';
-
-import AppButton from './AppButton';
+import React, { ReactElement, ReactNode } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 interface Props {
-    selected: string;
+    children: ReactElement<ReactNode>[];
 }
 
-const AppNavBtnGrp : React.FC<Props> = (props) => {
-    const navigation = useNavigation();
+const AppNavBtnGrp : React.FC<Props> = ({children}) => {
     return (
       <View>
         {/* Button NavStack */}
         <View style={styles.container}>
-          <View style={styles.buttonNavStackContainer}>
-            <AppButton
-              title="CLIENTS"
-              onPress={() => navigation.navigate("AccountsScreen")}
-              outlined={props.selected === "one" ? false: true}
-            />
-          </View>
-          <View style={styles.buttonNavStackContainer}>
-            <AppButton
-              title="MEETINGS"
-              onPress={() => navigation.navigate("MeetingsScreen")}
-              outlined={props.selected === "two" ? false : true}
-            />
-          </View>
-          <View
-            style={{ ...styles.buttonNavStackContainer, ...{ marginRight: 0 } }}
-          >
-            <AppButton
-              title="MAP"
-              onPress={() => navigation.navigate("MapScreen")}
-              outlined={props.selected === "three" ? false : true}
-            />
-          </View>
+
+          {children.map((child, i) => {
+            return (
+              <View 
+                key={i} 
+                style={styles.buttonNavStackContainer}
+              >
+                {child}
+              </View>
+            )
+          })}
         </View>
       </View>
     );
 }
 
 const styles = StyleSheet.create({
-      //== Buttons NavStack ==
+  //== Buttons NavStack ==
   container: {
     flexDirection: "row",
     justifyContent: "space-evenly",

@@ -16,10 +16,10 @@ export default function App() {
 
   useEffect(() => {
     // Clear User from Device
-    // AsyncStorage.clear()
+     AsyncStorage.clear()
 
     // Set My User for Testing
-    AsyncStorage.setItem('@google_user', JSON.stringify({
+    AsyncStorage.setItem('@smt_user', JSON.stringify({
       _id: "5ff8c3303f6f737827204033",
       is_active: true,
       created: "2021-01-07T16:10:19.786Z",

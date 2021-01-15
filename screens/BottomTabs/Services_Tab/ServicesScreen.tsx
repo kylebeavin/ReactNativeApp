@@ -54,10 +54,28 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
           contentContainerStyle={styles.contentContainer}
       >
 
-      <AppNavBtnGrp selected={LinkConfig.config.screens.Root.screens.CRM.screens.AccountsScreen} />
+      <AppNavBtnGrp>
+            <AppButton
+              title="AGREEMENTS"
+              onPress={() => navigation.navigate("ServicesScreen")}
+              outlined={false}
+            />
+            <AppButton
+              title="ORDERS"
+              onPress={() => navigation.navigate("OrdersScreen")}
+              outlined={true}
+            />
+            <View style={{marginRight: -10}}>
+              <AppButton
+                title="SCHEDULE"
+                onPress={() => navigation.navigate("ScheduleScreen")}
+                outlined={true}
+                />
+            </View>
+      </AppNavBtnGrp>
 
       {locations.length === 0 ? null : (
-        <AppAddNew title="SERVICE" modal="CreateServiceModal" />
+        <AppAddNew title="AGREEMENT" modal="CreateAgreementModal" />
       )}
 
       {isLoading ? (

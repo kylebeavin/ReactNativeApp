@@ -46,22 +46,39 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
   }
 
   return (
-    <View>
+    <View style={styles.screen}>
       <AppTitle title="CRM" help search />
 
-      <AppNavBtnGrp selected={LinkConfig.config.screens.Root.screens.CRM.screens.MapScreen} />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}>
+        <AppNavBtnGrp>
+          <AppButton
+            title="CLIENTS"
+            onPress={() => navigation.navigate('AccountsScreen')}
+            outlined={true}
+          />
+          <AppButton
+            title="MEETINGS"
+            onPress={() => navigation.navigate('MeetingsScreen')}
+            outlined={true}
+          />
+          <View style={{marginRight: -10}}>
+            <AppButton
+              title="MAP"
+              onPress={() => navigation.navigate('MapScreen')}
+              outlined={false}
+            />
+          </View>
+        </AppNavBtnGrp>
 
-      {locations.length === 0 ? null : (
-        <AppAddNew title="LOCATION" modal="CreateLocationModal" />
-      )}
+        {locations.length === 0 ? null : (
+          <AppAddNew title="LOCATION" modal="CreateLocationModal" />
+        )}
 
-      {isLoading ? (
-        <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-      ) : (
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
-        >
+        {isLoading ? (
+          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
+        ) : (
           <View>
             {/* Map Card */}
             {locations.length === 0 ? null : (
@@ -73,16 +90,14 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
                   backgroundColor: Colors.SMT_Secondary_1_Light_1,
                   borderWidth: 2,
                   height: 300,
-                  justifyContent: "center",
-                }}
-              >
+                  justifyContent: 'center',
+                }}>
                 <Text
                   style={{
                     color: Colors.SMT_Tertiary_1,
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                  }}>
                   MAP PLACEHOLDER
                 </Text>
               </View>
@@ -96,15 +111,22 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
                 return (
                   <View style={styles.card} key={i}>
                     <View style={styles.column1}>
-                      <Text style={{fontWeight: "bold"}}>{u.location_name}</Text>
-                      <Text>{u.address_city + ", " + u.address_state}</Text>
+                      <Text style={{fontWeight: 'bold'}}>
+                        {u.location_name}
+                      </Text>
+                      <Text>{u.address_city + ', ' + u.address_state}</Text>
                     </View>
 
                     <View style={styles.column2}>
                       <AppButton
                         title="Details"
                         backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() => navigation.navigate("Modal", {modal: "UpdateLocationModal", item: u})}
+                        onPress={() =>
+                          navigation.navigate('Modal', {
+                            modal: 'UpdateLocationModal',
+                            item: u,
+                          })
+                        }
                       />
                     </View>
                   </View>
@@ -112,8 +134,8 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
               })
             )}
           </View>
-        </ScrollView>
-      )}
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -141,9 +163,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-end",
   },
+  screen: {
+    marginBottom: 36,
+  },
   scrollView: {
     height: "100%",
     width: "100%",
+    paddingHorizontal: 10,
   },
   status: {},
   statusValid: {
