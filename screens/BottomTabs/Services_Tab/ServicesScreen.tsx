@@ -6,9 +6,8 @@ import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import LinkConfig from '../../../navigation/LinkingConfiguration';
 import AppAddNew from '../../../components/Layout/AppAddNew';
-import {Location} from '../../../types/index';
+import {Agreement} from '../../../types/service';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { useIsFocused } from '@react-navigation/native';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
@@ -20,17 +19,17 @@ interface Props {
 
 const ServicesScreen: React.FC<Props> = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [agreements, setAgreements] = useState<Agreement[]>([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getServices();
+    getAgreements();
   }, [isFocused]);
 
-  const getServices = async () => {
+  const getAgreements = async () => {
     let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id)
     
-    await fetch(`${Configs.TCMC_URI}/api/locationsBy`, {
+    await fetch(`${Configs.TCMC_URI}/api/agreementsBy`, {
       headers: await getRequestHeadersAsync().then(header => header),
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
@@ -38,7 +37,7 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
     .then(res => res.json())
     .then(json => {
       if (json.data){
-        setLocations(json.data)
+        setAgreements(json.data)
       }
     })
     .catch((err) => console.log(err))
@@ -67,14 +66,14 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title="SCHEDULE"
-                onPress={() => navigation.navigate("ScheduleScreen")}
+                title="DEMOS"
+                onPress={() => navigation.navigate("DemosScreen")}
                 outlined={true}
                 />
             </View>
       </AppNavBtnGrp>
 
-      {locations.length === 0 ? null : (
+      {agreements.length === 0 ? null : (
         <AppAddNew title="AGREEMENT" modal="CreateAgreementModal" />
       )}
 
@@ -84,7 +83,7 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
 
           <View>
             {/* Map Card */}
-            {locations.length === 0 ? null : (
+            {agreements.length === 0 ? null : (
               <View
                 style={{
                   borderColor: Colors.SMT_Secondary_1,
@@ -109,22 +108,23 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
             )}
 
             {/* Locations List */}
-            {locations.length === 0 ? (
-              <AppEmptyCard entity="locations" modal="CreateLocationModal" />
+            {agreements.length === 0 ? (
+              <AppEmptyCard entity="agreements" modal="CreateAgreementModal" />
             ) : (
-              locations.map((u, i) => {
+              agreements.map((u, i) => {
                 return (
                   <View style={styles.card} key={i}>
                     <View style={styles.column1}>
-                      <Text style={{fontWeight: "bold"}}>{u.location_name}</Text>
-                      <Text>{u.address_city + ", " + u.address_state}</Text>
+                      <Text style={{fontWeight: "bold"}}>{u._id}</Text>
+                      <Text>{u.account_id}</Text>
+                      <Text>{u.created}</Text>
                     </View>
 
                     <View style={styles.column2}>
                       <AppButton
                         title="Details"
                         backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() => navigation.navigate("Modal", {modal: "UpdateLocationModal", item: u})}
+                        onPress={() => navigation.navigate("Modal", {modal: "UpdateAgreementModal", item: u})}
                       />
                     </View>
                   </View>

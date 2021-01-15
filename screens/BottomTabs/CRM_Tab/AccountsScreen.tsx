@@ -4,7 +4,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { Account, Contact } from '../../../types/index';
+import { Account, Contact } from '../../../types/crm';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';

@@ -23,6 +23,8 @@ import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
 import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
 import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
 import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
+import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
+import DemosScreen from "../screens/BottomTabs/Services_Tab/DemosScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -100,6 +102,8 @@ function ServicesNavigator() {
       }}
     >
       <ServicesStack.Screen name="ServicesScreen" component={SmashScreen} />
+      <ServicesStack.Screen name="OrdersScreen" component={OrdersScreen} />
+      <ServicesStack.Screen name="DemosScreen" component={DemosScreen} />
     </ServicesStack.Navigator>
   );
 }

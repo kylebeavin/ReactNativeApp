@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { ScrollView, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 
 import Configs from '../../../constants/Configs';
@@ -6,9 +6,8 @@ import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import LinkConfig from '../../../navigation/LinkingConfiguration';
 import AppAddNew from '../../../components/Layout/AppAddNew';
-import {Location} from '../../../types/crm';
+import {Order} from '../../../types/service';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { useIsFocused } from '@react-navigation/native';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
@@ -18,19 +17,19 @@ interface Props {
     navigation: any;
 }
 
-const MapScreen: React.FC<Props> = ({navigation}) => {
+const OrdersScreen: React.FC<Props> = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getLocations();
+    getOrders();
   }, [isFocused]);
 
-  const getLocations = async () => {
+  const getOrders = async () => {
     let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id)
     
-    await fetch(`${Configs.TCMC_URI}/api/locationsBy`, {
+    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
       headers: await getRequestHeadersAsync().then(header => header),
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
@@ -38,7 +37,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
     .then(res => res.json())
     .then(json => {
       if (json.data){
-        setLocations(json.data)
+        setOrders(json.data)
       }
     })
     .catch((err) => console.log(err))
@@ -47,41 +46,44 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="CRM" help search />
+      <AppTitle title="Service" help search />
 
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <AppButton
-            title="CLIENTS"
-            onPress={() => navigation.navigate('AccountsScreen')}
-            outlined={true}
-          />
-          <AppButton
-            title="MEETINGS"
-            onPress={() => navigation.navigate('MeetingsScreen')}
-            outlined={true}
-          />
-          <View style={{marginRight: -10}}>
+          style={styles.scrollView}
+          contentContainerStyle={styles.contentContainer}
+      >
+
+      <AppNavBtnGrp>
             <AppButton
-              title="MAP"
-              onPress={() => navigation.navigate('MapScreen')}
+              title="AGREEMENTS"
+              onPress={() => navigation.navigate("ServicesScreen")}
+              outlined={true}
+            />
+            <AppButton
+              title="ORDERS"
+              onPress={() => navigation.navigate("OrdersScreen")}
               outlined={false}
             />
-          </View>
-        </AppNavBtnGrp>
+            <View style={{marginRight: -10}}>
+              <AppButton
+                title="DEMOS"
+                onPress={() => navigation.navigate("DemosScreen")}
+                outlined={true}
+                />
+            </View>
+      </AppNavBtnGrp>
 
-        {locations.length === 0 ? null : (
-          <AppAddNew title="LOCATION" modal="CreateLocationModal" />
-        )}
+      {orders.length === 0 ? null : (
+        <AppAddNew title="ORDER" modal="CreateOrderModal" />
+      )}
 
-        {isLoading ? (
-          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-        ) : (
+      {isLoading ? (
+        <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
+      ) : (
+
           <View>
             {/* Map Card */}
-            {locations.length === 0 ? null : (
+            {orders.length === 0 ? null : (
               <View
                 style={{
                   borderColor: Colors.SMT_Secondary_1,
@@ -90,43 +92,39 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
                   backgroundColor: Colors.SMT_Secondary_1_Light_1,
                   borderWidth: 2,
                   height: 300,
-                  justifyContent: 'center',
-                }}>
+                  justifyContent: "center",
+                }}
+              >
                 <Text
                   style={{
                     color: Colors.SMT_Tertiary_1,
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                  }}>
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
                   MAP PLACEHOLDER
                 </Text>
               </View>
             )}
 
-            {/* Locations List */}
-            {locations.length === 0 ? (
-              <AppEmptyCard entity="locations" modal="CreateLocationModal" />
+            {/* Orders List */}
+            {orders.length === 0 ? (
+              <AppEmptyCard entity="orders" modal="CreateOrderModal" />
             ) : (
-              locations.map((u, i) => {
+              orders.map((u, i) => {
                 return (
                   <View style={styles.card} key={i}>
                     <View style={styles.column1}>
-                      <Text style={{fontWeight: 'bold'}}>
-                        {u.location_name}
-                      </Text>
-                      <Text>{u.address_city + ', ' + u.address_state}</Text>
+                      <Text style={{fontWeight: "bold"}}>{u._id}</Text>
+                      <Text>{u.account_id}</Text>
+                      <Text>{u.created}</Text>
                     </View>
 
                     <View style={styles.column2}>
                       <AppButton
                         title="Details"
                         backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() =>
-                          navigation.navigate('Modal', {
-                            modal: 'UpdateLocationModal',
-                            item: u,
-                          })
-                        }
+                        onPress={() => navigation.navigate("Modal", {modal: "UpdateOrderModal", item: u})}
                       />
                     </View>
                   </View>
@@ -134,7 +132,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
               })
             )}
           </View>
-        )}
+      )}
       </ScrollView>
     </View>
   );
@@ -169,7 +167,8 @@ const styles = StyleSheet.create({
   scrollView: {
     height: "100%",
     width: "100%",
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
+
   },
   status: {},
   statusValid: {
@@ -180,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapScreen;
+export default OrdersScreen;
