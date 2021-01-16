@@ -9,6 +9,12 @@ import CreateLocationModal from './Creates/CreateLocationModal';
 import UpdateLocationModal from './Updates/UpdateLocationModal';
 import CreateMeetingModal from './Creates/CreateMeetingModal';
 import UpdateMeetingModal from './Updates/UpdateMeetingModal';
+import CreateAgreementModal from './Creates/CreateAgreementModal';
+import CreateDemoModal from './Creates/CreateDemoModal';
+import CreateOrderModal from './Creates/CreateOrderModal';
+import UpdateAgreementModal from './Updates/UpdateAgreementModal';
+import UpdateOrderModal from './Updates/UpdateOrderModal';
+import UpdateDemoModal from './Updates/UpdateDemoModal';
 
 interface Props {
     navigation: any;
@@ -27,6 +33,12 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <CreateLocationModal navigation={navigation} />;
       case "CreateMeetingModal":
         return <CreateMeetingModal navigation={navigation} />;
+      case "CreateAgreementModal":
+        return <CreateAgreementModal />;
+      case "CreateOrderModal":
+        return <CreateOrderModal />;
+      case "CreateDemoModal":
+        return <CreateDemoModal />;
 
       //=== Update Modals ===//
       case "UpdateAccountModal":
@@ -37,6 +49,13 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <UpdateLocationModal navigation={navigation} location={item} />;
       case "UpdateMeetingModal": 
         return <UpdateMeetingModal navigation={navigation} meeting={item} />;
+      case "UpdateAgreementModal":
+        return <UpdateAgreementModal />;
+      case "UpdateOrderModal":
+        return <UpdateOrderModal />;
+      case "UpdateDemoModal":
+        return <UpdateDemoModal />;
+
       default:
         return null;
     }
