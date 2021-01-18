@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {Location, Account} from '../../../types/index';
+import {Location, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 

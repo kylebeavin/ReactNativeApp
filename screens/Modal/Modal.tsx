@@ -36,7 +36,7 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
       case "CreateAgreementModal":
         return <CreateAgreementModal />;
       case "CreateOrderModal":
-        return <CreateOrderModal />;
+        return <CreateOrderModal navigation={navigation} />;
       case "CreateDemoModal":
         return <CreateDemoModal />;
 
