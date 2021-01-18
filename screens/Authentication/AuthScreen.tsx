@@ -13,7 +13,7 @@ interface Props {
 const AuthScreen: React.FC<Props> = (props) => {
 
   const signIn = async (props: Props) => {
-    // ToDo: Add Fields for user to sign in instead of being hard coded and auth header value
+    // ToDo: Add Fields for user to sign in instead of being hard coded and auth header valu
     let user = {
       _id: "5ff8c3303f6f737827204033",
       is_active: true,

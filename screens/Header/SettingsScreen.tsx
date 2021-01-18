@@ -42,7 +42,6 @@ const logOutButton = async (props:Props) => {
 const styles = StyleSheet.create({
     settingsContainer: {
         flex: 1,
-        margin: -10,
     },
     //======== ScrollView =======
 

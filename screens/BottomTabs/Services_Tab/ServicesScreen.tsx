@@ -82,32 +82,7 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
       ) : (
 
           <View>
-            {/* Map Card */}
-            {agreements.length === 0 ? null : (
-              <View
-                style={{
-                  borderColor: Colors.SMT_Secondary_1,
-                  marginBottom: 10,
-                  borderRadius: 3,
-                  backgroundColor: Colors.SMT_Secondary_1_Light_1,
-                  borderWidth: 2,
-                  height: 300,
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: Colors.SMT_Tertiary_1,
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  MAP PLACEHOLDER
-                </Text>
-              </View>
-            )}
-
-            {/* Locations List */}
+            {/* Agreements List */}
             {agreements.length === 0 ? (
               <AppEmptyCard entity="agreements" modal="CreateAgreementModal" />
             ) : (

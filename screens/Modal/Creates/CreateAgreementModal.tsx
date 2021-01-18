@@ -133,7 +133,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const postNewAgreement = async () => {
       const agreement: Agreement = await getFormData();
 
-      await fetch(`${Configs.TCMC_URI}/api/orders`, {
+      await fetch(`${Configs.TCMC_URI}/api/agreements`, {
         method: "POST",
         body: JSON.stringify(agreement),
         headers: await getRequestHeadersAsync().then(header => header)
@@ -146,7 +146,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
           err;
         });
     
-      navigation.navigate("AgreementsScreen");
+      navigation.navigate("ServicesScreen");
     };
 
     const openStartDateCalendar = (show: boolean) => {

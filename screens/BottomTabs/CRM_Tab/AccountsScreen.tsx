@@ -28,6 +28,7 @@ const AccountScreen: React.FC<Props> = () => {
   }, [isFocused]);
   
   const getAccounts = async () => {
+    console.log(Configs.TCMC_URI)
     fetch(`${Configs.TCMC_URI}/api/accounts`, {
       headers: await getRequestHeadersAsync().then(header => header)
     }) // ToDo: get accounts by group id 

@@ -16,7 +16,7 @@ export default function App() {
 
   useEffect(() => {
     // Clear User from Device
-     AsyncStorage.clear()
+    AsyncStorage.clear()
 
     // Set My User for Testing
     AsyncStorage.setItem('@smt_user', JSON.stringify({
