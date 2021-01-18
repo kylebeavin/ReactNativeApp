@@ -5,16 +5,16 @@ export type Agreement = {
     account_id: string;
     group_id: string;
     is_recurring: boolean;
-    services: Services;
+    services: string;
     service_frequency: string;
-    service_per: ServicesPer;
-    service_days: Days;
+    service_per: string;
+    service_days: string;
     monthly_rate: string;
     demand_rate: string;
     term_date: string;
-    start_date: Date;
-    end_date: Date;
-    created: Date;
+    start_date: string;
+    end_date: string;
+    created: string;
     is_active: boolean;
     notes: string; 
     url: string;
@@ -44,5 +44,5 @@ export type Order = {
 export type Demo = {
     _id: string;
     account_id: string;
-    created: Date;
+    created: string;
 }

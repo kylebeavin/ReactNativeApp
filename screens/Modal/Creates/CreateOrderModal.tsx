@@ -148,7 +148,7 @@ const CreateOrderModal: React.FC<Props> = () => {
           err;
         });
     
-      navigation.navigate("MeetingsScreen");
+      navigation.navigate("OrdersScreen");
     };
 
     const openStartDateCalendar = (show: boolean) => {
