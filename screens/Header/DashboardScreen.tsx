@@ -11,7 +11,7 @@ interface Props {
 
 const DashboardScreen: React.FC<Props> = (props) => {
     return (
-      <ScrollView>
+      <ScrollView style={styles.scrollView}>
         {/* Summary Card */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>30 Day Summary</Text>
@@ -168,6 +168,11 @@ const DashboardScreen: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
+  //====== Base Styles==============
+  scrollView: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+  },
   //====== Card Styles==============
   card: {
     padding: 10,

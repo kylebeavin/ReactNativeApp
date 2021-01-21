@@ -36,7 +36,7 @@ const AppTitle: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",
-    marginBottom: 10,
+    marginTop: 5,
     borderBottomWidth: 3,
     borderBottomColor: Colors.SMT_Secondary_1_Light_1,
   },

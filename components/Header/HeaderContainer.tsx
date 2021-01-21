@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         paddingTop: 0,
         backgroundColor: Colors.SMT_Primary_2,
         paddingHorizontal: 0,
-        marginBottom: 10,
+        marginTop: -15,
     },
 })
 

@@ -29,7 +29,9 @@ export type CRM_ParamList = {
 };
 
 export type ServicesParamList = {
-  ServicesScreen: undefined;
+  OrdersScreen: undefined;
+  OrdersCalendarScreen: undefined;
+  OrdersMapScreen: undefined;
 };
 
 export type RoutesParamList = {

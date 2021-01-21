@@ -4,7 +4,8 @@ import { Picker } from '@react-native-picker/picker';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import {Account, SMT_User, Meeting, Contact} from '../../../types/index';
+import {SMT_User} from '../../../types/index';
+import {Account, Meeting, Contact} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import Layout from '../../../constants/Layout';
@@ -63,7 +64,10 @@ const UpdateMeetingModal: React.FC<Props> = ({navigation, meeting}) => {
         body: JSON.stringify({group_id: grpId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => (accountsList = json.data))
         .catch((err) => console.log(err));
       return accountsList;

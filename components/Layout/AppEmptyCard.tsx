@@ -17,8 +17,6 @@ const AppEmptyCard: React.FC<Props> = ({entity, modal}) => {
             <Text style={styles.emptyContainerText}>Looks like you don't have any {entity} yet.</Text>
 
             <Text style={styles.emptyContainerLink} onPress={() => navigation.navigate("Modal", {modal: modal})}>Click here to make your first {entity.slice(0,-1)}</Text>
-            
-            <Text>{Configs.TCMC_URI}</Text>
         </View>
     );
 }

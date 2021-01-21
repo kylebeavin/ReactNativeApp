@@ -5,7 +5,8 @@ import { Picker } from '@react-native-picker/picker';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import { ContactRole, Status } from '../../../types/enums';
-import {Contact, SMT_User} from '../../../types/index';
+import {SMT_User} from '../../../types/index';
+import {Contact} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
@@ -76,7 +77,10 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
           body: JSON.stringify({group_id: grpId}),
           headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => userList = json.data)
         .catch((err) => console.log(err))
 

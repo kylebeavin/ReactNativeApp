@@ -35,7 +35,10 @@ const MeetingsScreen: React.FC<Props> = ({navigation}) => {
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
     })
-    .then(res => res.json())
+    .then(res => {
+      console.log(res.status)
+      return res.json()
+    })
     .then(json => {
       if (json.data){
         setMeetings(json.data)
@@ -46,39 +49,61 @@ const MeetingsScreen: React.FC<Props> = ({navigation}) => {
   }
 
   return (
-    <View>
+    <View style={styles.screen}>
       <AppTitle title="CRM" help search />
 
-      <AppNavBtnGrp selected={LinkConfig.config.screens.Root.screens.CRM.screens.MeetingsScreen} />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}>
+        <AppNavBtnGrp>
+          <AppButton
+            title="CLIENTS"
+            onPress={() => navigation.navigate('AccountsScreen')}
+            outlined={true}
+          />
+          <AppButton
+            title="MEETINGS"
+            onPress={() => navigation.navigate('MeetingsScreen')}
+            outlined={false}
+          />
+          <View style={{marginRight: -10}}>
+            <AppButton
+              title="MAP"
+              onPress={() => navigation.navigate('MapScreen')}
+              outlined={true}
+            />
+          </View>
+        </AppNavBtnGrp>
 
-      {meetings.length === 0 ? null : (
-        <AppAddNew title="MEETING" modal="CreateMeetingModal" />
-      )}
+        {meetings.length === 0 ? null : (
+          <AppAddNew title="MEETING" modal="CreateMeetingModal" />
+        )}
 
-      {isLoading ? (
-        <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-      ) : (
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
-        >
+        {isLoading ? (
+          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
+        ) : (
           <View>
-          {meetings.length === 0 ? (
+            {meetings.length === 0 ? (
               <AppEmptyCard entity="meetings" modal="CreateMeetingModal" />
             ) : (
               meetings.map((u, i) => {
                 return (
                   <View style={styles.card} key={i}>
                     <View style={styles.column1}>
-                      <Text style={{fontWeight: "bold"}}>{u.title}</Text>
-                      <Text>{u.address_city + ", " + u.address_state}</Text>
+                      <Text style={{fontWeight: 'bold'}}>{u.title}</Text>
+                      <Text>{u.address_city + ', ' + u.address_state}</Text>
                     </View>
 
                     <View style={styles.column2}>
                       <AppButton
                         title="Details"
                         backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() => navigation.navigate("Modal", {modal: "UpdateMeetingModal", item: u})}
+                        onPress={() =>
+                          navigation.navigate('Modal', {
+                            modal: 'UpdateMeetingModal',
+                            item: u,
+                          })
+                        }
                       />
                     </View>
                   </View>
@@ -86,8 +111,8 @@ const MeetingsScreen: React.FC<Props> = ({navigation}) => {
               })
             )}
           </View>
-        </ScrollView>
-      )}
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -115,9 +140,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-end",
   },
+  screen: {
+    marginBottom: 36,
+  },
   scrollView: {
     height: "100%",
     width: "100%",
+    paddingHorizontal: 10,
   },
   status: {},
   statusValid: {

@@ -7,7 +7,8 @@ import { TextInputMask } from 'react-native-masked-text';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {Meeting, Account, Contact, SMT_User} from '../../../types/index';
+import {SMT_User} from '../../../types/index';
+import {Meeting, Account, Contact} from '../../../types/crm';
 import {formatDateString, getRequestHeadersAsync} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/Layout/AppButton';
@@ -65,7 +66,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify({group_id: grpId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => (accountsList = json.data))
         .catch((err) => console.log(err));
       return accountsList;
@@ -77,7 +81,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify({account_id: accountId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => setContactList(json.data))
         .catch((err) => console.log(err));
     };
@@ -138,7 +145,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify(meeting),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((data) => data)
         .catch((err) => {
           // ToDo: Come up with error handling strategy.

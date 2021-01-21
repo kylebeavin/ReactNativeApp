@@ -1,14 +1,16 @@
 import 'react-native-gesture-handler';
 import React, { useEffect,useState } from "react";
-import { Button, StatusBar, View } from "react-native";
+import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useAsyncStorage from "./hooks/useAsyncStorage";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
-import AuthScreen from "./navigation/AuthScreen";
+import AuthScreen from "./screens/Authentication/AuthScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Configs from "./constants/Configs";
+import ToastProvider from './providers/ToastProvider';
+import AppToast from './components/Layout/AppToast';
 
 export default function App() {
   const [isAuth, setIsAuth] = useState(false);
@@ -16,10 +18,10 @@ export default function App() {
 
   useEffect(() => {
     // Clear User from Device
-    // AsyncStorage.clear()
+    AsyncStorage.clear()
 
     // Set My User for Testing
-    AsyncStorage.setItem('@google_user', JSON.stringify({
+    AsyncStorage.setItem('@smt_user', JSON.stringify({
       _id: "5ff8c3303f6f737827204033",
       is_active: true,
       created: "2021-01-07T16:10:19.786Z",
@@ -37,7 +39,6 @@ export default function App() {
   }, []);
 
   const isSignedIn = async () => {
-    
     await useAsyncStorage().getUserAsync()
             .then((user) => {
               // ToDo: Need to validate token by calling the server
@@ -56,8 +57,11 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation />
-        <StatusBar />
+        <ToastProvider>
+          <AppToast />
+          <Navigation />
+          <StatusBar translucent backgroundColor="transparent" />
+        </ToastProvider>
       </SafeAreaProvider>
     );
   }

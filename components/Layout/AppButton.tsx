@@ -49,6 +49,7 @@ const AppButton: React.FC<Props> = (props) => {
       }
 
       <Text
+        numberOfLines={1}
         style={{
           ...styles.text,
           color,

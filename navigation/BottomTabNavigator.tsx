@@ -17,12 +17,14 @@ import Colors from "../constants/Colors";
 import DashboardScreen from "../screens/Header/DashboardScreen";
 import SettingsScreen from "../screens/Header/SettingsScreen";
 import AccountsScreen from "../screens/BottomTabs/CRM_Tab/AccountsScreen";
-import SmashScreen from "../screens/BottomTabs/Services_Tab/ServicesScreen";
+import OrdersCalendarScreen from "../screens/BottomTabs/Services_Tab/OrdersCalendarScreen";
 import MaintainScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
 import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
 import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
 import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
 import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
+import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
+import OrdersMapScreen from "../screens/BottomTabs/Services_Tab/OrdersMapScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -52,7 +54,7 @@ function DashboardNavigator() {
     <DashboardStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, padding: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <DashboardStack.Screen
@@ -68,7 +70,7 @@ function SettingsNavigator() {
     <SettingsStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, padding: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen} />
@@ -81,7 +83,7 @@ function CRM_Navigator() {
     <CRM_Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <CRM_Stack.Screen name="AccountsScreen" component={AccountsScreen} />
@@ -96,10 +98,12 @@ function ServicesNavigator() {
     <ServicesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <ServicesStack.Screen name="ServicesScreen" component={SmashScreen} />
+      <ServicesStack.Screen name="OrdersScreen" component={OrdersScreen} />
+      <ServicesStack.Screen name="OrdersCalendarScreen" component={OrdersCalendarScreen} />
+      <ServicesStack.Screen name="OrdersMapScreen" component={OrdersMapScreen} />
     </ServicesStack.Navigator>
   );
 }
@@ -109,7 +113,7 @@ function RoutesNavigator() {
     <RoutesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <RoutesStack.Screen name="RoutesScreen" component={MaintainScreen} />
@@ -122,7 +126,7 @@ function InvoicesNavigator() {
     <InvoicesStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <InvoicesStack.Screen name="InvoicesScreen" component={InvoiceScreen} />
@@ -135,7 +139,7 @@ function ReportsNavigator() {
     <ReportsStack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.TCMC_White, paddingHorizontal: 10 },
+        cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
       <ReportsStack.Screen name="ReportsScreen" component={ReportScreen} />

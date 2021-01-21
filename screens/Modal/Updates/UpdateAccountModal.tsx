@@ -4,7 +4,8 @@ import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {Account, SMT_User} from '../../../types/index';
+import {SMT_User} from '../../../types/index';
+import {Account} from '../../../types/crm';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 
@@ -67,7 +68,10 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
             body: JSON.stringify(updatedAccount),
             headers: await getRequestHeadersAsync().then(header => header)
             })
-            .then(res => res.json())
+            .then(res => {
+              console.log(res.status)
+              return res.json()
+            })
             .then(data => data)
             .catch(err => {
               // ToDo: Come up with error handling strategy.
