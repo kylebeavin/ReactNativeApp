@@ -32,7 +32,10 @@ const AuthScreen: React.FC<Props> = (props) => {
       body: JSON.stringify(user),
       headers: {"Content-type": "application/json; charset=UTF-8"}
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res.status)
+        return res.json()
+      })
       .then(json => {
         console.log(json)
         if (json.token) {

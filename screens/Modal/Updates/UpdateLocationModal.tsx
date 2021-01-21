@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import {Location, Account} from '../../../types/index';
+import {Location, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
@@ -52,7 +52,10 @@ const UpdateLocationModal: React.FC<Props> = ({navigation, location}) => {
           body: JSON.stringify({group_id: grpId}),
           headers: await getRequestHeadersAsync().then(header => header)
         })
-          .then((res) => res.json())
+          .then((res) => {
+            console.log(res.status)
+            return res.json()
+          })
           .then((json) => (accountsList = json.data))
           .catch((err) => console.log(err));
         return accountsList;

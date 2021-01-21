@@ -35,7 +35,10 @@ const MeetingsScreen: React.FC<Props> = ({navigation}) => {
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
     })
-    .then(res => res.json())
+    .then(res => {
+      console.log(res.status)
+      return res.json()
+    })
     .then(json => {
       if (json.data){
         setMeetings(json.data)

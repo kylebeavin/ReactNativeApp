@@ -55,3 +55,8 @@ export enum Days {
     fri = "fri",
     sat = "sat"
 }
+
+export enum SortOrdersList {
+    distance = "By Distance",
+    stops = "By Stops",
+}

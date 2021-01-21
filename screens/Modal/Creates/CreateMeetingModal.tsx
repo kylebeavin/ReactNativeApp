@@ -66,7 +66,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify({group_id: grpId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => (accountsList = json.data))
         .catch((err) => console.log(err));
       return accountsList;
@@ -78,7 +81,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify({account_id: accountId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => setContactList(json.data))
         .catch((err) => console.log(err));
     };
@@ -139,7 +145,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         body: JSON.stringify(meeting),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((data) => data)
         .catch((err) => {
           // ToDo: Come up with error handling strategy.

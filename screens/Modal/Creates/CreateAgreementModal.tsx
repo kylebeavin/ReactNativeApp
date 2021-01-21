@@ -15,7 +15,7 @@ import {formatDateString, getRequestHeadersAsync} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/Layout/AppButton';
 import Layout from '../../../constants/Layout';
-import { Agreement, Order } from '../../../types/service';
+import { Agreement } from '../../../types/service';
 import { Days, Services, ServicesPer } from '../../../types/enums';
 
 interface Props {
@@ -28,7 +28,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const [account, setAccount] = useState("");
     const [group, setGroup] = useState("");
     const [isRecurring, setIsRecurring] = useState(false);
-    const [services, setServices] = useState(Services.smash.toString());
+    const [services, setServices] = useState("");
     const [serviceFrequency, setServiceFrequency] = useState("");
     const [servicePer, setServicePer] = useState(ServicesPer.day.toString());
     const [serviceDays, setServiceDays] = useState(Days.sun.toString());
@@ -80,7 +80,10 @@ const CreateAgreementModal: React.FC<Props> = () => {
         body: JSON.stringify({group_id: grpId}),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => (accountsList = json.data))
         .catch((err) => console.log(err));
       return accountsList;
@@ -113,7 +116,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
         account_id: account, 
         group_id: user.group_id,
         is_recurring: isRecurring,
-        services: services,
+        services: services.toString(),
         service_frequency: serviceFrequency,
         service_per: servicePer,
         service_days: serviceDays,
@@ -138,7 +141,10 @@ const CreateAgreementModal: React.FC<Props> = () => {
         body: JSON.stringify(agreement),
         headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((data) => data)
         .catch((err) => {
           // ToDo: Come up with error handling strategy.
@@ -165,8 +171,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
             <View style={styles.picker}>
               <Picker
                 selectedValue={account}
-                onValueChange={(itemValue, ItemIndex) => setAccount(itemValue.toString())}
-              >
+                onValueChange={(itemValue, ItemIndex) =>
+                  setAccount(itemValue.toString())
+                }>
                 {accountList?.map((item, index) => {
                   return (
                     <Picker.Item
@@ -183,11 +190,11 @@ const CreateAgreementModal: React.FC<Props> = () => {
           {/* isRecurring */}
           <View style={styles.fieldContainer}>
             <Text style={styles.text}>Is Recurring</Text>
-              <CheckBox
-                disabled={false}
-                value={isRecurring}
-                onValueChange={(newValue) => setIsRecurring(!isRecurring)}
-              />
+            <CheckBox
+              disabled={false}
+              value={isRecurring}
+              onValueChange={(newValue) => setIsRecurring(!isRecurring)}
+            />
           </View>
 
           {/* Services */}
@@ -210,7 +217,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </Picker>
             </View>
           </View>
-          
+
           {/* Service Frequency */}
           <View style={styles.fieldContainer}>
             <Text style={styles.text}>Frequency</Text>
@@ -227,8 +234,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
             <View style={styles.picker}>
               <Picker
                 selectedValue={servicePer}
-                onValueChange={(itemValue, ItemIndex) => setServicePer(itemValue.toString())}
-              >
+                onValueChange={(itemValue, ItemIndex) =>
+                  setServicePer(itemValue.toString())
+                }>
                 {Object.values(ServicesPer).map((item, index) => {
                   return (
                     <Picker.Item
@@ -248,8 +256,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
             <View style={styles.picker}>
               <Picker
                 selectedValue={serviceDays}
-                onValueChange={(itemValue, ItemIndex) => setServiceDays(itemValue.toString())}
-              >
+                onValueChange={(itemValue, ItemIndex) =>
+                  setServiceDays(itemValue.toString())
+                }>
                 {Object.values(Days).map((item, index) => {
                   return (
                     <Picker.Item
@@ -299,13 +308,13 @@ const CreateAgreementModal: React.FC<Props> = () => {
               <View style={styles.column}>
                 <Text style={styles.text}>Start Date</Text>
                 <View style={styles.textInput}>
-                  <TextInputMask 
-                    type={"datetime"}
+                  <TextInputMask
+                    type={'datetime'}
                     options={{
-                      format: "MM/DD/YYYY"
+                      format: 'MM/DD/YYYY',
                     }}
                     value={startDate}
-                    onChangeText={text => setStartDate(text)}
+                    onChangeText={(text) => setStartDate(text)}
                   />
                 </View>
               </View>
@@ -313,7 +322,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
                 <AppButton
                   title="Calendar"
                   onPress={() => openStartDateCalendar(true)}
-                  icon={{ name: "calendar", type: "MaterialCommunityIcons" }}
+                  icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
                 />
               </View>
@@ -326,13 +335,13 @@ const CreateAgreementModal: React.FC<Props> = () => {
               <View style={styles.column}>
                 <Text style={styles.text}>End Date</Text>
                 <View style={styles.textInput}>
-                  <TextInputMask 
-                    type={"datetime"}
+                  <TextInputMask
+                    type={'datetime'}
                     options={{
-                      format: "MM/DD/YYYY"
+                      format: 'MM/DD/YYYY',
                     }}
                     value={endDate}
-                    onChangeText={text => setEndDate(text)}
+                    onChangeText={(text) => setEndDate(text)}
                   />
                 </View>
               </View>
@@ -340,7 +349,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
                 <AppButton
                   title="Calendar"
                   onPress={() => openEndDateCalendar(true)}
-                  icon={{ name: "calendar", type: "MaterialCommunityIcons" }}
+                  icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
                 />
               </View>
@@ -358,15 +367,14 @@ const CreateAgreementModal: React.FC<Props> = () => {
           </View>
 
           {/* Notes */}
-          <View style={[styles.fieldContainer, {marginBottom: 40}]} >
+          <View style={[styles.fieldContainer, {marginBottom: 40}]}>
             <Text style={styles.text}>Notes</Text>
             <TextInput
-                style={styles.textInput}
-                value={notes}
-                onChange={(text) => setNotes(text.nativeEvent.text)}
+              style={styles.textInput}
+              value={notes}
+              onChange={(text) => setNotes(text.nativeEvent.text)}
             />
           </View>
-
         </ScrollView>
 
         <ModalButtons navigation={navigation} save={() => postNewAgreement()} />
@@ -374,13 +382,12 @@ const CreateAgreementModal: React.FC<Props> = () => {
         {showStartDateCalendar ? (
           <TouchableOpacity
             style={styles.calendarPopup}
-            onPress={() => setShowStartDateCalendar(false)}
-          >
-            <Calendar 
+            onPress={() => setShowStartDateCalendar(false)}>
+            <Calendar
               style={{borderRadius: 4}}
               onDayPress={(day) => {
                 setStartDate(formatDateString(day.dateString));
-                setShowStartDateCalendar(false)
+                setShowStartDateCalendar(false);
               }}
             />
           </TouchableOpacity>
@@ -388,13 +395,12 @@ const CreateAgreementModal: React.FC<Props> = () => {
         {showEndDateCalendar ? (
           <TouchableOpacity
             style={styles.calendarPopup}
-            onPress={() => setShowEndDateCalendar(false)}
-          >
-            <Calendar 
+            onPress={() => setShowEndDateCalendar(false)}>
+            <Calendar
               style={{borderRadius: 4}}
               onDayPress={(day) => {
                 setEndDate(formatDateString(day.dateString));
-                setShowEndDateCalendar(false)
+                setShowEndDateCalendar(false);
               }}
             />
           </TouchableOpacity>
@@ -405,7 +411,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
 
 const styles = StyleSheet.create({
     form: {
-        maxHeight: Layout.window.height/1.42,
+        maxHeight: Layout.window.height/1.52,
         marginBottom: 20,
         padding: 20,
         borderRadius: 4,

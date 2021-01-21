@@ -17,14 +17,14 @@ import Colors from "../constants/Colors";
 import DashboardScreen from "../screens/Header/DashboardScreen";
 import SettingsScreen from "../screens/Header/SettingsScreen";
 import AccountsScreen from "../screens/BottomTabs/CRM_Tab/AccountsScreen";
-import SmashScreen from "../screens/BottomTabs/Services_Tab/ServicesScreen";
+import OrdersCalendarScreen from "../screens/BottomTabs/Services_Tab/OrdersCalendarScreen";
 import MaintainScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
 import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
 import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
 import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
 import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
 import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
-import DemosScreen from "../screens/BottomTabs/Services_Tab/DemosScreen";
+import OrdersMapScreen from "../screens/BottomTabs/Services_Tab/OrdersMapScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -101,9 +101,9 @@ function ServicesNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <ServicesStack.Screen name="ServicesScreen" component={SmashScreen} />
       <ServicesStack.Screen name="OrdersScreen" component={OrdersScreen} />
-      <ServicesStack.Screen name="DemosScreen" component={DemosScreen} />
+      <ServicesStack.Screen name="OrdersCalendarScreen" component={OrdersCalendarScreen} />
+      <ServicesStack.Screen name="OrdersMapScreen" component={OrdersMapScreen} />
     </ServicesStack.Navigator>
   );
 }

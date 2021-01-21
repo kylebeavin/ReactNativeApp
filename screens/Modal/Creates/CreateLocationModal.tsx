@@ -54,7 +54,10 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
         headers: await getRequestHeadersAsync().then(header => header),
         body: JSON.stringify({group_id: grpId})
       })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((json) => (accountsList = json.data))
         .catch((err) => console.log(err));
       return accountsList;
@@ -86,11 +89,11 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
             body: JSON.stringify(location),
             headers: await getRequestHeadersAsync().then(header => header)
             })
-            .then(res => res.json())
-            .then(data => {
-             console.log(data) 
-              data
+            .then(res => {
+              console.log(res.status)
+              return res.json()
             })
+            .then(data => data)
             .catch(err => {
               // ToDo: Come up with error handling strategy.
               console.log(err);

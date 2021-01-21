@@ -28,11 +28,13 @@ const AccountScreen: React.FC<Props> = () => {
   }, [isFocused]);
   
   const getAccounts = async () => {
-    console.log(Configs.TCMC_URI)
     fetch(`${Configs.TCMC_URI}/api/accounts`, {
       headers: await getRequestHeadersAsync().then(header => header)
     }) // ToDo: get accounts by group id 
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.status)        
+        return res.json()
+      })
       .then((json) => {
         if (json.data) {
           json.data.map((account: any) => {

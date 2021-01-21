@@ -9,6 +9,8 @@ import Navigation from "./navigation";
 import AuthScreen from "./screens/Authentication/AuthScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Configs from "./constants/Configs";
+import ToastProvider from './providers/ToastProvider';
+import AppToast from './components/Layout/AppToast';
 
 export default function App() {
   const [isAuth, setIsAuth] = useState(false);
@@ -55,8 +57,11 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation />
-        <StatusBar translucent backgroundColor="transparent" />
+        <ToastProvider>
+          <AppToast />
+          <Navigation />
+          <StatusBar translucent backgroundColor="transparent" />
+        </ToastProvider>
       </SafeAreaProvider>
     );
   }

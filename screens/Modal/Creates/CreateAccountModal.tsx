@@ -68,7 +68,10 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
             body: JSON.stringify(account),
             headers: await getRequestHeadersAsync().then(header => header)
             })
-            .then(res => res.json())
+            .then(res => {
+              console.log(res.status)
+              return res.json()
+            })
             .then(data => data)
             .catch(err => {
               // ToDo: Come up with error handling strategy.
