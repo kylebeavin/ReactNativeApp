@@ -18,22 +18,22 @@ export default function App() {
 
   useEffect(() => {
     // Clear User from Device
-    AsyncStorage.clear()
+    // AsyncStorage.clear()
 
     // Set My User for Testing
-    AsyncStorage.setItem('@smt_user', JSON.stringify({
-      _id: "5ff8c3303f6f737827204033",
-      is_active: true,
-      created: "2021-01-07T16:10:19.786Z",
-      email: "kyle.beavin@fakemail.com",
-      password: "$2b$08$RD1.U.Ul6Z1mT5d4lEAXZulrSWYgAHW5cJDRywNIQaIoMJdp6ynNq",
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZjhjMzMwM2Y2ZjczNzgyNzIwNDAzMyIsImlhdCI6MTYxMDM4MjI3MH0.5GcoYe_72nHrUqWT1y_9DqZB-M-Hjd3nPplE6mbNL6k",
-      image: "profileURL",
-      first_name: "test",
-      last_name: "user",
-      role: "admin",
-      group_id: "00"
-    }))
+    // AsyncStorage.setItem('@smt_user', JSON.stringify({
+    //   _id: "5ff8c3303f6f737827204033",
+    //   is_active: true,
+    //   created: "2021-01-07T16:10:19.786Z",
+    //   email: "kyle.beavin@fakemail.com",
+    //   password: "$2b$08$RD1.U.Ul6Z1mT5d4lEAXZulrSWYgAHW5cJDRywNIQaIoMJdp6ynNq",
+    //   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZjhjMzMwM2Y2ZjczNzgyNzIwNDAzMyIsImlhdCI6MTYxMDM4MjI3MH0.5GcoYe_72nHrUqWT1y_9DqZB-M-Hjd3nPplE6mbNL6k",
+    //   image: "profileURL",
+    //   first_name: "test",
+    //   last_name: "user",
+    //   role: "admin",
+    //   group_id: "00"
+    // }))
 
     isSignedIn()
   }, []);

@@ -1,42 +1,47 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Colors from '../../constants/Colors';
 import SettingsList from '../../components/Settings/SettingsList';
+import useAsyncStorage from '../../hooks/useAsyncStorage';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
-    logOut: () => void;
 }
 
 const SettingsScreen: React.FC<Props> = (props) => {
-    return (
-      <View style={styles.settingsContainer}>
+  const navigation = useNavigation();
 
-        {/* Settings List Component */}
-        <SettingsList />
+  const logOut = async () => {
+    console.log("hi")
+    await useAsyncStorage().clearUserAsync().then(success => {
+      if (success) {
+        navigation.navigate("AuthScreen");
+      }
+    })
+  }
 
-        <View style={styles.linksContainer}>
-          <TouchableOpacity onPress={() => console.log("Help Center")}>
-            <View style={styles.link}>
-              <Text style={[styles.linkText, { fontWeight: "bold" }]}>
-                Help Center
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => logOutButton(props)}>
-            <View style={styles.link}>
-              <Text style={styles.linkText}>Log Out</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+  return (
+    <View style={styles.settingsContainer}>
+      {/* Settings List Component */}
+      <SettingsList />
+
+      <View style={styles.linksContainer}>
+        <TouchableOpacity onPress={() => console.log('Help Center')}>
+          <View style={styles.link}>
+            <Text style={[styles.linkText, {fontWeight: 'bold'}]}>
+              Help Center
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => logOut()}>
+          <View style={styles.link}>
+            <Text style={styles.linkText}>Log Out</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    );
-}
-
-const logOutButton = async (props:Props) => {
-    await AsyncStorage.removeItem('@smt_user');
-    props.logOut();
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

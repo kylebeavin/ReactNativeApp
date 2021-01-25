@@ -8,7 +8,6 @@ import LeftHeader from './LeftHeader';
 import RightHeader from './RightHeader';
 
 interface Props {
-    text: string;
 }
 
 const HeaderContainer: React.FC<Props> = (props) => {

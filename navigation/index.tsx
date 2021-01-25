@@ -47,7 +47,7 @@ function RootNavigator() {
               : scene.route.name;
         
           return (
-            <HeaderContainer text="HelloWorld!" />
+            <HeaderContainer />
           );
         }
         
