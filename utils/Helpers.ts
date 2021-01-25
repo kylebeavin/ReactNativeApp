@@ -16,7 +16,7 @@ export const formatDateString = (oldString: string) :string => {
     return newString;
 }
 
-//#region Summary
+//#region Summary //This is Broke
 ///Function: Converts JS Date object to usable date and time strings.
 ///Params: A JavaScript Date.
 ///Returns: An object with a date string and time string for use in forms.
@@ -54,6 +54,20 @@ export const getRequestHeadersAsync = async (method?: HttpMethods) : Promise<Hea
     headers.set("x-access-token", token);
     
     return headers;
+}
+
+export function formatDate(date: Date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
 
 // import * as validator from "validator";

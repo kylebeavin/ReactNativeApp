@@ -62,7 +62,7 @@ const CreateOrderModal: React.FC<Props> = () => {
 
     useEffect(() => {
       // Set State
-
+      
       // Fetch Accounts by group id
       getAccountsDropDown()
         .then((data) => {
@@ -137,17 +137,19 @@ const CreateOrderModal: React.FC<Props> = () => {
     
     const postNewOrder = async () => {
       const order: Order = await getFormData();
-
       await fetch(`${Configs.TCMC_URI}/api/orders`, {
         method: "POST",
         body: JSON.stringify(order),
         headers: await getRequestHeadersAsync().then(header => header)
         })
         .then((res) => {
-          console.log(res.status)
+          console.log(res.status + "========this")
           return res.json()
         })
-        .then((data) => data)
+        .then((data) => {
+          console.log(data)
+          return data
+        })
         .catch((err) => {
           // ToDo: Come up with error handling strategy.
           console.log(err);
@@ -179,7 +181,7 @@ const CreateOrderModal: React.FC<Props> = () => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.name}
+                      label={item.account_name}
                       value={item._id}
                     />
                   );
@@ -423,7 +425,7 @@ const CreateOrderModal: React.FC<Props> = () => {
 
 const styles = StyleSheet.create({
     form: {
-        maxHeight: Layout.window.height/1.42,
+        maxHeight: Layout.window.height/1.50,
         marginBottom: 20,
         padding: 20,
         borderRadius: 4,

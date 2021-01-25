@@ -13,6 +13,7 @@ import { Calendar } from 'react-native-calendars';
 import { formatDateString, getDateStringsFromDate, getRequestHeadersAsync } from '../../../utils/Helpers';
 import { TextInputMask } from 'react-native-masked-text';
 import AppButton from '../../../components/Layout/AppButton';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 interface Props {
     navigation: any;
@@ -141,7 +142,10 @@ const UpdateMeetingModal: React.FC<Props> = ({navigation, meeting}) => {
           body: JSON.stringify(updatedMeeting),
           headers: await getRequestHeadersAsync().then(header => header)
         })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.status)
+          return res.json()
+        })
         .then((data) => data)
         .catch((err) => {
           // ToDo: Come up with error handling strategy.
@@ -189,7 +193,7 @@ const UpdateMeetingModal: React.FC<Props> = ({navigation, meeting}) => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.name}
+                      label={item.account_name}
                       value={item._id}
                     />
                   );

@@ -128,7 +128,7 @@ const UpdateLocationModal: React.FC<Props> = ({navigation, location}) => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.name}
+                      label={item.account_name}
                       value={item._id}
                     />
                   );

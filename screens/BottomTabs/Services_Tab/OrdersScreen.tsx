@@ -19,6 +19,8 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import {getRequestHeadersAsync} from '../../../utils/Helpers';
 import {Picker} from '@react-native-picker/picker';
 import {SortOrdersList} from '../../../types/enums';
+import AppEditBtn from '../../../components/Layout/AppEditBtn';
+import AppAddNew from '../../../components/Layout/AppAddNew';
 
 interface Props {
   navigation: any;
@@ -87,83 +89,37 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
           </View>
         </AppNavBtnGrp>
 
-        {orders.length === 0 ? null : (
-          <View style={{flex: 1, flexDirection: 'row', marginBottom: 15}}>
-            <View style={{flex: 1, marginRight: 15}}>
-              <Text style={{fontSize: 12}}>Sort List</Text>
-              <View style={styles.picker}>
-                <Picker
-                  style={{height: 30}}
-                  selectedValue={sortItem}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSortItem(itemValue.toString())
-                  }>
-                  {Object.values(SortOrdersList).map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item.toString()}
-                        label={item.toString()}
-                        value={item.toString()}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
-            <View style={{flex: 1}}>
-              <Text style={{fontSize: 12}}>List View</Text>
-              <View style={styles.picker}>
-                <Picker
-                  style={{height: 30}}
-                  selectedValue={sortItem}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSortItem(itemValue.toString())
-                  }>
-                  {Object.values(SortOrdersList).map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item.toString()}
-                        label={item.toString()}
-                        value={item.toString()}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
-          </View>
-        )}
+        <AppAddNew title="ORDER" modal="CreateOrderModal"/>
 
         {isLoading ? (
           <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
         ) : (
           <View>
-            {/* Agreements List */}
+            {/* Orders List */}
             {orders.length === 0 ? (
               <AppEmptyCard entity="orders" modal="CreateOrderModal" />
             ) : (
               orders.map((u, i) => {
                 return (
                   <View style={styles.card} key={i}>
-                    <View style={styles.column1}>
-                      <Text style={{fontWeight: 'bold'}}>{u._id}</Text>
-                      <Text>{u.account_id}</Text>
-                      <Text>{u.created}</Text>
+
+                    <AppEditBtn item={u}/>
+
+                    <View style={styles.title}>
+                      <Text style={styles.titleText}>Name Here - {u.services}</Text>
+                      <Text style={styles.titleText}>Status:
+                        <Text style={{fontWeight: 'bold', color: Colors.SMT_Secondary_2_Light_1}}> On Schedule</Text>
+                      </Text>
                     </View>
 
-                    <View style={styles.column2}>
-                      <AppButton
-                        title="Details"
-                        backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() =>
-                          navigation.navigate('Modal', {
-                            modal: 'UpdateOrderModal',
-                            item: u,
-                          })
-                        }
-                      />
+                    <View style={styles.content}>
+                      <Text>Driver: Name Here</Text>
+                      <Text>Notes: {u.notes}</Text>
+                    </View>
+
+                    <View style={styles.btnContainer}>
+                      <AppButton title="Complete" onPress={() => console.log("Complete")} />
+                      <AppButton title="Report" onPress={() => console.log("Complete")} outlined />
                     </View>
                   </View>
                 );
@@ -178,15 +134,27 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
     backgroundColor: Colors.SMT_Tertiary_1,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: Colors.SMT_Secondary_2_Light_1,
     borderRadius: 3,
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
-  column1: {},
+  title: {
+    marginBottom: 10,
+  },
+  titleText: {
+    fontWeight: 'bold',
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  content: {
+    marginBottom: 10,
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',

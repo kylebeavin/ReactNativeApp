@@ -22,6 +22,7 @@ export type Agreement = {
 
 export type Order = {
     _id: string;
+    agreement_id?: string;
     account_id: string;
     group_id: string;
     is_recurring: boolean;

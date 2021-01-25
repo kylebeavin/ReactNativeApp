@@ -149,7 +149,10 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
           console.log(res.status)
           return res.json()
         })
-        .then((data) => data)
+        .then((data) => {
+          console.log(data)
+          return data
+        })
         .catch((err) => {
           // ToDo: Come up with error handling strategy.
           console.log(err);
@@ -194,7 +197,7 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.name}
+                      label={item.account_name}
                       value={item._id}
                     />
                   );
@@ -367,7 +370,7 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
 
 const styles = StyleSheet.create({
     form: {
-        maxHeight: Layout.window.height/1.42,
+        maxHeight: Layout.window.height/1.50,
         marginBottom: 20,
         padding: 20,
         borderRadius: 4,

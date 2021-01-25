@@ -15,7 +15,7 @@ const AppEditBtn: React.FC<Props> = ({item}) => {
         {/* Edit Button */}
         <View style={styles.editButtonContainer}>
           <TouchableOpacity
-            style={{ paddingHorizontal: 10, paddingVertical: 5 }}
+            //style={{ paddingHorizontal: 10, paddingVertical: 5 }}
             onPress={() =>
               navigation.navigate("Modal", {
                 modal: "UpdateAccountModal",
@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
   //==== Edit Button =====
   editButtonContainer: {
     position: "absolute",
-    right: 10,
-    top: 5,
+    right: 0,
+    top: 0,
     zIndex: 100,
   },
   editButtonIcon: {

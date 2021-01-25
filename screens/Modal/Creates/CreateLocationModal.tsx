@@ -134,7 +134,7 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.name}
+                      label={item.account_name}
                       value={item._id}
                     />
                   );

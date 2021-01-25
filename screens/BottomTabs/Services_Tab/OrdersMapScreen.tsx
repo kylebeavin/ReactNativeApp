@@ -19,7 +19,6 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import {getRequestHeadersAsync} from '../../../utils/Helpers';
 import {Picker} from '@react-native-picker/picker';
 import {SortOrdersList} from '../../../types/enums';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 interface Props {
   navigation: any;

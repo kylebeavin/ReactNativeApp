@@ -60,3 +60,14 @@ export enum SortOrdersList {
     distance = "By Distance",
     stops = "By Stops",
 }
+
+export enum ContactType {
+    bill = "bill",
+    smash = "smash",
+    haul = "haul",
+}
+
+export enum ContactMethod {
+    email = "email",
+    sms = "sms",
+}

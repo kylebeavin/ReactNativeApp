@@ -4,12 +4,13 @@ import { Picker } from '@react-native-picker/picker';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { ContactRole, Status } from '../../../types/enums';
+import { ContactRole, ContactType, Status } from '../../../types/enums';
 import {SMT_User} from '../../../types/index';
 import {Contact, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import Layout from '../../../constants/Layout';
 
 interface Props {
     navigation: any;
@@ -52,13 +53,13 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
     }, []);
 
     const getFormData = async () => {
-      let firstName = name.split(" ").slice(0, -1).join(" ");
-      let lastName = name.split(" ").slice(-1).join(" ");
+      // let firstName = name.split(" ").slice(0, -1).join(" ");
+      // let lastName = name.split(" ").slice(-1).join(" ");
 
       const contact: Contact = {
         _id: "",
-        first_name: firstName,
-        last_name: lastName,
+        first_name: name,
+        last_name: "_",
         type: role,
         account_id: account._id, // Set id
         phone: phone,
@@ -66,7 +67,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         owner_id: owner,
         created: "",
         is_active: status === "Active" ? true : false,
-        method: "Phone",
+        method: "email",
       };
 
       return contact;
@@ -103,7 +104,10 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
               console.log(res.status)
               return res.json()
             })
-            .then(data => data)
+            .then(data => {
+              console.log(data)
+              return data
+            })
             .catch(err => {
               // ToDo: Come up with error handling strategy.
               console.log(err);
@@ -139,18 +143,15 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
                   setRole(itemValue.toString())
                 }
               >
-                <Picker.Item
-                  label={ContactRole.billing}
-                  value={ContactRole.billing.toString()}
-                />
-                <Picker.Item
-                  label={ContactRole.notifications}
-                  value={ContactRole.notifications.toString()}
-                />
-                <Picker.Item
-                  label={ContactRole.hauling}
-                  value={ContactRole.hauling.toString()}
-                />
+                {Object.values(ContactType).map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={item.toString()}
+                      label={item.toString()}
+                      value={item.toString()}
+                    />
+                  );
+                })}
               </Picker>
             </View>
           </View>
@@ -220,7 +221,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
               </Picker>
             </View>
           </View>
-          <View style={styles.fieldContainer}>
+          <View style={[styles.fieldContainer, {marginBottom: 40}]}>
             <Text style={styles.text}>NOTES</Text>
             <TextInput
               style={styles.textInput}
@@ -238,11 +239,12 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
 
 const styles = StyleSheet.create({
     form: {
-        marginBottom: 20,
-        padding: 20,
-        borderRadius: 4,
-        backgroundColor: Colors.SMT_Tertiary_1,
-      },
+      maxHeight: Layout.window.height/1.50,
+      marginBottom: 20,
+      padding: 20,
+      borderRadius: 4,
+      backgroundColor: Colors.SMT_Tertiary_1,
+    },
     fieldContainer: {
         marginBottom: 10,
     },

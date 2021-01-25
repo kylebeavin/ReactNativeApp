@@ -23,7 +23,7 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
 
           {/* Card Title */}
           <View>
-            <Text style={styles.cardTitleText}>{item.name}</Text>
+            <Text style={styles.cardTitleText}>{item.account_name}</Text>
           </View>
 
           {/* Status */}
@@ -53,8 +53,8 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
           {/* Notes */}
           <View style={styles.notesContainer}>
             <Text>Notes: </Text>
-            <Text>
-              {/* item.note */}This is a note about the Account.
+            <Text numberOfLines={1}>
+              {item.notes === null || item.notes === "" ? " ..." : item.notes}
             </Text>
           </View>
 
@@ -113,21 +113,6 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
     },
   
-    // //==== Edit Button ===== 
-    // editButtonContainer: {
-    //   position: "absolute",
-    //   right: 10,
-    //   top: 5,
-    //   zIndex: 100
-    // },
-    // editButtonIcon: {
-    //   fontSize: 30,
-    //   color: Colors.SMT_Primary_2,
-    // },
-    // editButtonText: {
-    //   color: Colors.SMT_Primary_2,
-    // },
-  
     //=== Status Styles ====
     statusContainer: {
       marginBottom: 10,
@@ -147,6 +132,7 @@ const styles = StyleSheet.create({
     
     //======= Notes ========
     notesContainer: {
+      width: 210,
       marginBottom: 10,
       flexDirection: "row",
     },

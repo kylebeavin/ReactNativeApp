@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, { useRef, useState} from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
+import Layout from '../../../constants/Layout';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {SMT_User} from '../../../types/index';
 import {Account} from '../../../types/crm';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
@@ -15,25 +15,27 @@ interface Props {
 }
 
 const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
-    const [name, setName] = useState(account.name);
+    const [name, setName] = useState(account.account_name);
     const [email, setEmail] = useState(account.email);
     const [street, setStreet] = useState(account.address_street);
     const [city, setCity] = useState(account.address_city);
     const [state, setState] = useState(account.address_state);
     const [zip, setZip] = useState(account.address_zip);
+    const [notes, setNotes] = useState(account.notes);
     const nameRef = useRef<TextInput>(null);
     const emailRef = useRef<TextInput>(null);
     const streetRef = useRef<TextInput>(null);
     const cityRef = useRef<TextInput>(null);
     const stateRef = useRef<TextInput>(null);
     const zipRef = useRef<TextInput>(null);
+    const notesRef = useRef<TextInput>(null);
 
     const getFormData = async () => {
       const updatedAccount: Account = {
         _id: account._id,
         group_id: "",
         owner_id: account.owner_id,
-        name: name,
+        account_name: name,
         address_street: street,
         address_city: city,
         address_state: state,
@@ -44,13 +46,14 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
         hauling_contract: account.hauling_contract,
         hauling_expiration: account.hauling_expiration,
         stage: account.stage,
+        geo_location: account.geo_location,
         is_active: account.is_active,
         contacts: [],
         conversion: account.conversion,
         national: account.national,
         referral: account.referral,
         referral_group_id: account.referral_group_id,
-        notes: account.notes
+        notes: notes
       }
 
       await useAsyncStorage().getUserAsync()
@@ -156,6 +159,15 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
               onChange={(text) => setZip(text.nativeEvent.text)}
               />
           </View>
+          <View style={[styles.fieldContainer, {marginBottom: 40}]}>
+            <Text style={styles.text}>Notes</Text>
+            <TextInput
+             style={styles.textInput}
+              ref={notesRef}
+              value={notes}
+              onChange={(text) => setNotes(text.nativeEvent.text)}
+              />
+          </View>
         </ScrollView>
         <ModalButtons navigation={navigation} save={() => updateAccount()}/>
       </View>
@@ -164,11 +176,12 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
 const styles = StyleSheet.create({
     form: {
-        marginBottom: 20,
-        padding: 20,
-        borderRadius: 4,
-        backgroundColor: Colors.SMT_Tertiary_1,
-      },
+      maxHeight: Layout.window.height/1.50,
+      marginBottom: 20,
+      padding: 20,
+      borderRadius: 4,
+      backgroundColor: Colors.SMT_Tertiary_1,
+    },
     fieldContainer: {
         marginBottom: 10,
     },

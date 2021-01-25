@@ -12,6 +12,7 @@ import AppCard from '../../../components/Layout/AppCard';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import AppButton from '../../../components/Layout/AppButton';
+import useAsyncStorage from '../../../hooks/useAsyncStorage';
 
 interface Props {
 }
@@ -28,8 +29,12 @@ const AccountScreen: React.FC<Props> = () => {
   }, [isFocused]);
   
   const getAccounts = async () => {
-    fetch(`${Configs.TCMC_URI}/api/accounts`, {
-      headers: await getRequestHeadersAsync().then(header => header)
+    let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id);
+
+    fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
+      headers: await getRequestHeadersAsync().then(header => header),
+      method: "POST",
+      body: JSON.stringify({group_id: grpId}),
     }) // ToDo: get accounts by group id 
       .then((res) => {
         console.log(res.status)        
@@ -65,13 +70,16 @@ const AccountScreen: React.FC<Props> = () => {
 
   const getContactsList = async (account_id: string, index: number) : Promise<Contact[]> => {
     let contacts : Contact[] = [];
-    
+
     await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
       method: "POST",
       body: JSON.stringify({account_id: account_id}),
       headers: await getRequestHeadersAsync().then(header => header)
     })
-    .then((res) => res.json())
+    .then((res) => {
+      console.log(res.status)
+      return res.json()
+    })
     .then((json) => contacts = json.data)
     .catch((err) => console.log(err))
     return contacts;

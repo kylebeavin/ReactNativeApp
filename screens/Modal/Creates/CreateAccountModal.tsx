@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
+import Layout from '../../../constants/Layout';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import {Account} from '../../../types/crm';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
@@ -19,19 +20,21 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zip, setZip] = useState("");
+    const [notes, setNotes] = useState("");
     const nameRef = useRef<TextInput>(null);
     const emailRef = useRef<TextInput>(null);
     const streetRef = useRef<TextInput>(null);
     const cityRef = useRef<TextInput>(null);
     const stateRef = useRef<TextInput>(null);
     const zipRef = useRef<TextInput>(null);
+    const notesRef = useRef<TextInput>(null);
 
     const getFormData = async () => {
       const account: Account = {
         _id: "",
         group_id: "",
         owner_id: "",
-        name: name,
+        account_name: name,
         address_street: street,
         address_city: city,
         address_state: state,
@@ -42,13 +45,14 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
         hauling_contract: false,
         hauling_expiration: "",
         stage: "Lead",
+        geo_location: "",
         is_active: true,
         contacts: [],
         conversion: new Date(),
         national: false,
         referral: false,
         referral_group_id: "",
-        notes: ""
+        notes: notes
       }
 
       await useAsyncStorage().getUserAsync()
@@ -72,7 +76,10 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
               console.log(res.status)
               return res.json()
             })
-            .then(data => data)
+            .then(data => {
+              console.log(data)
+              return data
+            })
             .catch(err => {
               // ToDo: Come up with error handling strategy.
               console.log(err);
@@ -156,6 +163,15 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
               onChange={(text) => setZip(text.nativeEvent.text)}
               />
           </View>
+          <View style={[styles.fieldContainer, {marginBottom: 40}]}>
+            <Text style={styles.text}>Notes</Text>
+            <TextInput
+             style={styles.textInput}
+              ref={notesRef}
+              value={notes}
+              onChange={(text) => setNotes(text.nativeEvent.text)}
+              />
+          </View>
         </ScrollView>
         <ModalButtons navigation={navigation} save={() => postNewAccount()}/>
       </View>
@@ -164,11 +180,12 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
 
 const styles = StyleSheet.create({
     form: {
-        marginBottom: 20,
-        padding: 20,
-        borderRadius: 4,
-        backgroundColor: Colors.SMT_Tertiary_1,
-      },
+      maxHeight: Layout.window.height/1.50,
+      marginBottom: 20,
+      padding: 20,
+      borderRadius: 4,
+      backgroundColor: Colors.SMT_Tertiary_1,
+    },
     fieldContainer: {
         marginBottom: 10,
     },

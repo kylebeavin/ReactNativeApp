@@ -1,7 +1,7 @@
 import React from 'react';
 import { View,StyleSheet,Text, Linking } from 'react-native';
 import Colors from '../../constants/Colors';
-import { Account, Contact } from '../../types';
+import { Account, Contact } from '../../types/crm';
 import AppAddNew from './AppAddNew';
 import AppButton from './AppButton';
 
@@ -27,7 +27,7 @@ const AppCardDrawer: React.FC<Props> = ({navigation, isVisible, contacts, accoun
     return contacts.map((item, index) => (
       <View style={styles.contactCard} key={item._id}>
         <View>
-          <Text style={{ fontWeight: "bold" }}>{item.first_name + " " + item.last_name}</Text>
+          <Text style={{ fontWeight: "bold" }}>{item.first_name}</Text>
           <Text>Role Here</Text>
         </View>
         <View style={styles.buttonContainer}>

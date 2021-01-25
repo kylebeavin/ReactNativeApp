@@ -4,12 +4,13 @@ import { Picker } from '@react-native-picker/picker';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { ContactRole, Status } from '../../../types/enums';
+import { ContactRole, ContactType, Status } from '../../../types/enums';
 import {SMT_User} from '../../../types/index';
 import {Contact} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import Layout from '../../../constants/Layout';
 
 interface Props {
     navigation: any;
@@ -18,8 +19,8 @@ interface Props {
 
 const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
     //#region === Use State Variables ===//
-    const [name, setName] = useState(contact.first_name + " " + contact.last_name);
-    const [role, setRole] = useState(contact.type);
+    const [name, setName] = useState(contact.first_name);
+    const [role, setRole] = useState(ContactType[contact.type.toString()]);
     const [phone, setPhone] = useState(contact.phone);
     const [email, setEmail] = useState(contact.email);
     const [owner, setOwner] = useState(contact.owner_id);
@@ -39,6 +40,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
     //#endregion
 
     useEffect(() => {
+      console.log(role)
+      // setRole(contact.type)
         // Fetch Dropdowns
         const ownerList = getOwnersDropDown();
         ownerList
@@ -49,13 +52,13 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
     }, []);
 
     const getFormData = async () => {
-      let firstName = name.split(" ").slice(0, -1).join(" ");
-      let lastName = name.split(" ").slice(-1).join(" ");
+      // let firstName = name.split(" ").slice(0, -1).join(" ");
+      // let lastName = name.split(" ").slice(-1).join(" ");
 
       const updatedContact: Contact = {
         _id: contact._id,
-        first_name: firstName,
-        last_name: lastName,
+        first_name: name,
+        last_name: contact.last_name,
         type: role,
         account_id: contact.account_id,
         phone: phone,
@@ -132,7 +135,7 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
                   setRole(itemValue.toString())
                 }
               >
-                {Object.values(ContactRole).map((item, index) => {
+                {Object.values(ContactType).map((item, index) => {
                   return (
                     <Picker.Item
                       key={item.toString()}
@@ -211,7 +214,7 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
               </Picker>
             </View>
           </View>
-          <View style={styles.fieldContainer}>
+          <View style={[styles.fieldContainer, {marginBottom: 40}]}>
             <Text style={styles.text}>NOTES</Text>
             <TextInput
               style={styles.textInput}
@@ -229,11 +232,12 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
 
 const styles = StyleSheet.create({
     form: {
-        marginBottom: 20,
-        padding: 20,
-        borderRadius: 4,
-        backgroundColor: Colors.SMT_Tertiary_1,
-      },
+      maxHeight: Layout.window.height/1.50,
+      marginBottom: 20,
+      padding: 20,
+      borderRadius: 4,
+      backgroundColor: Colors.SMT_Tertiary_1,
+    },
     fieldContainer: {
         marginBottom: 10,
     },

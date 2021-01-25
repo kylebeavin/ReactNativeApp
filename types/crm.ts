@@ -1,10 +1,12 @@
 export type Account = {
     _id: string;
     group_id: string;
-    name: string;
+    account_name: string;
     owner_id: string;
+    contacts: Contact[];
     is_active: boolean;
     stage: string;
+    geo_location: string;
     address_street: string;
     address_city: string;
     address_state: string;
@@ -22,7 +24,6 @@ export type Account = {
   
     // UI properties
     drawerIsVisible?: boolean;
-    contacts: Contact[];
   }
   
   export type Contact = {
