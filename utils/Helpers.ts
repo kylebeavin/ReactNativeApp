@@ -1,9 +1,6 @@
-//#region Summary
-// Function: Split string into array then rebuilds it like MM/DD/YYYY
-// Params: takes in a react-native-calendar dateString
-// Returns: Our formatted string for forms
-
+import React, { useContext } from "react";
 import useAsyncStorage from "../hooks/useAsyncStorage";
+import AppContext from "../providers/AppContext";
 import { HttpMethods } from "../types/enums";
 
 //#endregion 
@@ -42,6 +39,7 @@ export const getDateStringsFromDate = (date: Date) : {date: string, time: string
 ///Returns: A Headers object for fetch requests.
 //#endregion
 export const getRequestHeadersAsync = async (method?: HttpMethods) : Promise<Headers> => {
+    //const {token} = useContext(AppContext);
     let headers : Headers = new Headers();
     let token = await useAsyncStorage().getUserAsync().then(user => user.token)
 

@@ -1,89 +1,42 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { StyleSheet, View, ActivityIndicator, FlatList, ScrollView} from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { Account, Contact } from '../../../types/crm';
+import {Account} from '../../../types/crm';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppCard from '../../../components/Layout/AppCard';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import AppButton from '../../../components/Layout/AppButton';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import { useFetch } from '../../../hooks/useFetch';
 
 interface Props {
 }
 
 const AccountScreen: React.FC<Props> = () => {
+  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/accountsBy`, 'POST');
   const navigation = useNavigation();
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [toggle, setToggle] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getAccounts();
-  }, [isFocused]);
-  
-  const getAccounts = async () => {
-    let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id);
-
-    fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
-      headers: await getRequestHeadersAsync().then(header => header),
-      method: "POST",
-      body: JSON.stringify({group_id: grpId}),
-    }) // ToDo: get accounts by group id 
-      .then((res) => {
-        console.log(res.status)        
-        return res.json()
-      })
-      .then((json) => {
-        if (json.data) {
-          json.data.map((account: any) => {
-            account.drawerIsVisible = false,
-            account.contacts = []
-          })
-
-          setAccounts(json.data)
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
-  }
-
-  const onToggleCardDrawer = async ( item: Account, index: number) => {
-    let account = accounts;
-    let contacts : Contact[] = [];
-    account[index].drawerIsVisible = !account[index].drawerIsVisible;
-
-    if (item.drawerIsVisible){
-      contacts = await getContactsList(item._id, index)
-      account[index].contacts = contacts;
+    if (status === "fetched"){
+      getAccounts();
     }
-
-    setAccounts(account);
-    setToggle(!toggle);
-  };
-
-  const getContactsList = async (account_id: string, index: number) : Promise<Contact[]> => {
-    let contacts : Contact[] = [];
-
-    await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
-      method: "POST",
-      body: JSON.stringify({account_id: account_id}),
-      headers: await getRequestHeadersAsync().then(header => header)
+  }, [isFocused, status]);
+  
+  const getAccounts = () => {
+    data.data.map((account: Account) => {
+      account.drawerIsVisible = false,
+      account.contacts = []
     })
-    .then((res) => {
-      console.log(res.status)
-      return res.json()
-    })
-    .then((json) => contacts = json.data)
-    .catch((err) => console.log(err))
-    return contacts;
-  };
+    setAccounts(data.data)
+    setIsLoading(false);
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -131,7 +84,8 @@ const AccountScreen: React.FC<Props> = () => {
                   key={i}
                   item={u}
                   index={i}
-                  onToggleCardDrawer={onToggleCardDrawer}></AppCard>
+                  >
+                  </AppCard>
               );})
           )}
         </View>

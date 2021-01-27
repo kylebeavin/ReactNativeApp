@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { StyleSheet, View, Text, Image, TextInput } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -7,38 +7,25 @@ import Configs from "../../constants/Configs";
 import useAsyncStorage from "../../hooks/useAsyncStorage";
 import Layout from "../../constants/Layout";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import AppContext from "../../providers/AppContext";
 
 interface Props {
   isSignedIn: () => void;
 }
 
 const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("kyle.beavin@tcmcllc.com");
+  const [password, setPassword] = useState("password123");
 
+  const {setAppState, setIsAuth,setToken,setGrpId} = useContext(AppContext);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
   const signIn = async () => {
-    // ToDo: Add Fields for user to sign in instead of being hard coded and auth header valu
-    // let user = {
-    //   _id: "5ff8c3303f6f737827204033",
-    //   is_active: true,
-    //   created: "2021-01-07T16:10:19.786Z",
-    //   email: "kyle.beavin@fakemail.com",
-    //   password: "$2b$08$RD1.U.Ul6Z1mT5d4lEAXZulrSWYgAHW5cJDRywNIQaIoMJdp6ynNq",
-    //   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZjhjMzMwM2Y2ZjczNzgyNzIwNDAzMyIsImlhdCI6MTYxMDM4MjI3MH0.5GcoYe_72nHrUqWT1y_9DqZB-M-Hjd3nPplE6mbNL6k",
-    //   image: "profileURL",
-    //   first_name: "test",
-    //   last_name: "user",
-    //   role: "admin",
-    //   group_id: "00"
-    // }
     let user = {
       email: email,
       password: password,
     }
-
     await fetch(`${Configs.TCMC_URI}/api/login`, {
       method: "POST",
       body: JSON.stringify(user),
@@ -49,22 +36,10 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
         return res.json()
       })
       .then(json => {
-        console.log(json)
-        if (json.token) {
-          console.log(json.data)
-          useAsyncStorage().setUserAsync({
-            _id: json.data._id,
-            is_active: json.data.is_active,
-            created: json.data.created,
-            email: json.data.email,
-            password: json.data.password,
-            token: json.data.token,
-            image: json.data.image,
-            first_name: json.data.first_name,
-            last_name: json.data.last_name,
-            role: json.data.role,
-            group_id: json.data.group_id,
-          });
+        if (json.auth) {
+          setToken(json.data.token);
+          setGrpId(json.data.group_id);
+          setIsAuth(true);
         }
 
         return json

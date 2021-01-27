@@ -1,22 +1,28 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import { Account } from '../../types/crm';
 import AppButton from './AppButton';
 import AppCardDrawer from './AppCardDrawer';
 import AppEditBtn from './AppEditBtn';
 
 interface Props {
-    item: any;
+    item: Account;
     index: number
-    onToggleCardDrawer?: (item: any, index: number) => Promise<void>;
 }
 
-const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
+const AppCard: React.FC<Props> = ({item, index}) => {
     const navigation = useNavigation();
+    const [showDrawer, setShowDrawer] = useState(item.drawerIsVisible);
+
+    const onToggleCardDrawer = () => {
+      setShowDrawer(!showDrawer)
+    };
+
     return (
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={showDrawer ? { paddingHorizontal: 20 } : {paddingHorizontal: 20, marginBottom: 20}}>
         <View style={styles.card}>
 
           <AppEditBtn item={item} />
@@ -75,22 +81,25 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
             </View>
             <View style={{...styles.cardButton, ...{marginLeft: 10,marginRight: 0}}}>
               <AppButton
-                title={item.drawerIsVisible ? "Hide" : "Contacts"}
+                title={showDrawer ? "Hide" : "Contacts"}
                 icon={{ type: "MaterialIcons", name: "people" }}
-                onPress={() => (onToggleCardDrawer===undefined ? null : onToggleCardDrawer(item, index))}
+                onPress={onToggleCardDrawer}
                 backgroundColor={Colors.SMT_Secondary_2}
-                outlined={!item.drawerIsVisible}
+                outlined={!showDrawer}
               />
             </View>
           </View>
         </View>
 
-        <AppCardDrawer
+        { showDrawer &&
+          <AppCardDrawer
           navigation={navigation}
-          isVisible={item.drawerIsVisible!}
+          isVisible={showDrawer}
           contacts={item.contacts}
           account={item}
-        />
+          />
+        }
+
       </View>
     );
 }

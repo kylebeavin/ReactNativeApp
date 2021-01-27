@@ -24,8 +24,11 @@ function Navigation() {
       //linking={LinkingConfiguration} ToDo: Will need to implement some linking config later on.
       ref={navigationRef}
       >
+      <StatusBar translucent backgroundColor="transparent" />
+
       <View style={{flex: 1}}>
         <RootNavigator />
+      <StatusBar translucent backgroundColor="transparent" />
       </View>
     </NavigationContainer>
   );
@@ -34,7 +37,8 @@ function Navigation() {
 function RootNavigator() {
 
   return (
-    <Stack.Navigator headerMode="screen"
+    <Stack.Navigator 
+      //headerMode="screen"
       screenOptions={{
         cardStyle: { backgroundColor: Colors.TCMC_White },
         header: ({ scene, previous, navigation }) => {
@@ -45,9 +49,13 @@ function RootNavigator() {
               : options.title !== undefined
               ? options.title
               : scene.route.name;
-        
+              
           return (
+            <View>
+
             <HeaderContainer />
+            <StatusBar translucent backgroundColor="transparent" />
+            </View>
           );
         }
         
@@ -55,7 +63,7 @@ function RootNavigator() {
     >
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: "Oops!" }} />
-      <Stack.Screen
+      <Stack.Screen 
         name="Modal"
         component={Modal}
         options={{

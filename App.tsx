@@ -1,24 +1,53 @@
 import 'react-native-gesture-handler';
-import React, { useEffect,useState } from "react";
-import { StatusBar } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React, {useEffect, useState} from 'react';
+import {StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import useAsyncStorage from "./hooks/useAsyncStorage";
-import useCachedResources from "./hooks/useCachedResources";
-import Navigation from "./navigation";
-import AuthScreen from "./screens/Authentication/AuthScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Configs from "./constants/Configs";
+import useAsyncStorage from './hooks/useAsyncStorage';
+import useCachedResources from './hooks/useCachedResources';
+import Navigation from './navigation';
+import AuthScreen from './screens/Authentication/AuthScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Configs from './constants/Configs';
 import ToastProvider from './providers/ToastProvider';
 import AppToast from './components/Layout/AppToast';
+import {SMT_User} from './types';
+import AppContext from './providers/AppContext';
+
+const initialAppState: SMT_User = {
+  _id: '',
+  first_name: '',
+  last_name: '',
+  email: '',
+  password: '',
+  token: '',
+  image: '',
+  role: '',
+  group_id: '',
+  created: '',
+  is_active: false,
+};
 
 export default function App() {
-  const [isAuth, setIsAuth] = useState(false);
   const isLoadingComplete = useCachedResources();
+  const [isAuth, setIsAuth] = useState(false);
+  const [token, setToken] = useState("");
+  const [grpId, setGrpId] = useState("");
+  const [appState, setAppState] = useState(initialAppState);
 
+  const userSettings = {
+    appState: initialAppState,
+    isAuth: isAuth,
+    token: token,
+    grpId: grpId,
+    setToken,
+    setGrpId,
+    setAppState,
+    setIsAuth,
+  };
   useEffect(() => {
     // Clear User from Device
-    // AsyncStorage.clear()
+    AsyncStorage.clear();
 
     // Set My User for Testing
     // AsyncStorage.setItem('@smt_user', JSON.stringify({
@@ -35,33 +64,35 @@ export default function App() {
     //   group_id: "00"
     // }))
 
-    isSignedIn()
+    //isSignedIn()
   }, []);
 
   const isSignedIn = async () => {
-    await useAsyncStorage().getUserAsync()
-            .then((user) => {
-              // ToDo: Need to validate token by calling the server
-              if (user !== null)
-                user.token === null ? setIsAuth(false) : setIsAuth(true);
-            });
+    //setIsAuth(true);
+    //   await useAsyncStorage().getUserAsync()
+    //           .then((user) => {
+    //             // ToDo: Need to validate token by calling the server
+    //             if (user !== null)
+    //               user.token === null ? setIsAuth(false) : setIsAuth(true);
+    //           });
   };
 
   if (!isLoadingComplete) {
     return null;
-  }
-
-  if (!isAuth) {
-    return <AuthScreen isSignedIn={() => isSignedIn()} />;
-
   } else {
     return (
       <SafeAreaProvider>
-        <ToastProvider>
-          <AppToast />
-          <Navigation />
-          <StatusBar translucent backgroundColor="transparent" />
-        </ToastProvider>
+        <AppContext.Provider value={userSettings}>
+          <ToastProvider>
+            <StatusBar translucent backgroundColor="transparent" />
+            <AppToast />
+            {!isAuth ?
+              <AuthScreen isSignedIn={() => isSignedIn()} />
+              :
+              <Navigation />
+            }
+          </ToastProvider>
+        </AppContext.Provider>
       </SafeAreaProvider>
     );
   }

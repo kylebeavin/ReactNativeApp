@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View,StyleSheet,Text, Linking } from 'react-native';
 import Colors from '../../constants/Colors';
+import Configs from '../../constants/Configs';
+import { useFetch } from '../../hooks/useFetch';
 import { Account, Contact } from '../../types/crm';
 import AppAddNew from './AppAddNew';
 import AppButton from './AppButton';
@@ -12,7 +14,21 @@ interface Props {
     account: Account;
 }
 
-const AppCardDrawer: React.FC<Props> = ({navigation, isVisible, contacts, account}) => {
+const AppCardDrawer: React.FC<Props> = ({navigation, isVisible, account}) => {
+  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/contactsBy`, "POST", {account_id: account._id});
+  const [isLoading, setIsLoading] = useState(true);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  
+  useEffect(() => {
+    if (status === "fetched") {
+      getContacts();
+    }
+  }, [status]);
+
+  const getContacts = () => {
+    setContacts(data.data);
+    setIsLoading(false);
+  }
 
   const openMailTo = (email: string) => {
     Linking.canOpenURL("mailto:").then(data => data ? Linking.openURL(`mailto:${email}`): null);

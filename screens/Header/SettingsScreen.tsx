@@ -1,24 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import Colors from '../../constants/Colors';
 import SettingsList from '../../components/Settings/SettingsList';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import { useNavigation } from '@react-navigation/native';
+import AppContext from '../../providers/AppContext';
 
 interface Props {
 }
 
 const SettingsScreen: React.FC<Props> = (props) => {
+  const {setIsAuth, setToken, setGrpId} = useContext(AppContext);
   const navigation = useNavigation();
 
   const logOut = async () => {
-    console.log("hi")
-    await useAsyncStorage().clearUserAsync().then(success => {
-      if (success) {
-        navigation.navigate("AuthScreen");
-      }
-    })
+    setToken("");
+    setGrpId([]);
+    setIsAuth(false);
   }
 
   return (

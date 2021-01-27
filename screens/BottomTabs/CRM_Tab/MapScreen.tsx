@@ -19,6 +19,7 @@ interface Props {
 }
 
 const MapScreen: React.FC<Props> = ({navigation}) => {
+  
   const [isLoading, setLoading] = useState(true);
   const [locations, setLocations] = useState<Location[]>([]);
   const isFocused = useIsFocused();
