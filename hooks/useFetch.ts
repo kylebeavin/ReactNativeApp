@@ -4,7 +4,7 @@ import AppContext from '../providers/AppContext';
 export const useFetch = (url:string, method: string, body?: {}) => {
     const {token, grpId} = useContext(AppContext);
     const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
-    let bodyObj = !body ? {group_id: grpId[0]} : body; 
+	let bodyObj = !body ? {group_id: grpId[0]} : body; 
 
 	const initialState = {
 		status: 'idle',
@@ -24,15 +24,15 @@ export const useFetch = (url:string, method: string, body?: {}) => {
 				return state;
 		}
 	}, initialState);
-
 	useEffect(() => {
 		let cancelRequest = false;
 		if (!url) return;
 
 		const fetchData = async () => {
 			dispatch({ type: 'FETCHING' });
+			
 			if (cache.current[url]) {
-				const data = cache.current[url];
+				const data = cache.current[url + body];
 				dispatch({ type: 'FETCHED', payload: data });
 			} else {
 				try {
@@ -41,9 +41,9 @@ export const useFetch = (url:string, method: string, body?: {}) => {
                         method: method,
                         body: JSON.stringify(bodyObj)
                     });
-                    console.log('\n',"Response from: ", url,'\n', "Status Code: ", response.status,'\n', "Body Sent: ",bodyObj)
-                    const data = await response.json();
-					cache.current[url] = data;
+                    //console.log('\n',"Response from: ", url,'\n', "Status Code: ", response.status,'\n', "Body Sent: ",bodyObj)
+					const data = await response.json();
+					cache.current[url + body] = data;
 					if (cancelRequest) return;
 					dispatch({ type: 'FETCHED', payload: data });
 				} catch (error) {
@@ -58,7 +58,7 @@ export const useFetch = (url:string, method: string, body?: {}) => {
 		return function cleanup() {
 			cancelRequest = true;
 		};
-	}, [url]);
+	}, [url, body]);
 
 	return state;
 };

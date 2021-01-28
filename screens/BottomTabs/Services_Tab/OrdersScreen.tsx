@@ -21,6 +21,7 @@ import {Picker} from '@react-native-picker/picker';
 import {SortOrdersList} from '../../../types/enums';
 import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppAddNew from '../../../components/Layout/AppAddNew';
+import { useFetch } from '../../../hooks/useFetch';
 
 interface Props {
   navigation: any;
@@ -28,7 +29,8 @@ interface Props {
 
 const ServicesScreen: React.FC<Props> = ({navigation}) => {
   //#region Use State Variables
-  const [isLoading, setLoading] = useState(true);
+  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/ordersBy`, 'POST');
+  const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const isFocused = useIsFocused();
 
@@ -36,30 +38,14 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
   //#endregion
 
   useEffect(() => {
-    getOrders();
-  }, [isFocused]);
+    if (status === "fetched") {
+      getOrders();
+    }
+  }, [isFocused, status]);
 
   const getOrders = async () => {
-    let grpId = await useAsyncStorage()
-      .getUserAsync()
-      .then((user) => user.group_id);
-
-    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
-      headers: await getRequestHeadersAsync().then((header) => header),
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-    })
-      .then((res) => {
-        console.log(res.status)
-        return res.json()
-      })
-      .then((json) => {
-        if (json.data) {
-          setOrders(json.data);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+    setOrders(data.data);
+    setIsLoading(false);
   };
 
   return (
