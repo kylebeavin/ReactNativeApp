@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, SegmentedControlIOSComponent } from 'react-native';
 
@@ -11,8 +11,10 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Colors from '../../../constants/Colors';
 import { Picker } from '@react-native-picker/picker';
 import ModalButtons from '../ModalButtons';
+import AppContext from '../../../providers/AppContext';
 
 const CreateDemoModal = () => {
+    const {grpId, token} = useContext(AppContext);
     const navigation = useNavigation();
 
     //#region Use State Variables
@@ -32,13 +34,12 @@ const CreateDemoModal = () => {
     }, []);
 
     const getAccountsDropDown = async () : Promise<Account[]> => {
-        let grpId = await useAsyncStorage().getUserAsync().then((user) => user.group_id);
           let accounts : Account[] = [];
           
           await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
             method: "POST",
             body: JSON.stringify({group_id: grpId}),
-            headers: await getRequestHeadersAsync().then(header => header)
+            headers: {"Content-Type": "application/json","x-access-token": token},
           })
           .then((res) => {
             console.log(res.status)
@@ -66,7 +67,7 @@ const CreateDemoModal = () => {
         const data = await fetch(`${Configs.TCMC_URI}/api/demos`, {
             method: "POST",
             body: JSON.stringify(demo),
-            headers: await getRequestHeadersAsync().then(header => header)
+            headers: {"Content-Type": "application/json","x-access-token": token},
             })
             .then(res => {
               console.log(res.status)
@@ -109,7 +110,7 @@ const CreateDemoModal = () => {
                               return (
                                   <Picker.Item
                                     key={item._id}
-                                    label={item.name}
+                                    label={item.account_name}
                                     value={item._id}
                                   />
                               );

@@ -10,19 +10,20 @@ import AppEditBtn from './AppEditBtn';
 
 interface Props {
     item: Account;
-    index: number
+    index: number;
+    onToggleCardDrawer?: (item: any, index: number) => Promise<void>;
 }
 
-const AppCard: React.FC<Props> = ({item, index}) => {
+const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
     const navigation = useNavigation();
-    const [showDrawer, setShowDrawer] = useState(item.drawerIsVisible);
+    //const [showDrawer, setShowDrawer] = useState(item.drawerIsVisible);
 
-    const onToggleCardDrawer = () => {
-      setShowDrawer(!showDrawer)
-    };
+    // const onToggleCardDrawer = () => {
+    //   setShowDrawer(!showDrawer)
+    // };
 
     return (
-        <View style={showDrawer ? { paddingHorizontal: 20 } : {paddingHorizontal: 20, marginBottom: 20}}>
+        <View style={{ paddingHorizontal: 20 }}>
         <View style={styles.card}>
 
           <AppEditBtn item={item} />
@@ -81,24 +82,22 @@ const AppCard: React.FC<Props> = ({item, index}) => {
             </View>
             <View style={{...styles.cardButton, ...{marginLeft: 10,marginRight: 0}}}>
               <AppButton
-                title={showDrawer ? "Hide" : "Contacts"}
+                title={item.drawerIsVisible ? "Hide" : "Contacts"}
                 icon={{ type: "MaterialIcons", name: "people" }}
-                onPress={onToggleCardDrawer}
+                onPress={() => (onToggleCardDrawer===undefined ? null : onToggleCardDrawer(item, index))}
                 backgroundColor={Colors.SMT_Secondary_2}
-                outlined={!showDrawer}
+                outlined={!item.drawerIsVisible}
               />
             </View>
           </View>
         </View>
 
-        { showDrawer &&
           <AppCardDrawer
           navigation={navigation}
-          isVisible={showDrawer}
+          isVisible={item.drawerIsVisible}
           contacts={item.contacts}
           account={item}
           />
-        }
 
       </View>
     );

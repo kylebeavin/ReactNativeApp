@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { exp } from "react-native-reanimated";
 import useAsyncStorage from "../hooks/useAsyncStorage";
 import AppContext from "../providers/AppContext";
 import { HttpMethods } from "../types/enums";
@@ -67,6 +68,44 @@ export function formatDate(date: Date) {
 
     return [year, month, day].join('-');
 }
+
+export const isValidEmail = (email: string) : {isValid: boolean, message: string} => {
+    let validationObject = {isValid: false, message: "Required"};
+    const expression : RegExp = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+
+    if (!email) {
+        return validationObject;
+    } else if (email === "" || email.length === 0) {
+        validationObject.message = "Email Required";
+        return validationObject;
+    } else {
+        let test = expression.test(email)
+        if (test) {
+            validationObject.isValid = true;
+            validationObject.message = "Email is Valid";
+            return validationObject;
+        } 
+
+        validationObject.message = "Email is Not Valid";
+        return validationObject;
+    }
+}
+
+export const isValidPassword = (password: string) : {isValid: boolean, message: string} => {
+    let validationObject = {isValid: false, message: "Required"};
+
+    if (!password) {
+        return validationObject;
+    } else if (password === "" || password.length === 0) {
+        validationObject.message = "Password Required";
+        return validationObject;
+    } else {
+        // ToDo: Add Password validation logic here. (length, character, capital)
+        validationObject.isValid = true;
+        validationObject.message = "Password is Valid";
+        return validationObject;
+    }
+};
 
 // import * as validator from "validator";
 // import { UserAuth } from "../custom-types";

@@ -1,10 +1,11 @@
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import AppContext from '../../../providers/AppContext';
 import {Account} from '../../../types/crm';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
@@ -14,6 +15,8 @@ interface Props {
 }
 
 const CreateAccountModal: React.FC<Props> = ({navigation}) => {
+    const {grpId, token} = useContext(AppContext);
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [street, setStreet] = useState("");
@@ -32,7 +35,7 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
     const getFormData = async () => {
       const account: Account = {
         _id: "",
-        group_id: "",
+        group_id: grpId,
         owner_id: "",
         account_name: name,
         address_street: street,
@@ -55,12 +58,6 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
         notes: notes
       }
 
-      await useAsyncStorage().getUserAsync()
-              .then(data => {
-                account.owner_id = data._id,
-                account.group_id = data.group_id 
-              });
-
       return account;
     }
     
@@ -69,8 +66,8 @@ const CreateAccountModal: React.FC<Props> = ({navigation}) => {
         
         const data = await fetch(`${Configs.TCMC_URI}/api/accounts`, {
             method: "POST",
+            headers: {"Content-Type": "application/json","x-access-token": token},
             body: JSON.stringify(account),
-            headers: await getRequestHeadersAsync().then(header => header)
             })
             .then(res => {
               console.log(res.status)

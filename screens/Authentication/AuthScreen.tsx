@@ -1,23 +1,38 @@
-import React, { useContext, useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, TextInput } from "react-native";
+import React, {useContext, useRef, useState} from 'react';
+import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 
-import Colors from "../../constants/Colors";
-import AppButton from "../../components/Layout/AppButton";
-import Configs from "../../constants/Configs";
-import useAsyncStorage from "../../hooks/useAsyncStorage";
-import Layout from "../../constants/Layout";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import AppContext from "../../providers/AppContext";
+import Colors from '../../constants/Colors';
+import AppButton from '../../components/Layout/AppButton';
+import Configs from '../../constants/Configs';
+import useAsyncStorage from '../../hooks/useAsyncStorage';
+import Layout from '../../constants/Layout';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AppContext from '../../providers/AppContext';
+import {isValidEmail, isValidPassword} from '../../utils/Helpers';
+import { ToastContext } from '../../providers/ToastProvider';
 
 interface Props {
   isSignedIn: () => void;
 }
 
 const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
-  const [email, setEmail] = useState("kyle.beavin@tcmcllc.com");
-  const [password, setPassword] = useState("password123");
+  // const [email, setEmail] = useState("kyle.beavin@tcmcllc.com");
+  // const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState('');
+  const [emailValidator, setEmailValidator] = useState({
+    isValid: false,
+    message: '',
+    isVisible: false,
+  });
+  const [password, setPassword] = useState('');
+  const [passwordValidator, setPasswordValidator] = useState({
+    isValid: false,
+    message: '',
+    isVisible: false,
+  });
+  const {setId, setIsAuth, setToken, setGrpId} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
 
-  const {setAppState, setIsAuth,setToken,setGrpId} = useContext(AppContext);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
@@ -25,26 +40,34 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
     let user = {
       email: email,
       password: password,
-    }
+    };
+
     await fetch(`${Configs.TCMC_URI}/api/login`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(user),
-      headers: {"Content-type": "application/json; charset=UTF-8"}
+      headers: {'Content-type': 'application/json; charset=UTF-8'},
     })
-      .then(res => {
-        console.log(res.status)
-        return res.json()
+      .then((res) => {
+        console.log(res.status);
+        return res.json();
       })
-      .then(json => {
+      .then((json) => {
         if (json.auth) {
+          show({message: json.message})
           setToken(json.data.token);
           setGrpId(json.data.group_id);
+          setId(json.data._id);
           setIsAuth(true);
+        } else {
+          show({message: "Login Failed."}) // ToDo: need to update response json to provide message. 
+          return json;
         }
-
-        return json
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        show({message: "Error: " + err.message})
+      });
+
     isSignedIn();
   };
 
@@ -62,24 +85,69 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
         <View style={styles.fieldContainer}>
           <Text style={styles.text}>Email Address</Text>
           <TextInput
-           style={styles.textInput}
-           ref={emailRef}
-           value={email}
-           onChange={(text) => setEmail(text.nativeEvent.text)}
-           returnKeyType="next"
-           onSubmitEditing={() => passwordRef.current!.focus()}
-           blurOnSubmit={false}
+            style={styles.textInput}
+            ref={emailRef}
+            value={email}
+            onChange={(text) => setEmail(text.nativeEvent.text)}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              let test = isValidEmail(email.trim());
+              if (test.isValid) {
+                setEmailValidator({
+                  isValid: true,
+                  message: test.message,
+                  isVisible: false,
+                });
+                return passwordRef.current!.focus();
+              } else {
+                setEmailValidator({
+                  isValid: false,
+                  message: test.message,
+                  isVisible: true,
+                });
+                return emailRef.current!.focus();
+              }
+            }}
+            blurOnSubmit={false}
           />
+          <View style={emailValidator.isVisible ? {opacity: 1} : {opacity: 0}}>
+            <Text style={{color: Colors.SMT_Primary_1}}>
+              {emailValidator.message}
+            </Text>
+          </View>
         </View>
+
         <View style={[styles.fieldContainer, {marginBottom: 20}]}>
           <Text style={styles.text}>Password</Text>
           <TextInput
-           style={styles.textInput}
-           secureTextEntry={true}
-           ref={passwordRef}
-           value={password}
-           onChange={(text) => setPassword(text.nativeEvent.text)}
+            style={styles.textInput}
+            secureTextEntry={true}
+            ref={passwordRef}
+            value={password}
+            onChange={(text) => setPassword(text.nativeEvent.text)}
+            onSubmitEditing={() => {
+              let test = isValidPassword(password.trim());
+              if (test.isValid) {
+                setPasswordValidator({
+                  isValid: true,
+                  message: test.message,
+                  isVisible: false,
+                });
+              } else {
+                setPasswordValidator({
+                  isValid: false,
+                  message: test.message,
+                  isVisible: true,
+                });
+              }
+            }}
           />
+          <View
+            style={passwordValidator.isVisible ? {opacity: 1} : {opacity: 0}}>
+            <Text style={{color: Colors.SMT_Primary_1}}>
+              {passwordValidator.message}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -87,12 +155,23 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
             <AppButton title="Log In" onPress={() => signIn()} />
           </View>
         </View>
-
       </View>
 
       <View style={styles.needHelpContainer}>
-        <Text style={{marginLeft: 15}}>Need Help? <Text style={{color: Colors.SMT_Secondary_2_Light_1, borderBottomColor: Colors.SMT_Secondary_2_Light_1, textDecorationLine: "underline"}}>Contact Us</Text></Text>
-        <View style={{flex: 1,alignItems: "flex-end"}}><Ionicons style={styles.helpIcon} name="ios-help-circle" /></View>
+        <Text style={{marginLeft: 15}}>
+          Need Help?{' '}
+          <Text
+            style={{
+              color: Colors.SMT_Secondary_2_Light_1,
+              borderBottomColor: Colors.SMT_Secondary_2_Light_1,
+              textDecorationLine: 'underline',
+            }}>
+            Contact Us
+          </Text>
+        </Text>
+        <View style={{flex: 1, alignItems: 'flex-end'}}>
+          <Ionicons style={styles.helpIcon} name="ios-help-circle" />
+        </View>
       </View>
     </View>
   );
@@ -101,7 +180,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
 const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   button: {
     width: 100,
@@ -124,7 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: Colors.SMT_Secondary_1,
     marginTop: -20,
-    marginRight: 20
+    marginRight: 20,
   },
   image: {
     width: '70%',
@@ -141,8 +220,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   needHelpContainer: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
   },
   title: {
     fontWeight: 'bold',

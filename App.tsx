@@ -33,6 +33,7 @@ export default function App() {
   const [isAuth, setIsAuth] = useState(false);
   const [token, setToken] = useState("");
   const [grpId, setGrpId] = useState("");
+  const [id, setId] = useState("");
   const [appState, setAppState] = useState(initialAppState);
 
   const userSettings = {
@@ -40,10 +41,12 @@ export default function App() {
     isAuth: isAuth,
     token: token,
     grpId: grpId,
+    id: id,
     setToken,
     setGrpId,
     setAppState,
     setIsAuth,
+    setId
   };
   useEffect(() => {
     // Clear User from Device

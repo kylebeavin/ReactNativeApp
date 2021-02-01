@@ -1,10 +1,11 @@
-import React, { useRef, useState} from 'react';
+import React, { useContext, useRef, useState} from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import AppContext from '../../../providers/AppContext';
 import {Account} from '../../../types/crm';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
+  const {grpId, token} = useContext(AppContext);
     const [name, setName] = useState(account.account_name);
     const [email, setEmail] = useState(account.email);
     const [street, setStreet] = useState(account.address_street);
@@ -33,7 +35,7 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
     const getFormData = async () => {
       const updatedAccount: Account = {
         _id: account._id,
-        group_id: "",
+        group_id: grpId,
         owner_id: account.owner_id,
         account_name: name,
         address_street: street,
@@ -55,11 +57,6 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
         referral_group_id: account.referral_group_id,
         notes: notes
       }
-
-      await useAsyncStorage().getUserAsync()
-              .then(user => {
-                updatedAccount.group_id = user.group_id 
-              });
       
       return updatedAccount;
     }
@@ -69,7 +66,7 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
         const data = await fetch(`${Configs.TCMC_URI}/api/accounts/${updatedAccount._id}`, {
             method: "PUT",
             body: JSON.stringify(updatedAccount),
-            headers: await getRequestHeadersAsync().then(header => header)
+            headers: {"Content-Type": "application/json","x-access-token": token},
             })
             .then(res => {
               console.log(res.status)

@@ -4,7 +4,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import {Account} from '../../../types/crm';
+import {Account, Contact} from '../../../types/crm';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
@@ -12,31 +12,81 @@ import AppCard from '../../../components/Layout/AppCard';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import AppButton from '../../../components/Layout/AppButton';
 import { useFetch } from '../../../hooks/useFetch';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
 }
 
 const AccountScreen: React.FC<Props> = () => {
-  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/accountsBy`, 'POST');
+  console.log("I have been re-rendered")
+  //const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/accountsBy`, 'POST');
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const {grpId, token} = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const isFocused = useIsFocused();
+  const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
-    if (status === "fetched"){
       getAccounts();
-    }
-  }, [isFocused, status]);
+  }, [isFocused]);
   
-  const getAccounts = () => {
-    data.data.map((account: Account) => {
-      account.drawerIsVisible = false,
-      account.contacts = []
-    })
-    setAccounts(data.data)
-    setIsLoading(false);
+  const getAccounts = async () => {
+    fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
+      headers: {"Content-Type": "application/json", "x-access-token": token},
+      method: "POST",
+      body: JSON.stringify({group_id: grpId}),
+    }) // ToDo: get accounts by group id 
+      .then((res) => {
+        console.log(res.status)        
+        return res.json()
+      })
+      .then((json) => {
+        if (json.data) {
+          json.data.map((account: any) => {
+            account.drawerIsVisible = false,
+            account.contacts = []
+          })
+
+          setAccounts(json.data)
+        }
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }
+
+  const onToggleCardDrawer = async ( item: Account, index: number) => {
+    let account = accounts;
+    let contacts : Contact[] = [];
+    account[index].drawerIsVisible = !account[index].drawerIsVisible;
+
+    if (item.drawerIsVisible){
+      contacts = await getContactsList(item._id, index)
+      account[index].contacts = contacts;
+    }
+
+    setAccounts(account);
+    setToggle(!toggle);
+  };
+
+  const getContactsList = async (account_id: string, index: number) : Promise<Contact[]> => {
+    let contacts : Contact[] = [];
+
+    await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
+      method: "POST",
+      body: JSON.stringify({account_id: account_id}),
+      headers: {"Content-Type": "application/json", "x-access-token": token}
+    })
+    .then((res) => {
+      console.log(res.status)
+      return res.json()
+    })
+    .then((json) => contacts = json.data)
+    .catch((err) => console.log(err))
+    return contacts;
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -84,6 +134,7 @@ const AccountScreen: React.FC<Props> = () => {
                   key={i}
                   item={u}
                   index={i}
+                  onToggleCardDrawer={onToggleCardDrawer}
                   >
                   </AppCard>
               );})

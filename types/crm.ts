@@ -23,7 +23,7 @@ export type Account = {
     notes: string;
   
     // UI properties
-    drawerIsVisible?: boolean;
+    drawerIsVisible: boolean;
   }
   
   export type Contact = {

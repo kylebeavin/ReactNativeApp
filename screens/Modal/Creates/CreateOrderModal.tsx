@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
@@ -17,13 +17,14 @@ import AppButton from '../../../components/Layout/AppButton';
 import Layout from '../../../constants/Layout';
 import { Order } from '../../../types/service';
 import { Days, Services, ServicesPer } from '../../../types/enums';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
 }
 
 const CreateOrderModal: React.FC<Props> = () => {
     const navigation = useNavigation();
-
+    const {grpId, token} = useContext(AppContext);
     //#region === Use State Variables ===//
     const [account, setAccount] = useState("");
     const [group, setGroup] = useState("");
@@ -73,14 +74,13 @@ const CreateOrderModal: React.FC<Props> = () => {
     }, []);
 
     const getAccountsDropDown = async (): Promise<Account[]> => {
-      let grpId = await useAsyncStorage().getUserAsync().then((user) => user.group_id);
       let accountsList: Account[] = [];
 
       await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
         method: "POST",
         body: JSON.stringify({group_id: grpId}),
-        headers: await getRequestHeadersAsync().then(header => header)
-        })
+        headers: {"Content-Type": "application/json","x-access-token": token},
+      })
         .then((res) => {
           console.log(res.status)
           return res.json()
@@ -90,32 +90,31 @@ const CreateOrderModal: React.FC<Props> = () => {
       return accountsList;
     };
 
-    const getSMT_User = async (): Promise<SMT_User> => {
-      return await useAsyncStorage().getUserAsync()
-        .then((user) => {
-          let smtUser: SMT_User = {
-            _id: user._id,
-            is_active: user.is_active,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            created: user.created,
-            email: user.email,
-            group_id: user.group_id,
-            role: user.role,
-            password: user.password,
-            image: user.image,
-            token: user.token
-          }
-          return smtUser;
-        });
-    };
+    // const getSMT_User = async (): Promise<SMT_User> => {
+    //   return await useAsyncStorage().getUserAsync()
+    //     .then((user) => {
+    //       let smtUser: SMT_User = {
+    //         _id: user._id,
+    //         is_active: user.is_active,
+    //         first_name: user.first_name,
+    //         last_name: user.last_name,
+    //         created: user.created,
+    //         email: user.email,
+    //         group_id: user.group_id,
+    //         role: user.role,
+    //         password: user.password,
+    //         image: user.image,
+    //         token: user.token
+    //       }
+    //       return smtUser;
+    //     });
+    // };
 
     const getFormData = async () => {
-      let user : SMT_User = await getSMT_User();
       const order: Order = {
         _id: "",
         account_id: account, 
-        group_id: user.group_id,
+        group_id: grpId,
         is_recurring: isRecurring,
         services: services,
         service_frequency: serviceFrequency,
@@ -140,10 +139,10 @@ const CreateOrderModal: React.FC<Props> = () => {
       await fetch(`${Configs.TCMC_URI}/api/orders`, {
         method: "POST",
         body: JSON.stringify(order),
-        headers: await getRequestHeadersAsync().then(header => header)
-        })
+        headers: {"Content-Type": "application/json","x-access-token": token},
+      })
         .then((res) => {
-          console.log(res.status + "========this")
+          console.log(res.status)
           return res.json()
         })
         .then((data) => {
@@ -164,7 +163,7 @@ const CreateOrderModal: React.FC<Props> = () => {
     };
     const openEndDateCalendar = (show: boolean) => {
         setShowEndDateCalendar(show);
-      };
+    };
 
     return (
       <View>

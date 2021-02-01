@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState} from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {Calendar} from 'react-native-calendars';
@@ -13,12 +13,14 @@ import {formatDateString, getRequestHeadersAsync} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/Layout/AppButton';
 import Layout from '../../../constants/Layout';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
     navigation: any;
 }
 
 const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
+    const {id, grpId, token} = useContext(AppContext);
     //#region === Use State Variables ===//
     const [name, setName] = useState("");
     const [date, setDate] = useState("");
@@ -58,14 +60,13 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
     }, []);
 
     const getAccountsDropDown = async (): Promise<Account[]> => {
-      let grpId = await useAsyncStorage().getUserAsync().then((user) => user.group_id);
       let accountsList: Account[] = [];
 
       await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
         method: "POST",
         body: JSON.stringify({group_id: grpId}),
-        headers: await getRequestHeadersAsync().then(header => header)
-        })
+        headers: {"Content-Type": "application/json","x-access-token": token},
+      })
         .then((res) => {
           console.log(res.status)
           return res.json()
@@ -79,8 +80,8 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
       await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
         method: "POST",
         body: JSON.stringify({account_id: accountId}),
-        headers: await getRequestHeadersAsync().then(header => header)
-        })
+        headers: {"Content-Type": "application/json","x-access-token": token},
+      })
         .then((res) => {
           console.log(res.status)
           return res.json()
@@ -89,25 +90,25 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
         .catch((err) => console.log(err));
     };
 
-    const getSMT_User = async (): Promise<SMT_User> => {
-      return await useAsyncStorage().getUserAsync()
-        .then((user) => {
-          let smtUser: SMT_User = {
-            _id: user._id,
-            is_active: user.is_active,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            created: user.created,
-            email: user.email,
-            group_id: user.group_id,
-            role: user.role,
-            password: user.password,
-            image: user.image,
-            token: user.token
-          }
-          return smtUser;
-        });
-    };
+    // const getSMT_User = async (): Promise<SMT_User> => {
+    //   return await useAsyncStorage().getUserAsync()
+    //     .then((user) => {
+    //       let smtUser: SMT_User = {
+    //         _id: user._id,
+    //         is_active: user.is_active,
+    //         first_name: user.first_name,
+    //         last_name: user.last_name,
+    //         created: user.created,
+    //         email: user.email,
+    //         group_id: user.group_id,
+    //         role: user.role,
+    //         password: user.password,
+    //         image: user.image,
+    //         token: user.token
+    //       }
+    //       return smtUser;
+    //     });
+    // };
 
     const getMeetingTime = () : Date => {
       let dateArr = date.split("/");
@@ -118,13 +119,12 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
     }
 
     const getFormData = async () => {
-      let user : SMT_User = await getSMT_User();
       const meeting: Meeting = {
         _id: "",
-        group_id: user.group_id,
+        group_id: grpId,
         account_id: account, 
         contact_id: contact,
-        owner_id: user._id,
+        owner_id: id,
         title: name,
         address_street: street,
         address_city: city,
@@ -143,8 +143,8 @@ const CreateMeetingModal: React.FC<Props> = ({navigation}) => {
       await fetch(`${Configs.TCMC_URI}/api/meetings`, {
         method: "POST",
         body: JSON.stringify(meeting),
-        headers: await getRequestHeadersAsync().then(header => header)
-        })
+        headers: {"Content-Type": "application/json","x-access-token": token},
+      })
         .then((res) => {
           console.log(res.status)
           return res.json()

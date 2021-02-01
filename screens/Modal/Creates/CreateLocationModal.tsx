@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState} from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 
@@ -8,12 +8,14 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import {Location, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
     navigation: any;
 }
 
 const CreateLocationModal: React.FC<Props> = ({navigation}) => {
+    const {grpId, token} = useContext(AppContext);
     //#region === Use State Variables ===//
     const [name, setName] = useState("");
     const [street, setStreet] = useState("");
@@ -46,12 +48,11 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
     }, []);
 
     const getAccountsDropDown = async (): Promise<Account[]> => {
-      let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id);
       let accountsList: Account[] = [];
 
       await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
         method: "POST",
-        headers: await getRequestHeadersAsync().then(header => header),
+        headers: {"Content-Type": "application/json","x-access-token": token},
         body: JSON.stringify({group_id: grpId})
       })
         .then((res) => {
@@ -64,8 +65,6 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
     };
 
     const getFormData = async () => {
-      let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id);
-
       const location: Location = {
         _id: "",
         account_id: account, 
@@ -87,7 +86,7 @@ const CreateLocationModal: React.FC<Props> = ({navigation}) => {
         await fetch(`${Configs.TCMC_URI}/api/locations`, {
             method: "POST",
             body: JSON.stringify(location),
-            headers: await getRequestHeadersAsync().then(header => header)
+            headers: {"Content-Type": "application/json","x-access-token": token},
             })
             .then(res => {
               console.log(res.status)
