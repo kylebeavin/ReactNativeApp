@@ -1,11 +1,10 @@
-//#region Summary
-// Function: Split string into array then rebuilds it like MM/DD/YYYY
-// Params: takes in a react-native-calendar dateString
-// Returns: Our formatted string for forms
-
+import React, { useContext } from "react";
+import { exp } from "react-native-reanimated";
 import useAsyncStorage from "../hooks/useAsyncStorage";
+import AppContext from "../providers/AppContext";
 import { HttpMethods } from "../types/enums";
 
+//#region Summary
 //#endregion 
 export const formatDateString = (oldString: string) :string => {
     let newString :string = "";
@@ -42,6 +41,7 @@ export const getDateStringsFromDate = (date: Date) : {date: string, time: string
 ///Returns: A Headers object for fetch requests.
 //#endregion
 export const getRequestHeadersAsync = async (method?: HttpMethods) : Promise<Headers> => {
+    //const {token} = useContext(AppContext);
     let headers : Headers = new Headers();
     let token = await useAsyncStorage().getUserAsync().then(user => user.token)
 
@@ -69,6 +69,78 @@ export function formatDate(date: Date) {
 
     return [year, month, day].join('-');
 }
+
+export const isValidEmail = (email: string) : {isValid: boolean, message: string} => {
+    let validationObject = {isValid: false, message: "Required"};
+    const expression : RegExp = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+
+    if (!email) {
+        return validationObject;
+    } else if (email === "" || email.length === 0) {
+        validationObject.message = "Email Required";
+        return validationObject;
+    } else {
+        let test = expression.test(email)
+        if (test) {
+            validationObject.isValid = true;
+            validationObject.message = "Email is Valid";
+            return validationObject;
+        } 
+
+        validationObject.message = "Email is Not Valid";
+        return validationObject;
+    }
+}
+
+export const isValidPassword = (password: string) : {isValid: boolean, message: string} => {
+    let validationObject = {isValid: false, message: "Required"};
+
+    if (!password) {
+        return validationObject;
+    } else if (password === "" || password.length === 0) {
+        validationObject.message = "Password Required";
+        return validationObject;
+    } else {
+        // ToDo: Add Password validation logic here. (length, character, capital)
+        validationObject.isValid = true;
+        validationObject.message = "Password is Valid";
+        return validationObject;
+    }
+};
+
+//#region Summary
+///Function: Check an HTTP status code whether it is a success code or not.
+///Params: code - number representing HTTP status code.
+///Returns: True if the code is registered as a success code.
+//#endregion
+export const isSuccessStatusCode = (code: number) :boolean => {
+    let success: boolean = false;
+
+    switch (code) {
+        case 200:
+            success = true;
+            break;
+        case 201:
+            success = true;
+            break
+        case 202:
+            success = true;
+            break;
+        case 203:
+            success = true;
+            break;
+        case 204:
+            success = true;
+            break;
+        case 205:
+            success = true;
+            break;
+        default:
+            success = false;
+    }
+
+    return success;
+};
 
 // import * as validator from "validator";
 // import { UserAuth } from "../custom-types";

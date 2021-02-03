@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -19,61 +19,56 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import {formatDate, getRequestHeadersAsync} from '../../../utils/Helpers';
 import {Services} from '../../../types/enums';
 import { Calendar } from 'react-native-calendars';
+import { useFetch } from '../../../hooks/useFetch';
+import AppContext from '../../../providers/AppContext';
+import AppList from '../../../components/Layout/AppList';
 
 interface Props {
 }
 
 const ServicesScreen: React.FC<Props> = () => {
-  const navigation = useNavigation();
   //#region
-  const [isLoading, setLoading] = useState(true);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const {grpId} = useContext(AppContext);
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
-
+  const [greaterThanDate, setGreaterThanDate] = useState(formatDate(new Date()));
+  const [lessThanDate, setLessThanDate] = useState(formatDate(new Date()));
   const [sortItem, setSortItem] = useState('');
   const [selectedDate, setSelectedDate] = useState({[formatDate(new Date())]: {selected: true}})
   //#endregion
 
   
   useEffect(() => {
-    // let today = setTodaysDate()
-    
-    getOrders(Object.keys(selectedDate)[0]);
-  }, [isFocused]);
+    setTodaysDate();
+  }, []);
 
   const setTodaysDate = () => {
     let today = formatDate(new Date());
+    let lessThan = new Date(); 
+    lessThan.setDate(lessThan.getDate() + 1);
+    
+    // Mark The Calendar with this state.
     setSelectedDate({[today]: {selected: true}})
-    return today;
+
+    // Set our queries less than date.
+    setLessThanDate(formatDate(lessThan));
+
+    // Set todays date in state to make api call.
+    setGreaterThanDate(today);
   }
 
-  const getOrders = async (dateString?: string) => {
-    let grpId = await useAsyncStorage()
-      .getUserAsync()
-      .then((user) => user.group_id);
-
-    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
-      headers: await getRequestHeadersAsync().then((header) => header),
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId, start_date: dateString}),
-    })
-      .then((res) => {
-        console.log(res.status)
-        return res.json()
-      })
-      .then((json) => {
-        if (json.data) {
-          console.log(json)
-          setOrders(json.data);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
-  };
-
   const onDayPress = (day: any) => {
+    let lessThan = new Date(day.dateString);
+    lessThan.setDate(lessThan.getDate() + 1);
+
+    // Mark The Calendar with this state.
     setSelectedDate({[day.dateString]: {selected: true}});
-    getOrders(day.dateString);
+    
+    // Set our queries less than date.
+    setLessThanDate(lessThan.setDate(lessThan.getDate() + 1).toString());
+
+    // Set todays date in state to make api call.
+    setGreaterThanDate(day.dateString);
   };
 
   return (
@@ -179,54 +174,17 @@ const ServicesScreen: React.FC<Props> = () => {
           <AppTitle title="Service Events"/>
         </View>
 
-        {isLoading ? (
-          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-        ) : (
-          <View>
-            {/* OrdersCalendar List */}
-            {orders.length === 0 ? (
-              // <AppEmptyCard entity="orders" modal="CreateOrderModal" />
-              <View>
-                <Text style={{textAlign: 'center'}}>No Orders on this date.</Text>
-              </View>
-            ) : (
-              orders.map((u, i) => {
-                return (
-                  <View style={styles.card} key={i}>
-
-                    <View style={styles.title}>
-                      <Text style={styles.titleText}>Name Here - {u.services}</Text>
-                      <Text style={styles.titleText}>Status:
-                        <Text style={{fontWeight: 'bold', color: Colors.SMT_Secondary_2_Light_1}}> On Schedule</Text>
-                      </Text>
-                    </View>
-
-                    <View style={styles.btnContainer}>
-                      <AppButton title="Details" onPress={() => console.log("Details")} />
-                    </View>
-                  </View>
-                );
-              })
-            )}
-          </View>
-        )}
+        <AppList
+          url={`${Configs.TCMC_URI}/api/ordersBy`}
+          httpMethod="POST"
+          params={{group_id: grpId[0], start_date: {$gte: greaterThanDate,$lt: lessThanDate}}}
+        />
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
-    borderRadius: 3,
-    padding: 5,
-  },
   calendar: {
   },
   calendarContainer: {
@@ -268,16 +226,6 @@ const styles = StyleSheet.create({
   },
   statusInvalid: {
     color: Colors.Info,
-  },
-  title: {
-    marginBottom: 10,
-  },
-  titleText: {
-    fontWeight: 'bold',
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   content: {
     marginBottom: 10,

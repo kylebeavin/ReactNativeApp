@@ -1,38 +1,42 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { StyleSheet, View, ActivityIndicator, FlatList, ScrollView} from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { Account, Contact } from '../../../types/crm';
+import {Account, Contact} from '../../../types/crm';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppCard from '../../../components/Layout/AppCard';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import AppButton from '../../../components/Layout/AppButton';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import { useFetch } from '../../../hooks/useFetch';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
 }
 
 const AccountScreen: React.FC<Props> = () => {
+  //#region State Variables
+  //const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/accountsBy`, 'POST');
   const navigation = useNavigation();
-  const [isLoading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
+  const {grpId, token} = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [toggle, setToggle] = useState(false);
-  const isFocused = useIsFocused();
-
+  //#endregion
+  
   useEffect(() => {
-    getAccounts();
+      getAccounts();
   }, [isFocused]);
   
   const getAccounts = async () => {
-    let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id);
-
     fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
-      headers: await getRequestHeadersAsync().then(header => header),
+      headers: {"Content-Type": "application/json", "x-access-token": token},
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
     }) // ToDo: get accounts by group id 
@@ -51,7 +55,7 @@ const AccountScreen: React.FC<Props> = () => {
         }
       })
       .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }
 
   const onToggleCardDrawer = async ( item: Account, index: number) => {
@@ -74,7 +78,7 @@ const AccountScreen: React.FC<Props> = () => {
     await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
       method: "POST",
       body: JSON.stringify({account_id: account_id}),
-      headers: await getRequestHeadersAsync().then(header => header)
+      headers: {"Content-Type": "application/json", "x-access-token": token}
     })
     .then((res) => {
       console.log(res.status)
@@ -131,7 +135,9 @@ const AccountScreen: React.FC<Props> = () => {
                   key={i}
                   item={u}
                   index={i}
-                  onToggleCardDrawer={onToggleCardDrawer}></AppCard>
+                  onToggleCardDrawer={onToggleCardDrawer}
+                  >
+                  </AppCard>
               );})
           )}
         </View>

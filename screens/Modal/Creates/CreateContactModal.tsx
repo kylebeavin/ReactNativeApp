@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState} from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -11,6 +11,7 @@ import ModalButtons from '../ModalButtons';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import Layout from '../../../constants/Layout';
+import AppContext from '../../../providers/AppContext';
 
 interface Props {
     navigation: any;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
+    const {grpId, token} = useContext(AppContext);
     //#region === Use State Variables ===//
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
@@ -74,13 +76,12 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
     };
 
     const getOwnersDropDown = async () : Promise<SMT_User[]> => {
-      let grpId = await useAsyncStorage().getUserAsync().then((user) => user.group_id);
         let userList : SMT_User[] = [];
         
         await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
           method: "POST",
           body: JSON.stringify({group_id: grpId}),
-          headers: await getRequestHeadersAsync().then(header => header)
+          headers: {"Content-Type": "application/json","x-access-token": token},
         })
         .then((res) => {
           console.log(res.status)
@@ -98,7 +99,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         const data = await fetch(`${Configs.TCMC_URI}/api/contacts`, {
             method: "POST",
             body: JSON.stringify(contact),
-            headers: await getRequestHeadersAsync().then(header => header)
+            headers: {"Content-Type": "application/json","x-access-token": token},
             })
             .then(res => {
               console.log(res.status)

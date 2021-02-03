@@ -25,7 +25,7 @@ interface Props {
 }
 
 const ServicesScreen: React.FC<Props> = ({navigation}) => {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const isFocused = useIsFocused();
 
@@ -38,26 +38,27 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
   }, [isFocused]);
 
   const getOrders = async () => {
-    let grpId = await useAsyncStorage()
-      .getUserAsync()
-      .then((user) => user.group_id);
+    // let grpId = await useAsyncStorage()
+    //   .getUserAsync()
+    //   .then((user) => user.group_id);
 
-    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
-      headers: await getRequestHeadersAsync().then((header) => header),
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-    })
-      .then((res) => {
-        console.log(res.status)
-        return res.json()
-      })
-      .then((json) => {
-        if (json.data) {
-          setOrders(json.data);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+    // await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
+    //   headers: await getRequestHeadersAsync().then((header) => header),
+    //   method: 'POST',
+    //   body: JSON.stringify({group_id: grpId}),
+    // })
+    //   .then((res) => {
+    //     console.log(res.status)
+    //     return res.json()
+    //   })
+    //   .then((json) => {
+    //     if (json.data) {
+    //       setOrders(json.data);
+    //     }
+    //   })
+    //   .catch((err) => console.log(err))
+    //   .finally(() => setLoading(false));
+    setIsLoading(false);
   };
 
   return (
@@ -142,7 +143,8 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
           <View>
             {/* Agreements List */}
             {orders.length === 0 ? (
-              <AppEmptyCard entity="orders" modal="CreateOrderModal" />
+              // <AppEmptyCard entity="orders" modal="CreateOrderModal" />
+              <View><Text>Under Development</Text></View>
             ) : (
               orders.map((u, i) => {
                 return (

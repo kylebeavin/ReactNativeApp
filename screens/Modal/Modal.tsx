@@ -71,7 +71,7 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         {renderSwitch(route.params.modal, route.params.item)}
 
       </View>
-
+      
     </View>
   );
 };

@@ -13,39 +13,27 @@ import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import { useIsFocused } from '@react-navigation/native';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import { useFetch } from '../../../hooks/useFetch';
 
 interface Props {
     navigation: any;
 }
 
 const MapScreen: React.FC<Props> = ({navigation}) => {
-  const [isLoading, setLoading] = useState(true);
+  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/locationsBy`, 'POST');
+  const [isLoading, setIsLoading] = useState(true);
   const [locations, setLocations] = useState<Location[]>([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getLocations();
-  }, [isFocused]);
+    if (status === "fetched") {
+      getLocations();
+    }
+  }, [isFocused, status]);
 
   const getLocations = async () => {
-    let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id)
-    
-    await fetch(`${Configs.TCMC_URI}/api/locationsBy`, {
-      headers: await getRequestHeadersAsync().then(header => header),
-      method: "POST",
-      body: JSON.stringify({group_id: grpId}),
-    })
-    .then(res => {
-      console.log(res.status)
-      return res.json()
-    })
-    .then(json => {
-      if (json.data){
-        setLocations(json.data)
-      }
-    })
-    .catch((err) => console.log(err))
-    .finally(() => setLoading(false));
+    setLocations(data.data);
+    setIsLoading(false);
   }
 
   return (

@@ -1,6 +1,6 @@
 export type Account = {
     _id: string;
-    group_id: string;
+    group_id: string[];
     account_name: string;
     owner_id: string;
     contacts: Contact[];
@@ -18,12 +18,13 @@ export type Account = {
     hauling_contract: boolean;
     hauling_expiration: string;
     national: boolean;
+    owner_name: string;
     referral: boolean;
     referral_group_id: string;
-    notes: string;
+    notes: string[];
   
     // UI properties
-    drawerIsVisible?: boolean;
+    drawerIsVisible: boolean;
   }
   
   export type Contact = {

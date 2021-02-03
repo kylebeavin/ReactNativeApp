@@ -1,20 +1,27 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import { Account } from '../../types/crm';
 import AppButton from './AppButton';
 import AppCardDrawer from './AppCardDrawer';
 import AppEditBtn from './AppEditBtn';
 
 interface Props {
-    item: any;
-    index: number
+    item: Account;
+    index: number;
     onToggleCardDrawer?: (item: any, index: number) => Promise<void>;
 }
 
 const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
     const navigation = useNavigation();
+    //const [showDrawer, setShowDrawer] = useState(item.drawerIsVisible);
+
+    // const onToggleCardDrawer = () => {
+    //   setShowDrawer(!showDrawer)
+    // };
+
     return (
         <View style={{ paddingHorizontal: 20 }}>
         <View style={styles.card}>
@@ -47,14 +54,14 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
           <View style={styles.assignedToContainer}>
             <Text>Assigned to: </Text>
 
-            <Text>{item.owner_id}</Text>
+            <Text>{item.owner_name}</Text>
           </View>
 
           {/* Notes */}
           <View style={styles.notesContainer}>
             <Text>Notes: </Text>
             <Text numberOfLines={1}>
-              {item.notes === null || item.notes === "" ? " ..." : item.notes}
+              {item.notes === null || item.notes === [""] ? " ..." : item.notes}
             </Text>
           </View>
 
@@ -85,12 +92,13 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
           </View>
         </View>
 
-        <AppCardDrawer
+          <AppCardDrawer
           navigation={navigation}
-          isVisible={item.drawerIsVisible!}
+          isVisible={item.drawerIsVisible}
           contacts={item.contacts}
           account={item}
-        />
+          />
+
       </View>
     );
 }

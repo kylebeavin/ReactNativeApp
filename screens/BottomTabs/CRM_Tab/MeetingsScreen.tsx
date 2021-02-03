@@ -12,39 +12,27 @@ import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
+import { useFetch } from '../../../hooks/useFetch';
 
 interface Props {
   navigation: any;
 }
 
 const MeetingsScreen: React.FC<Props> = ({navigation}) => {
-  const [isLoading, setLoading] = useState(true);
+  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/meetingsBy`, 'POST');
+  const [isLoading, setIsLoading] = useState(true);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const isFocused = useIsFocused();
   
   useEffect(() => {
-    getMeetings();
-  }, [isFocused]);
+    if (status === "fetched") {
+      getMeetings();
+    }
+  }, [isFocused,status]);
 
   const getMeetings = async () => {
-    let grpId = await useAsyncStorage().getUserAsync().then(user => user.group_id)
-
-    await fetch(`${Configs.TCMC_URI}/api/meetingsBy`, {
-      headers: await getRequestHeadersAsync().then(header => header),
-      method: "POST",
-      body: JSON.stringify({group_id: grpId}),
-    })
-    .then(res => {
-      console.log(res.status)
-      return res.json()
-    })
-    .then(json => {
-      if (json.data){
-        setMeetings(json.data)
-      }
-    })
-    .catch((err) => console.log(err))
-    .finally(() => setLoading(false));
+    setMeetings(data.data);
+    setIsLoading(false);
   }
 
   return (

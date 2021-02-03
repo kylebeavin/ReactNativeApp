@@ -12,3 +12,16 @@ export type SMT_User = {
   created: string;
   is_active: boolean;
 };
+
+//=== Validators ===//
+export interface IValidator {
+  isValid: boolean;
+  message: string;
+  isVisible: boolean;
+}
+
+export class Validator implements IValidator {
+  isValid: boolean = false;
+  message: string = "";
+  isVisible: boolean = false;
+}
