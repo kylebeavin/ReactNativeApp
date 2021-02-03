@@ -9,32 +9,36 @@ import Layout from '../../constants/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppContext from '../../providers/AppContext';
 import {isValidEmail, isValidPassword} from '../../utils/Helpers';
-import { ToastContext } from '../../providers/ToastProvider';
+import {ToastContext} from '../../providers/ToastProvider';
 
 interface Props {
   isSignedIn: () => void;
 }
 
 const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
-  // const [email, setEmail] = useState("kyle.beavin@tcmcllc.com");
-  // const [password, setPassword] = useState("password123");
-  const [email, setEmail] = useState('');
+  //#region State Variables
+  const [email, setEmail] = useState('kyle.beavin@tcmcllc.com');
+  const [password, setPassword] = useState('password123');
+  // const [email, setEmail] = useState('');
   const [emailValidator, setEmailValidator] = useState({
     isValid: false,
     message: '',
     isVisible: false,
   });
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
   const [passwordValidator, setPasswordValidator] = useState({
     isValid: false,
     message: '',
     isVisible: false,
   });
-  const {setId, setIsAuth, setToken, setGrpId} = useContext(AppContext);
+  const {setId, setIsAuth, setToken, setGrpId, setDisplayName} = useContext(
+    AppContext,
+  );
   const {show} = useContext(ToastContext);
 
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+  //#endregion
 
   const signIn = async () => {
     let user = {
@@ -47,32 +51,28 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
       body: JSON.stringify(user),
       headers: {'Content-type': 'application/json; charset=UTF-8'},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => {
         if (json.auth) {
-          show({message: json.message})
+          show({message: json.message});
           setToken(json.data.token);
           setGrpId(json.data.group_id);
           setId(json.data._id);
+          setDisplayName(json.data.display_name);
           setIsAuth(true);
         } else {
-          show({message: "Login Failed."}) // ToDo: need to update response json to provide message. 
-          return json;
+          show({message: 'Login Failed.'}); // ToDo: need to update response json to provide message.
         }
       })
-      .catch((err) => {
-        console.log(err)
-        show({message: "Error: " + err.message})
-      });
+      .catch((err) => show({message: 'Error: ' + err.message}));
 
     isSignedIn();
   };
 
   return (
     <View style={styles.container}>
+
+      {/* Image Container */}
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
@@ -82,6 +82,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
       </View>
 
       <View style={styles.form}>
+        {/* Email Address */}
         <View style={styles.fieldContainer}>
           <Text style={styles.text}>Email Address</Text>
           <TextInput
@@ -117,6 +118,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
           </View>
         </View>
 
+        {/* Password */}
         <View style={[styles.fieldContainer, {marginBottom: 20}]}>
           <Text style={styles.text}>Password</Text>
           <TextInput
@@ -150,6 +152,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
           </View>
         </View>
 
+        {/* Buttons */}
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <AppButton title="Log In" onPress={() => signIn()} />
@@ -157,6 +160,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
         </View>
       </View>
 
+      {/* Need Help? */}
       <View style={styles.needHelpContainer}>
         <Text style={{marginLeft: 15}}>
           Need Help?{' '}
@@ -173,6 +177,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
           <Ionicons style={styles.helpIcon} name="ios-help-circle" />
         </View>
       </View>
+    
     </View>
   );
 };

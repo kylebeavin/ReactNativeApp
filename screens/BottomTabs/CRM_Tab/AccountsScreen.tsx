@@ -20,7 +20,7 @@ interface Props {
 }
 
 const AccountScreen: React.FC<Props> = () => {
-  console.log("I have been re-rendered")
+  //#region State Variables
   //const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/accountsBy`, 'POST');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -28,7 +28,8 @@ const AccountScreen: React.FC<Props> = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [toggle, setToggle] = useState(false);
-
+  //#endregion
+  
   useEffect(() => {
       getAccounts();
   }, [isFocused]);

@@ -54,14 +54,14 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
           <View style={styles.assignedToContainer}>
             <Text>Assigned to: </Text>
 
-            <Text>{item.owner_id}</Text>
+            <Text>{item.owner_name}</Text>
           </View>
 
           {/* Notes */}
           <View style={styles.notesContainer}>
             <Text>Notes: </Text>
             <Text numberOfLines={1}>
-              {item.notes === null || item.notes === "" ? " ..." : item.notes}
+              {item.notes === null || item.notes === [""] ? " ..." : item.notes}
             </Text>
           </View>
 

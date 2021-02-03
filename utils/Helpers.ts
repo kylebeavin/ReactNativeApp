@@ -4,6 +4,7 @@ import useAsyncStorage from "../hooks/useAsyncStorage";
 import AppContext from "../providers/AppContext";
 import { HttpMethods } from "../types/enums";
 
+//#region Summary
 //#endregion 
 export const formatDateString = (oldString: string) :string => {
     let newString :string = "";
@@ -105,6 +106,40 @@ export const isValidPassword = (password: string) : {isValid: boolean, message: 
         validationObject.message = "Password is Valid";
         return validationObject;
     }
+};
+
+//#region Summary
+///Function: Check an HTTP status code whether it is a success code or not.
+///Params: code - number representing HTTP status code.
+///Returns: True if the code is registered as a success code.
+//#endregion
+export const isSuccessStatusCode = (code: number) :boolean => {
+    let success: boolean = false;
+
+    switch (code) {
+        case 200:
+            success = true;
+            break;
+        case 201:
+            success = true;
+            break
+        case 202:
+            success = true;
+            break;
+        case 203:
+            success = true;
+            break;
+        case 204:
+            success = true;
+            break;
+        case 205:
+            success = true;
+            break;
+        default:
+            success = false;
+    }
+
+    return success;
 };
 
 // import * as validator from "validator";

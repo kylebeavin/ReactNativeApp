@@ -14,37 +14,23 @@ import AppToast from './components/Layout/AppToast';
 import {SMT_User} from './types';
 import AppContext from './providers/AppContext';
 
-const initialAppState: SMT_User = {
-  _id: '',
-  first_name: '',
-  last_name: '',
-  email: '',
-  password: '',
-  token: '',
-  image: '',
-  role: '',
-  group_id: '',
-  created: '',
-  is_active: false,
-};
-
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const [isAuth, setIsAuth] = useState(false);
   const [token, setToken] = useState("");
   const [grpId, setGrpId] = useState("");
   const [id, setId] = useState("");
-  const [appState, setAppState] = useState(initialAppState);
+  const [displayName, setDisplayName] = useState("");
 
   const userSettings = {
-    appState: initialAppState,
     isAuth: isAuth,
     token: token,
     grpId: grpId,
     id: id,
+    displayName: displayName,
+    setDisplayName,
     setToken,
     setGrpId,
-    setAppState,
     setIsAuth,
     setId
   };
