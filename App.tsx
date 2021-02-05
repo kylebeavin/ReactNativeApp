@@ -34,6 +34,7 @@ export default function App() {
     setIsAuth,
     setId
   };
+  
   useEffect(() => {
     // Clear User from Device
     AsyncStorage.clear();
