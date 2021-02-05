@@ -1,8 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import {useNavigation} from '@react-navigation/native';
 
+import useForm from '../../../hooks/useForm';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
@@ -10,9 +10,11 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {Account} from '../../../types/crm';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
+import AppTextInput from '../../../components/Layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
+import {isRequired, isEmail} from '../../../utils/Validators';
 
-const defaultValues = {
+const formValues = {
   name: '',
   email: '',
   street: '',
@@ -22,7 +24,7 @@ const defaultValues = {
   notes: ''
 }
 
-const defaultErrors = {
+const formErrors = {
   name: [],
   email: [],
   street: [],
@@ -32,15 +34,15 @@ const defaultErrors = {
   notes: []
 }
 
-const isRequired = (val: string) => {
-  return val.length > 0 ? '' : 'Can not be blank';
-};
-
-const isEmail = (val: string) => {
-  const ai = val.indexOf("@");
-  const gdi = val.split("").reduce((acc:any, char: any, i: any) => char === "." ? i : acc, 0);
-  return ai > -1 && gdi > ai ? "" : "Must be an email";
-};
+const formValidations = {
+  name: [isRequired],
+  email: [isRequired, isEmail],
+  street: [isRequired],
+  city: [isRequired],
+  state: [isRequired],
+  zip: [isRequired],
+  notes: []
+}
 
 const CreateAccountModal = () => {
   //#region State Variables
@@ -48,17 +50,8 @@ const CreateAccountModal = () => {
 
   const {grpId, token, id, displayName} = useContext(AppContext);
   const {show} = useContext(ToastContext);
-  
-  const [values, setValues] = useState(defaultValues);
-  const [errors, setErrors] = useState(defaultErrors);
-  
-  // const nameRef = useRef<TextInput>(null);
-  // const emailRef = useRef<TextInput>(null);
-  // const streetRef = useRef<TextInput>(null);
-  // const cityRef = useRef<TextInput>(null);
-  // const stateRef = useRef<TextInput>(null);
-  // const zipRef = useRef<TextInput>(null);
-  // const notesRef = useRef<TextInput>(null);
+  const {handleChange,handleSubmit,values,errors,setErrors}= useForm(formValues, formErrors, formValidations, postNewAccount);
+  // ToDo: Figure out how to useRefs to set focus onSubmit of TextInput.
   //#endregion
 
   const getFormData = async () => {
@@ -92,28 +85,24 @@ const CreateAccountModal = () => {
     return account;
   };
 
-  const postNewAccount = async () => {
+  async function postNewAccount() {
     const account = await getFormData();
     
-    if (false){
-      await fetch(`${Configs.TCMC_URI}/api/accounts`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'x-access-token': token},
-        body: JSON.stringify(account),
+    await fetch(`${Configs.TCMC_URI}/api/accounts`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify(account),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (isSuccessStatusCode(data.status)) {
+          show({message: data.message});
+          navigation.navigate('AccountsScreen');
+        } else {
+          show({message: data.message});
+        }
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (isSuccessStatusCode(data.status)) {
-            show({message: data.message});
-            navigation.navigate('AccountsScreen');
-          } else {
-            show({message: data.message});
-          }
-        })
-        .catch((err) => show({message: 'Error: ' + err.message}));
-    } else {
-      show({message: "Validation error."});
-    }
+      .catch((err) => show({message: 'Error: ' + err.message}));
   };
 
   return (
@@ -125,13 +114,7 @@ const CreateAccountModal = () => {
           label="Name"
           name="name"
           value={values.name}
-          onChange={(val) => {
-            const name = val;
-            setValues((prev) => ({
-              ...prev,
-              name,
-            }))
-          }}
+          onChange={(val) => handleChange("name", val)}
           validations={[isRequired]}
           errors={errors.name}
           setErrors={setErrors}
@@ -142,13 +125,7 @@ const CreateAccountModal = () => {
           label="Email"
           name="email"
           value={values.email}
-          onChange={(val) => {
-            const email = val;
-            setValues((prev) => ({
-              ...prev,
-              email,
-            }))
-          }}
+          onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
           errors={errors.email}
           setErrors={setErrors}
@@ -159,13 +136,7 @@ const CreateAccountModal = () => {
           label="Street"
           name="street"
           value={values.street}
-          onChange={(val) => {
-            const street = val;
-            setValues((prev) => ({
-              ...prev,
-              street,
-            }))
-          }}
+          onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
           errors={errors.street}
           setErrors={setErrors}
@@ -176,13 +147,7 @@ const CreateAccountModal = () => {
           label="City"
           name="city"
           value={values.city}
-          onChange={(val) => {
-            const city = val;
-            setValues((prev) => ({
-              ...prev,
-              city,
-            }))
-          }}
+          onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
           errors={errors.city}
           setErrors={setErrors}
@@ -193,13 +158,7 @@ const CreateAccountModal = () => {
           label="State"
           name="state"
           value={values.state}
-          onChange={(val) => {
-            const state = val;
-            setValues((prev) => ({
-              ...prev,
-              state,
-            }))
-          }}
+          onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
           errors={errors.state}
           setErrors={setErrors}
@@ -210,13 +169,7 @@ const CreateAccountModal = () => {
           label="Zip"
           name="zip"
           value={values.zip}
-          onChange={(val) => {
-            const zip = val;
-            setValues((prev) => ({
-              ...prev,
-              zip,
-            }))
-          }}
+          onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
           errors={errors.zip}
           setErrors={setErrors}
@@ -228,13 +181,7 @@ const CreateAccountModal = () => {
           label="Notes"
           name="notes"
           value={values.notes}
-          onChange={(val) => {
-            const notes = val;
-            setValues((prev) => ({
-              ...prev,
-              notes,
-            }))
-          }}
+          onChange={(val) => handleChange('notes', val)}
           validations={[]}
           errors={errors.notes}
           setErrors={setErrors}
@@ -245,7 +192,7 @@ const CreateAccountModal = () => {
       </ScrollView>
 
       {/* Buttons */}
-      <ModalButtons navigation={navigation} save={() => postNewAccount()} />
+      <ModalButtons navigation={navigation} save={handleSubmit} />
     </View>
   );
 };

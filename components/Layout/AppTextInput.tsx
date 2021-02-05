@@ -6,7 +6,7 @@ interface Props {
   label: string;
   name: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (name: string, value: string) => void;
   validations: any;
   errors: any;
   setErrors: any;
@@ -16,7 +16,7 @@ interface Props {
 const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline}) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef(null);
-
+  
   const validate = (validations: any) => {
     setErrors((prev:any) => ({
       ...prev,
@@ -35,7 +35,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
         style={styles.textInput}
         ref={ref}
         value={value}
-        onChange={(e) => onChange(e.nativeEvent.text)}
+        onChange={(e) => onChange(e.nativeEvent.text, name)}
         blurOnSubmit={false}
         onFocus={() => setFocused(true)}
         onBlur={() => {
