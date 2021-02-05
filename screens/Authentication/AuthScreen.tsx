@@ -39,6 +39,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   //#endregion
+  console.log(Configs.TCMC_URI)
 
   const signIn = async () => {
     let user = {
@@ -51,7 +52,10 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
       body: JSON.stringify(user),
       headers: {'Content-type': 'application/json; charset=UTF-8'},
     })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.url)
+        return res.json()
+      })
       .then((json) => {
         if (json.auth) {
           show({message: json.message});

@@ -44,6 +44,7 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
       _id: account._id,
       group_id: grpId,
       owner_id: account.owner_id,
+      owner_name: account.owner_name,
       account_name: name,
       address_street: street,
       address_city: city,

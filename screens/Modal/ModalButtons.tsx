@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors';
 
 interface Props {
     navigation: any;
-    save: () => Promise<any>;
+    save: () => void;
 }
 
 const ModalButtons: React.FC<Props> = (props) => {
