@@ -4,15 +4,13 @@ import {StyleSheet, View, Text, TextInput, ScrollView} from 'react-native';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {Account} from '../../../types/crm';
-import {
-  getRequestHeadersAsync,
-  isSuccessStatusCode,
-} from '../../../utils/Helpers';
+import {isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
+import {isRequired, isEmail} from '../../../utils/Validators';
+import AppTextInput from '../../../components/Layout/AppTextInput';
 
 interface Props {
   navigation: any;
@@ -20,23 +18,47 @@ interface Props {
 }
 
 const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
+  //#region Form Initializers
+  const formValues = {
+    name: account.account_name,
+    email: account.email,
+    street: account.address_street,
+    city: account.address_city,
+    state: account.address_state,
+    zip: account.address_zip,
+    notes: account.notes,
+  };
+
+  const formErrors = {
+    name: [],
+    email: [],
+    street: [],
+    city: [],
+    state: [],
+    zip: [],
+    notes: [],
+  };
+
+  const formValidations = {
+    name: [isRequired],
+    email: [isRequired, isEmail],
+    street: [isRequired],
+    city: [isRequired],
+    state: [isRequired],
+    zip: [isRequired],
+    notes: [],
+  };
+  //#endregion
+
   //#region State Variables
+  const {handleChange, handleSubmit, values, errors, setErrors} = useForm(
+    formValues,
+    formErrors,
+    formValidations,
+    updateAccount,
+  );
   const {show} = useContext(ToastContext);
   const {grpId, token} = useContext(AppContext);
-  const [name, setName] = useState(account.account_name);
-  const [email, setEmail] = useState(account.email);
-  const [street, setStreet] = useState(account.address_street);
-  const [city, setCity] = useState(account.address_city);
-  const [state, setState] = useState(account.address_state);
-  const [zip, setZip] = useState(account.address_zip);
-  const [notes, setNotes] = useState(account.notes);
-  const nameRef = useRef<TextInput>(null);
-  const emailRef = useRef<TextInput>(null);
-  const streetRef = useRef<TextInput>(null);
-  const cityRef = useRef<TextInput>(null);
-  const stateRef = useRef<TextInput>(null);
-  const zipRef = useRef<TextInput>(null);
-  const notesRef = useRef<TextInput>(null);
   //#endregion
 
   const getFormData = async () => {
@@ -45,14 +67,14 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
       group_id: grpId,
       owner_id: account.owner_id,
       owner_name: account.owner_name,
-      account_name: name,
-      address_street: street,
-      address_city: city,
-      address_state: state,
-      address_zip: zip,
+      account_name: values.name,
+      address_street: values.street,
+      address_city: values.city,
+      address_state: values.state,
+      address_zip: values.zip,
       created: account.created,
       demo: account.demo,
-      email: email,
+      email: values.email,
       hauling_contract: account.hauling_contract,
       hauling_expiration: account.hauling_expiration,
       stage: account.stage,
@@ -63,14 +85,14 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
       national: account.national,
       referral: account.referral,
       referral_group_id: account.referral_group_id,
-      notes: notes,
+      notes: values.notes,
       drawerIsVisible: account.drawerIsVisible,
     };
 
     return updatedAccount;
   };
 
-  const updateAccount = async () => {
+  async function updateAccount() {
     const updatedAccount = await getFormData();
     const data = await fetch(`${Configs.TCMC_URI}/api/accounts/`, {
       method: 'PUT',
@@ -94,101 +116,91 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
   return (
     <View>
       <ScrollView style={styles.form}>
+
         {/* Name */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Name</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={nameRef}
-            value={name}
-            onChange={(text) => setName(text.nativeEvent.text)}
-            returnKeyType="next"
-            onSubmitEditing={() => emailRef.current!.focus()}
-            blurOnSubmit={false}
-          />
-        </View>
+        <AppTextInput
+          label="Name"
+          name="name"
+          value={values.name}
+          onChange={(val) => handleChange("name", val)}
+          validations={[isRequired]}
+          errors={errors.name}
+          setErrors={setErrors}
+        />
 
-        {/* Email Address */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Email Address</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={emailRef}
-            value={email}
-            onChange={(text) => setEmail(text.nativeEvent.text)}
-            returnKeyType="next"
-            onSubmitEditing={() => streetRef.current!.focus()}
-            blurOnSubmit={false}
-          />
-        </View>
+        {/* Email */}
+        <AppTextInput
+          label="Email"
+          name="email"
+          value={values.email}
+          onChange={(val) => handleChange('email', val)}
+          validations={[isRequired, isEmail]}
+          errors={errors.email}
+          setErrors={setErrors}
+        />
 
-        {/* Street Address */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Street Address</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={streetRef}
-            value={street}
-            onChange={(text) => setStreet(text.nativeEvent.text)}
-            returnKeyType="next"
-            onSubmitEditing={() => cityRef.current!.focus()}
-            blurOnSubmit={false}
-          />
-        </View>
+        {/* Street */}
+        <AppTextInput
+          label="Street"
+          name="street"
+          value={values.street}
+          onChange={(val) => handleChange('street', val)}
+          validations={[isRequired]}
+          errors={errors.street}
+          setErrors={setErrors}
+        />
 
         {/* City */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>City</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={cityRef}
-            value={city}
-            onChange={(text) => setCity(text.nativeEvent.text)}
-            returnKeyType="next"
-            onSubmitEditing={() => stateRef.current!.focus()}
-            blurOnSubmit={false}
-          />
-        </View>
+        <AppTextInput
+          label="City"
+          name="city"
+          value={values.city}
+          onChange={(val) => handleChange('city', val)}
+          validations={[isRequired]}
+          errors={errors.city}
+          setErrors={setErrors}
+        />
 
         {/* State */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>State</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={stateRef}
-            value={state}
-            onChange={(text) => setState(text.nativeEvent.text)}
-            returnKeyType="next"
-            onSubmitEditing={() => zipRef.current!.focus()}
-            blurOnSubmit={false}
-          />
-        </View>
+        <AppTextInput
+          label="State"
+          name="state"
+          value={values.state}
+          onChange={(val) => handleChange('state', val)}
+          validations={[isRequired]}
+          errors={errors.state}
+          setErrors={setErrors}
+        />
 
         {/* Zip */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Zip</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={zipRef}
-            value={zip}
-            onChange={(text) => setZip(text.nativeEvent.text)}
-          />
-        </View>
+        <AppTextInput
+          label="Zip"
+          name="zip"
+          value={values.zip}
+          onChange={(val) => handleChange('zip', val)}
+          validations={[isRequired]}
+          errors={errors.zip}
+          setErrors={setErrors}
+        />
 
         {/* Notes */}
-        <View style={[styles.fieldContainer, {marginBottom: 40}]}>
-          <Text style={styles.text}>Notes</Text>
-          <TextInput
-            style={styles.textInput}
-            ref={notesRef}
-            value={notes[0]}
-            onChange={(text) => setNotes([text.nativeEvent.text])}
-          />
+        <View style={{marginBottom: 40}}>
+        <AppTextInput
+          label="Notes"
+          name="notes"
+          value={values.notes}
+          onChange={(val) => handleChange('notes', val)}
+          validations={[]}
+          errors={errors.notes}
+          setErrors={setErrors}
+          multiline
+        />
         </View>
+
       </ScrollView>
 
       {/* Buttons */}
-      <ModalButtons navigation={navigation} save={() => updateAccount()} />
+      <ModalButtons navigation={navigation} save={handleSubmit} />
     </View>
   );
 };
@@ -200,20 +212,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
-  },
-  fieldContainer: {
-    marginBottom: 10,
-  },
-  text: {
-    fontWeight: 'bold',
-    color: Colors.SMT_Secondary_1,
-  },
-  textInput: {
-    paddingLeft: 15,
-    paddingVertical: 5,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
-    borderRadius: 3,
   },
 });
 

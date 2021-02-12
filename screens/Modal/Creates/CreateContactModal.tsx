@@ -4,14 +4,14 @@ import { Picker } from '@react-native-picker/picker';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import { ContactRole, ContactType, Status } from '../../../types/enums';
+import { ContactType, Status } from '../../../types/enums';
 import {SMT_User} from '../../../types/index';
 import {Contact, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
+import {isRequired, isEmail} from '../../../utils/Validators';
+import { ToastContext } from '../../../providers/ToastProvider';
 
 interface Props {
     navigation: any;
@@ -19,26 +19,55 @@ interface Props {
 }
 
 const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
+  //#region Form Initializers
+  const formValues = {
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    owner: "",
+    notes: ""
+  }
+  
+  const formErrors = {
+    name: [],
+    email: [],
+    street: [],
+    city: [],
+    state: [],
+    zip: [],
+    notes: []
+  }
+  
+  const formValidations = {
+    name: [isRequired],
+    email: [isRequired, isEmail],
+    street: [isRequired],
+    city: [isRequired],
+    state: [isRequired],
+    zip: [isRequired],
+    notes: []
+  }
+  
+  //#endregion
+
+  //#region === Use State Variables ===//
     const {grpId, token} = useContext(AppContext);
-    //#region === Use State Variables ===//
-    const [name, setName] = useState("");
-    const [role, setRole] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
-    const [owner, setOwner] = useState("");
-    const [status, setStatus] = useState("");
-    const [notes, setNotes] = useState("");
+    const {handleChange,handleSubmit,values,errors,setErrors}= useForm(formValues, formErrors, formValidations, postNewContact);
+    const {show} = useContext(ToastContext);
+
+    // Drop downs
     const [ownerList, setOwnerList] = useState<SMT_User[]>();
     //#endregion
 
     //#region === Mutable Ref Variables ===//
-    const nameRef = useRef<TextInput>(null);
-    const roleRef = useRef<TextInput>(null);
-    const phoneRef = useRef<TextInput>(null);
-    const emailRef = useRef<TextInput>(null);
-    const ownerRef = useRef<TextInput>(null);
-    const statusRef = useRef<TextInput>(null);
-    const notesRef = useRef<TextInput>(null);
+    // const nameRef = useRef<TextInput>(null);
+    // const roleRef = useRef<TextInput>(null);
+    // const phoneRef = useRef<TextInput>(null);
+    // const emailRef = useRef<TextInput>(null);
+    // const ownerRef = useRef<TextInput>(null);
+    // const statusRef = useRef<TextInput>(null);
+    // const notesRef = useRef<TextInput>(null);
     //#endregion
 
     useEffect(() => {
@@ -50,7 +79,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
             setOwnerList(data);
             // Might need to setOwner(account.owner_id); here.
           })
-          .catch((err) => console.log(err));
+          .catch((err) => show({message: err.message}));
 
     }, []);
 
@@ -60,15 +89,15 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
 
       const contact: Contact = {
         _id: "",
-        first_name: name,
+        first_name: values.name,
         last_name: "_",
-        type: role,
+        type: values.role,
         account_id: account._id, // Set id
-        phone: phone,
-        email: email,
-        owner_id: owner,
+        phone: values.phone,
+        email: values.email,
+        owner_id: values.owner,
         created: "",
-        is_active: status === "Active" ? true : false,
+        is_active: values.status === "Active" ? true : false,
         method: "email",
       };
 
