@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -14,37 +14,40 @@ import AppTextInput from '../../../components/Layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
 import {isRequired, isEmail} from '../../../utils/Validators';
 
-const formValues = {
-  name: '',
-  email: '',
-  street: '',
-  city: '',
-  state: '',
-  zip: '',
-  notes: ''
-}
-
-const formErrors = {
-  name: [],
-  email: [],
-  street: [],
-  city: [],
-  state: [],
-  zip: [],
-  notes: []
-}
-
-const formValidations = {
-  name: [isRequired],
-  email: [isRequired, isEmail],
-  street: [isRequired],
-  city: [isRequired],
-  state: [isRequired],
-  zip: [isRequired],
-  notes: []
-}
 
 const CreateAccountModal = () => {
+  //#region Form Initializers
+  const formValues = {
+    name: '',
+    email: '',
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+    notes: ''
+  }
+  
+  const formErrors = {
+    name: [],
+    email: [],
+    street: [],
+    city: [],
+    state: [],
+    zip: [],
+    notes: []
+  }
+  
+  const formValidations = {
+    name: [isRequired],
+    email: [isRequired, isEmail],
+    street: [isRequired],
+    city: [isRequired],
+    state: [isRequired],
+    zip: [isRequired],
+    notes: []
+  }
+  //#endregion
+
   //#region State Variables
   const navigation = useNavigation();
 

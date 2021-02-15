@@ -68,4 +68,5 @@ export type Account = {
     created: string;
     meeting_time: Date;
     is_active: boolean;
+    notes: string;
   }
