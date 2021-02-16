@@ -58,6 +58,7 @@ const useForm = <T, Z, Y>(formFields: T, formErrors: Z, formValidations: any, ca
     useEffect(() => {
         if (checkProperties(errors) && isSubmitting){
             callback();
+            setIsSubmitting(false);
         }
     }, [errors]);
 
