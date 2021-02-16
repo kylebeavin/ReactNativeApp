@@ -4,8 +4,9 @@ import AppContext from '../providers/AppContext';
 export const useFetch = (url:string, method: string, body?: {}) => {
     const {token, grpId} = useContext(AppContext);
     const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
+	
 	let bodyObj = !body ? {group_id: grpId[0]} : body; 
-
+	
 	const initialState = {
 		status: 'idle',
 		error: null,

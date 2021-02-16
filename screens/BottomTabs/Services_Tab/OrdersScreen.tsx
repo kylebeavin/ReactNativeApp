@@ -75,7 +75,7 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
           </View>
         </AppNavBtnGrp>
 
-        <AppAddNew title="ORDER" modal="CreateOrderModal"/>
+        {orders.length === 0 ? null : <AppAddNew title="ORDER" modal="CreateOrderModal"/>}
 
         {isLoading ? (
           <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />

@@ -18,13 +18,15 @@ import DashboardScreen from "../screens/Header/DashboardScreen";
 import SettingsScreen from "../screens/Header/SettingsScreen";
 import AccountsScreen from "../screens/BottomTabs/CRM_Tab/AccountsScreen";
 import OrdersCalendarScreen from "../screens/BottomTabs/Services_Tab/OrdersCalendarScreen";
-import MaintainScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
+import RoutesScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
 import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
 import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
 import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
 import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
 import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
 import OrdersMapScreen from "../screens/BottomTabs/Services_Tab/OrdersMapScreen";
+import RoutesMapScreen from "../screens/BottomTabs/Routes_Tab/RoutesMapScreen";
+import RoutesCalendarScreen from "../screens/BottomTabs/Routes_Tab/RoutesCalendarScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -116,7 +118,9 @@ function RoutesNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <RoutesStack.Screen name="RoutesScreen" component={MaintainScreen} />
+      <RoutesStack.Screen name="RoutesScreen" component={RoutesScreen} />
+      <RoutesStack.Screen name="RoutesCalendarScreen" component={RoutesCalendarScreen} />
+      <RoutesStack.Screen name="RoutesMapScreen" component={RoutesMapScreen} />
     </RoutesStack.Navigator>
   );
 }
