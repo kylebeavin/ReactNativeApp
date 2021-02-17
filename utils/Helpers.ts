@@ -115,7 +115,7 @@ export const isValidPassword = (password: string) : {isValid: boolean, message: 
 //#endregion
 export const isSuccessStatusCode = (code: number) :boolean => {
     let success: boolean = false;
-
+    
     switch (code) {
         case 200:
             success = true;

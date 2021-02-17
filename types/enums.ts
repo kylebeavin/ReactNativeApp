@@ -71,3 +71,14 @@ export enum ContactMethod {
     email = "email",
     sms = "sms",
 }
+
+export enum TruckServiceStatus {
+    good = "Good",
+    serviceRequired = "Service Required",
+}
+
+export enum VehicleType {
+    smashTruck = "Smash Truck",
+    superhauler = "Super Hauler 9001",
+    superMega = "Super Mega Smash Machine 9002",
+}

@@ -15,18 +15,27 @@ export type Truck = {
     ownership: string;
     pictures: string[];
     service_history: string[];
-    service_status: string[];
+    service_status: string;
     trim: string;
     registration: string;
     vehicle_make: string;
     vehicle_model: string;
-    vehicle_type: string[];
+    vehicle_type: string;
     vin: string;
     year: string;
 }
 
 export type Route = {
-
+  _id: string;
+  group_id: string;
+  truck_id: string;
+  is_active: boolean;
+  start_location: string;
+  driver: string;
+  truck_vin: string;
+  service_stop: string[];
+  time: Date;
+  notes: string;
 }
 
 export type Inspection = {

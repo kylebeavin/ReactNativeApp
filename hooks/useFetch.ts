@@ -1,8 +1,11 @@
 import { useEffect, useRef, useReducer, useContext } from 'react';
 import AppContext from '../providers/AppContext';
+import { ToastContext } from '../providers/ToastProvider';
 
 export const useFetch = (url:string, method: string, body?: {}) => {
     const {token, grpId} = useContext(AppContext);
+	const {show} = useContext(ToastContext);
+
     const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
 	
 	let bodyObj = !body ? {group_id: grpId[0]} : body; 
@@ -25,6 +28,7 @@ export const useFetch = (url:string, method: string, body?: {}) => {
 				return state;
 		}
 	}, initialState);
+
 	useEffect(() => {
 		let cancelRequest = false;
 		if (!url) return;
@@ -49,6 +53,7 @@ export const useFetch = (url:string, method: string, body?: {}) => {
 					dispatch({ type: 'FETCHED', payload: data });
 				} catch (error) {
 					if (cancelRequest) return;
+					show({message: error.message});
 					dispatch({ type: 'FETCH_ERROR', payload: error.message });
 				}
 			}

@@ -15,6 +15,9 @@ import CreateOrderModal from './Creates/CreateOrderModal';
 import UpdateAgreementModal from './Updates/UpdateAgreementModal';
 import UpdateOrderModal from './Updates/UpdateOrderModal';
 import UpdateDemoModal from './Updates/UpdateDemoModal';
+import CreateTruckModal from './Creates/CreateTruckModal';
+import CreateRouteModal from './Creates/CreateRouteModal';
+import CreateDriverModal from './Creates/CreateDriverModal';
 
 interface Props {
     navigation: any;
@@ -26,19 +29,25 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
     switch (modal) {
       //=== Create Modals ===//
       case "CreateAccountModal":
-        return <CreateAccountModal navigation={navigation}/>;
+        return <CreateAccountModal />;
       case "CreateContactModal":
         return <CreateContactModal navigation={navigation} account={item} />;
       case "CreateLocationModal":
-        return <CreateLocationModal navigation={navigation} />;
+        return <CreateLocationModal />;
       case "CreateMeetingModal":
-        return <CreateMeetingModal navigation={navigation} />;
+        return <CreateMeetingModal />;
       case "CreateAgreementModal":
         return <CreateAgreementModal />;
       case "CreateOrderModal":
-        return <CreateOrderModal navigation={navigation} />;
+        return <CreateOrderModal />;
       case "CreateDemoModal":
         return <CreateDemoModal />;
+      case "CreateTruckModal":
+        return <CreateTruckModal />;
+      case "CreateRouteModal":
+        return <CreateRouteModal />;
+      case "CreateDriverModal":
+        return <CreateDriverModal />;
 
       //=== Update Modals ===//
       case "UpdateAccountModal":
@@ -46,13 +55,13 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
       case "UpdateContactModal":
         return <UpdateContactModal navigation={navigation} contact={item} />;
       case "UpdateLocationModal":
-        return <UpdateLocationModal navigation={navigation} location={item} />;
+        return <UpdateLocationModal location={item} />;
       case "UpdateMeetingModal": 
-        return <UpdateMeetingModal navigation={navigation} meeting={item} />;
+        return <UpdateMeetingModal meeting={item} />;
       case "UpdateAgreementModal":
         return <UpdateAgreementModal />;
       case "UpdateOrderModal":
-        return <UpdateOrderModal />;
+        return <UpdateOrderModal order={item}/>;
       case "UpdateDemoModal":
         return <UpdateDemoModal />;
 

@@ -15,6 +15,7 @@ import { useFetch } from '../../../hooks/useFetch';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';
 import AppContext from '../../../providers/AppContext';
+import { ToastContext } from '../../../providers/ToastProvider';
 
 interface Props {
 }
@@ -25,6 +26,7 @@ const AccountScreen: React.FC<Props> = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const {grpId, token} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
   const [isLoading, setIsLoading] = useState(true);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [toggle, setToggle] = useState(false);
@@ -41,7 +43,7 @@ const AccountScreen: React.FC<Props> = () => {
       body: JSON.stringify({group_id: grpId}),
     }) // ToDo: get accounts by group id 
       .then((res) => {
-        console.log(res.status)        
+        console.log(res.status)  
         return res.json()
       })
       .then((json) => {
@@ -54,7 +56,7 @@ const AccountScreen: React.FC<Props> = () => {
           setAccounts(json.data)
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => show({message: err.message}))
       .finally(() => setIsLoading(false));
   }
 
