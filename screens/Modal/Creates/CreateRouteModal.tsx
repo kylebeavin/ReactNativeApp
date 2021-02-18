@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -14,6 +14,8 @@ import Configs from '../../../constants/Configs';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 import { TruckServiceStatus, VehicleType } from '../../../types/enums';
+import { Picker } from '@react-native-picker/picker';
+import { SMT_User } from '../../../types';
 
 const CreateRouteModal = () => {
   //#region Form Initializers
@@ -24,7 +26,7 @@ const CreateRouteModal = () => {
     driver: '',
     truck_vin: '',
     service_stop: [],
-    time: new Date(),
+    time: new Date().toString(),
     notes: '',
   };
   const formErrors = {
@@ -42,8 +44,8 @@ const CreateRouteModal = () => {
     is_active: [],
     start_location: [isRequired],
     driver: [isRequired],
-    truck_vin: [isRequired],
-    service_stop: [isRequired],
+    truck_vin: [],
+    service_stop: [],
     time: [isRequired],
     notes: [],
   };
@@ -59,19 +61,74 @@ const CreateRouteModal = () => {
     formValidations,
     postNewRoute,
   );
+
+  // State
+  const [truckVin, setTruckVin] = useState('');
+
+  // Drop Down
+  const [trucksList, setTrucksList] = useState<Truck[]>([]);
+  const [ownersList, setOwnersList] = useState<SMT_User[]>([]);
   //#endregion
+
+  useEffect(() => {
+    getTrucksDropDown();
+    getOwnersDropDown()
+      .then((data) => {
+        setOwnersList(data);
+      })
+      .catch((err) => show({message: err.message}))  }, []);
+
+  const getTrucksDropDown = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
+        method: 'POST',
+        body: JSON.stringify({group_id: grpId}),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      })
+        .then((res) => {
+          console.log(res.status);
+          return res.json();
+        })
+        .then((data) => {
+          if (data.status == 'success') {
+            setTrucksList(data.data);
+            setTruckVin(data.data[0].vin)
+            //handleChange("truck_vin", data.data[0].vin);
+          } else {
+            show({message: data.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
+  };
+
+  const getOwnersDropDown = async (): Promise<SMT_User[]> => {
+    let userList: SMT_User[] = [];
+
+    await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => {
+        console.log(res.status);
+        return res.json();
+      })
+      .then((json) => (userList = json.data))
+      .catch((err) => console.log(err));
+
+    return userList;
+  };
 
   const getFormData = async () => {
     const route: Route = {
         _id: '',
-        group_id: grpId,
+        group_id: grpId[0],
         truck_id: values.truck_id,
         is_active: values.is_active,
         start_location: values.start_location,
         driver: values.driver,
-        truck_vin: values.truck_vin,
+        truck_vin: truckVin,
         service_stop: values.service_stop,
-        time: values.time,
+        time: new Date(values.time),
         notes: values.notes,
     };
     return route;
@@ -79,7 +136,7 @@ const CreateRouteModal = () => {
 
   async function postNewRoute() {
     const route: Route = await getFormData();
-    await fetch(`${Configs.TCMC_URI}/api/trucks`, {
+    await fetch(`${Configs.TCMC_URI}/api/routes`, {
       method: 'POST',
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
@@ -89,6 +146,7 @@ const CreateRouteModal = () => {
         return res.json();
       })
       .then((data) => {
+          console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('RoutesScreen');
@@ -99,177 +157,105 @@ const CreateRouteModal = () => {
       .catch((err) => show({message: err.message}));
   }
 
+  const changeVin = (itemIndex: number) => {
+    //handleChange('truck_vin', trucksList[itemIndex].vin)
+  }
+
   return (
     <View>
       <ScrollView style={styles.form}>
 
-        {/* Body Type */}
+        {/* Start Location */}
         <AppTextInput
-          label="Body Type"
-          name="body_type"
-          value={values.body_type}
-          onChange={(val) => handleChange('body_type', val)}
+          label="Start Location"
+          name="start_location"
+          value={values.start_location}
+          onChange={(val) => handleChange('start_location', val)}
           validations={[isRequired]}
-          errors={errors.body_type}
+          errors={errors.start_location}
           setErrors={setErrors}
         />
 
-        {/* Body Subtype */}
-        <AppTextInput
-          label="Body Subtype"
-          name="body_subtype"
-          value={values.body_subtype}
-          onChange={(val) => handleChange('body_subtype', val)}
-          validations={[isRequired]}
-          errors={errors.body_subtype}
-          setErrors={setErrors}
-        />
-
-        {/* Color */}
-        <AppTextInput
-          label="Color"
-          name="color"
-          value={values.color}
-          onChange={(val) => handleChange('color', val)}
-          validations={[isRequired]}
-          errors={errors.color}
-          setErrors={setErrors}
-        />
-
-        {/* Hours */}
-        <AppTextInput
-          label="Hours"
-          name="hours"
-          value={values.hours}
-          onChange={(val) => handleChange('hours', val)}
-          validations={[isRequired]}
-          errors={errors.hours}
-          setErrors={setErrors}
-        />
-
-        {/* License Plate */}
-        <AppTextInput
-          label="License Plate"
-          name="license_number"
-          value={values.license_number}
-          onChange={(val) => handleChange('license_number', val)}
-          validations={[isRequired]}
-          errors={errors.license_number}
-          setErrors={setErrors}
-        />
-
-        {/* MSRP */}
-        <AppTextInput
-          label="MSRP"
-          name="msrp"
-          value={values.msrp}
-          onChange={(val) => handleChange('msrp', val)}
-          validations={[isRequired]}
-          errors={errors.msrp}
-          setErrors={setErrors}
-        />
-
-        {/* Display Name */}
-        <AppTextInput
-          label="Display Name"
-          name="name"
-          value={values.name}
-          onChange={(val) => handleChange('name', val)}
-          validations={[isRequired]}
-          errors={errors.name}
-          setErrors={setErrors}
-        />
-
-        {/* Odometer */}
-        <AppTextInput
-          label="Odometer"
-          name="odo"
-          value={values.odo}
-          onChange={(val) => handleChange('odo', val)}
-          validations={[isRequired]}
-          errors={errors.odo}
-          setErrors={setErrors}
-        />
-
-        {/* Ownership */}
-        <AppTextInput
-          label="Ownership"
-          name="ownership"
-          value={values.ownership}
-          onChange={(val) => handleChange('ownership', val)}
-          validations={[isRequired]}
-          errors={errors.ownership}
-          setErrors={setErrors}
-        />
-
-        {/* Trim */}
-        <AppTextInput
-          label="Trim"
-          name="trim"
-          value={values.trim}
-          onChange={(val) => handleChange('trim', val)}
-          validations={[isRequired]}
-          errors={errors.trim}
-          setErrors={setErrors}
-        />
-
-        {/* Registration */}
-        <AppTextInput
-          label="Registration"
-          name="registration"
-          value={values.registration}
-          onChange={(val) => handleChange('registration', val)}
-          validations={[isRequired]}
-          errors={errors.registration}
-          setErrors={setErrors}
-        />
-
-        {/* Make */}
-        <AppTextInput
-          label="Make"
-          name="vehicle_make"
-          value={values.vehicle_make}
-          onChange={(val) => handleChange('vehicle_make', val)}
-          validations={[isRequired]}
-          errors={errors.vehicle_make}
-          setErrors={setErrors}
-        />
-
-        {/* Model */}
-        <AppTextInput
-          label="Model"
-          name="vehicle_model"
-          value={values.vehicle_model}
-          onChange={(val) => handleChange('vehicle_model', val)}
-          validations={[isRequired]}
-          errors={errors.vehicle_model}
-          setErrors={setErrors}
-        />
-
-        {/* VIN */}
-        <AppTextInput
-          label="VIN"
-          name="vin"
-          value={values.vin}
-          onChange={(val) => handleChange('vin', val)}
-          validations={[isRequired]}
-          errors={errors.vin}
-          setErrors={setErrors}
-        />
-
-        {/* Year */}
-        <View style={{marginBottom: 40}}>
-          <AppTextInput
-            label="Year"
-            name="year"
-            value={values.year}
-            onChange={(val) => handleChange('year', val)}
-            validations={[isRequired]}
-            errors={errors.year}
-            setErrors={setErrors}
-          />
+        {/* Truck */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Truck</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.truck_id}
+              onValueChange={(itemValue, itemIndex) => {
+                handleChange('truck_id', itemValue.toString())
+                setTruckVin(trucksList[itemIndex].vin)
+                //changeVin(itemIndex)
+                //handleChange('truck_vin', trucksList[itemIndex].vin)
+            }}>
+              {trucksList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item.vin}
+                    label={item.license_number}
+                    value={item._id}
+                    
+                  />
+                );
+              })}
+            </Picker>
+          </View>
         </View>
 
+        {/* Truck VIN */}
+        <AppTextInput 
+          label="Truck VIN"
+          name="truck_vin"
+          value={truckVin}
+          onChange={(val) => setTruckVin(val)}
+          validations={[isRequired]}
+          errors={errors.truck_vin}
+          setErrors={setErrors}
+        />
+
+        {/* Driver */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Driver</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.driver}
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange('driver', itemValue.toString())
+              }>
+              {ownersList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item._id}
+                    label={item.first_name + ' ' + item.last_name}
+                    value={item._id}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+        </View>
+
+        {/* Time */}
+        <AppTextInput
+          label="Time"
+          name="time"
+          value={values.time}
+          onChange={(val) => handleChange("time", val)}
+          validations={[isRequired]}
+          errors={errors.time}
+          setErrors={setErrors}
+        />
+
+        {/* Notes */}
+        <AppTextInput
+          label="Notes"
+          name="notes"
+          value={values.notes}
+          onChange={(val) => handleChange("notes", val)}
+          validations={[isRequired]}
+          errors={errors.notes}
+          setErrors={setErrors}
+        />
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />
@@ -285,6 +271,20 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
+  },
+  fieldContainer: {
+    marginBottom: 10,
+  },
+  text: {
+    fontWeight: 'bold',
+    color: Colors.SMT_Secondary_1,
+  },
+  picker: {
+    paddingLeft: 15,
+    //paddingVertical: 5,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
+    borderWidth: 2,
+    borderRadius: 3,
   },
 });
 

@@ -50,7 +50,7 @@ const useForm = <T, Z, Y>(formFields: T, formErrors: Z, formValidations: any, ca
         }))
 
         // Debug Validation Errors by uncommenting log.
-        // console.log(errorObject)
+        console.log(errorObject)
         // console.log(errors)
         
         setIsSubmitting(true);
