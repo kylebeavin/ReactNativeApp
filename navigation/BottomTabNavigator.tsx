@@ -27,6 +27,7 @@ import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
 import OrdersMapScreen from "../screens/BottomTabs/Services_Tab/OrdersMapScreen";
 import RoutesMapScreen from "../screens/BottomTabs/Routes_Tab/RoutesMapScreen";
 import RoutesCalendarScreen from "../screens/BottomTabs/Routes_Tab/RoutesCalendarScreen";
+import RouteDetailsScreen from "../screens/BottomTabs/Routes_Tab/RouteDetailsScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -121,6 +122,7 @@ function RoutesNavigator() {
       <RoutesStack.Screen name="RoutesScreen" component={RoutesScreen} />
       <RoutesStack.Screen name="RoutesCalendarScreen" component={RoutesCalendarScreen} />
       <RoutesStack.Screen name="RoutesMapScreen" component={RoutesMapScreen} />
+      <RoutesStack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
     </RoutesStack.Navigator>
   );
 }

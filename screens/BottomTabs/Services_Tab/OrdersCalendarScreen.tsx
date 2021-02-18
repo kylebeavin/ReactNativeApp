@@ -27,7 +27,7 @@ interface Props {
 }
 
 const ServicesScreen: React.FC<Props> = () => {
-  //#region
+  //#region Use State Variables
   const {grpId} = useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -178,6 +178,33 @@ const ServicesScreen: React.FC<Props> = () => {
           url={`${Configs.TCMC_URI}/api/ordersBy`}
           httpMethod="POST"
           params={{group_id: grpId[0], start_date: {$gte: greaterThanDate,$lt: lessThanDate}}}
+          renderItem={(u: any, i: number) => {
+            return (
+              <View style={styles.card} key={i}>
+                <View style={styles.title}>
+                  <Text style={styles.titleText}>Name Here - {u.services}</Text>
+                  <Text style={styles.titleText}>
+                    Status:
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        color: Colors.SMT_Secondary_2_Light_1,
+                      }}>
+                      {' '}
+                      On Schedule
+                    </Text>
+                  </Text>
+                </View>
+
+                <View style={styles.btnContainer}>
+                  <AppButton
+                    title="Details"
+                    onPress={() => console.log('Details')}
+                  />
+                </View>
+              </View>
+            );
+          }}
         />
       </ScrollView>
     </View>
@@ -229,6 +256,30 @@ const styles = StyleSheet.create({
   },
   content: {
     marginBottom: 10,
+  },
+
+
+  //=== Card ===//
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  card: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: Colors.SMT_Tertiary_1,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: Colors.SMT_Secondary_2_Light_1,
+    borderRadius: 3,
+    padding: 5,
+  },
+  title: {
+    marginBottom: 10,
+  },
+  titleText: {
+    fontWeight: 'bold',
   },
 });
 

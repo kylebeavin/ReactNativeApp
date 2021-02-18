@@ -38,6 +38,7 @@ export type RoutesParamList = {
   RoutesScreen: undefined;
   RoutesCalendarScreen: undefined;
   RoutesMapScreen: undefined;
+  RouteDetailsScreen: undefined;
 };
 
 export type InvoicesParamList = {

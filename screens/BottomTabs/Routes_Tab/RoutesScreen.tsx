@@ -4,11 +4,9 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  FlatList,
   TouchableOpacity,
   Text,
 } from 'react-native';
-import {colors} from 'react-native-elements';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppButton from '../../../components/Layout/AppButton';
 import AppList from '../../../components/Layout/AppList';
@@ -32,11 +30,13 @@ const RoutesScreen = () => {
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [drivers, setDrivers] = useState<SMT_User[]>([]);
+  const [inspections, setInspections] = useState<Inpsections[]>([]);
 
   // Toggles
   const [truckToggle, setTruckToggle] = useState(false);
   const [routeToggle, setRouteToggle] = useState(false);
   const [driverToggle, setDriverToggle] = useState(false);
+  const [inspectionsToggle, setInspectionsToggle] = useState(false);
   const [unassignedToggle, setUnassignedToggle] = useState(false);
   const [assignedToggle, setAssignedToggle] = useState(false);
   //#endregion
@@ -102,13 +102,36 @@ const RoutesScreen = () => {
       .catch((err) => show({message: err.message}));
   };
 
+  const getInspections = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/pre-tripBy`, {
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId[0]}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => {
+        console.log(res.status);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data)
+        if (data.status == 'success') {
+          setInspections(data.data);
+        } else {
+          show({message: data.message});
+        }
+      })
+      .catch((err) => show({message: err.message}));
+  };
+
   return (
     <View>
       <AppTitle title="Routes" help search />
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={styles.contentContainer}
+        >
+
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
@@ -270,6 +293,52 @@ const RoutesScreen = () => {
           </View>
         )}
 
+        <TouchableOpacity onPress={() => {
+            getInspections();
+            setInspectionsToggle(!inspectionsToggle)
+          }}>
+          <AppTitle title="Inspections" />
+        </TouchableOpacity>
+        {!inspectionsToggle ? null : (
+          <View style={styles.subList}>
+            <AppAddNew title="INSPECTIONS" modal="CreateInspectionsModal" />
+            {inspections.map((u, i) => {
+              return (
+                <View style={styles.card} key={u._id}>
+                  <Text>
+                    Name: {u.first_name}, Group: {u.group_id}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <AppButton
+                      outlined
+                      title="Driver Profile"
+                      onPress={() => console.log('Driver Profile')}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                      }}>
+                      <AppButton
+                        title="Logs"
+                        onPress={() => console.log('Logs')}
+                      />
+                      <AppButton
+                        title="Contact"
+                        onPress={() => console.log('Contact')}
+                        backgroundColor={Colors.SMT_Secondary_2_Light_1}
+                      />
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+
         <TouchableOpacity
           onPress={() => setUnassignedToggle(!unassignedToggle)}>
           <AppTitle title="Unassigned" />
@@ -279,6 +348,11 @@ const RoutesScreen = () => {
             <AppList
               url={`${Configs.TCMC_URI}/api/routesBy`}
               httpMethod="POST"
+              renderItem={(u,i) => {
+                return (
+                  <View></View>
+                )
+              }}
             />
           </View>
         )}
@@ -291,6 +365,11 @@ const RoutesScreen = () => {
             <AppList
               url={`${Configs.TCMC_URI}/api/routesBy`}
               httpMethod="POST"
+              renderItem={(u,i) => {
+                return (
+                  <View></View>
+                )
+              }}
             />
           </View>
         )}

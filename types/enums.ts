@@ -82,3 +82,7 @@ export enum VehicleType {
     superhauler = "Super Hauler 9001",
     superMega = "Super Mega Smash Machine 9002",
 }
+
+export enum RouteEvents {
+    routeEvents = "Route Events",
+}

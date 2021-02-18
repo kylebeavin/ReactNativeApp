@@ -9,9 +9,10 @@ interface Props {
     url: string;
     httpMethod: string;
     params?: {};
+    renderItem: (u: any, i: number) => {};
 }
 
-const AppList : React.FC<Props> = ({url, httpMethod, params}) => {
+const AppList : React.FC<Props> = ({url, httpMethod, params, renderItem}) => {
     const {status, data, error} = useFetch(url, httpMethod, (params ? params : undefined));
     const [isLoading, setIsLoading] = useState(true);
     const [listData, setListData] = useState<{}[]>([]);
@@ -37,25 +38,11 @@ const AppList : React.FC<Props> = ({url, httpMethod, params}) => {
             {listData.length === 0 ? (
               // <AppEmptyCard entity="orders" modal="CreateOrderModal" />
               <View>
-                <Text style={{textAlign: 'center'}}>No Orders on this date.</Text>
+                <Text style={{textAlign: 'center'}}>No Items on this date.</Text>
               </View>
             ) : (
               listData.map((u: any, i: number) => {
-                return (
-                  <View style={styles.card} key={i}>
-
-                    <View style={styles.title}>
-                      <Text style={styles.titleText}>Name Here - {u.services}</Text>
-                      <Text style={styles.titleText}>Status:
-                        <Text style={{fontWeight: 'bold', color: Colors.SMT_Secondary_2_Light_1}}> On Schedule</Text>
-                      </Text>
-                    </View>
-
-                    <View style={styles.btnContainer}>
-                      <AppButton title="Details" onPress={() => console.log("Details")} />
-                    </View>
-                  </View>
-                );
+                return renderItem(u, i)
               })
             )}
           </View>
@@ -65,27 +52,7 @@ const AppList : React.FC<Props> = ({url, httpMethod, params}) => {
 }
 
 const styles = StyleSheet.create({
-    btnContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      },
-    card: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: Colors.SMT_Tertiary_1,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: Colors.SMT_Secondary_2_Light_1,
-        borderRadius: 3,
-        padding: 5,
-      },
-      title: {
-        marginBottom: 10,
-      },
-      titleText: {
-        fontWeight: 'bold',
-      },
+
 })
 
 export default AppList;

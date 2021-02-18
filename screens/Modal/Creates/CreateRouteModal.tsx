@@ -13,9 +13,9 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import { TruckServiceStatus, VehicleType } from '../../../types/enums';
-import { Picker } from '@react-native-picker/picker';
-import { SMT_User } from '../../../types';
+import {TruckServiceStatus, VehicleType} from '../../../types/enums';
+import {Picker} from '@react-native-picker/picker';
+import {SMT_User} from '../../../types';
 
 const CreateRouteModal = () => {
   //#region Form Initializers
@@ -76,28 +76,29 @@ const CreateRouteModal = () => {
       .then((data) => {
         setOwnersList(data);
       })
-      .catch((err) => show({message: err.message}))  }, []);
+      .catch((err) => show({message: err.message}));
+  }, []);
 
   const getTrucksDropDown = async () => {
     await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
-        method: 'POST',
-        body: JSON.stringify({group_id: grpId}),
-        headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => {
+        console.log(res.status);
+        return res.json();
       })
-        .then((res) => {
-          console.log(res.status);
-          return res.json();
-        })
-        .then((data) => {
-          if (data.status == 'success') {
-            setTrucksList(data.data);
-            setTruckVin(data.data[0].vin)
-            //handleChange("truck_vin", data.data[0].vin);
-          } else {
-            show({message: data.message});
-          }
-        })
-        .catch((err) => show({message: err.message}));
+      .then((data) => {
+        if (data.status == 'success') {
+          setTrucksList(data.data);
+          setTruckVin(data.data[0].vin);
+          //handleChange("truck_vin", data.data[0].vin);
+        } else {
+          show({message: data.message});
+        }
+      })
+      .catch((err) => show({message: err.message}));
   };
 
   const getOwnersDropDown = async (): Promise<SMT_User[]> => {
@@ -120,16 +121,16 @@ const CreateRouteModal = () => {
 
   const getFormData = async () => {
     const route: Route = {
-        _id: '',
-        group_id: grpId[0],
-        truck_id: values.truck_id,
-        is_active: values.is_active,
-        start_location: values.start_location,
-        driver: values.driver,
-        truck_vin: truckVin,
-        service_stop: values.service_stop,
-        time: new Date(values.time),
-        notes: values.notes,
+      _id: '',
+      group_id: grpId[0],
+      truck_id: values.truck_id,
+      is_active: values.is_active,
+      start_location: values.start_location,
+      driver: values.driver,
+      truck_vin: truckVin,
+      service_stop: values.service_stop,
+      time: new Date(values.time),
+      notes: values.notes,
     };
     return route;
   };
@@ -146,7 +147,7 @@ const CreateRouteModal = () => {
         return res.json();
       })
       .then((data) => {
-          console.log(data)
+        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('RoutesScreen');
@@ -159,12 +160,11 @@ const CreateRouteModal = () => {
 
   const changeVin = (itemIndex: number) => {
     //handleChange('truck_vin', trucksList[itemIndex].vin)
-  }
+  };
 
   return (
     <View>
       <ScrollView style={styles.form}>
-
         {/* Start Location */}
         <AppTextInput
           label="Start Location"
@@ -183,18 +183,17 @@ const CreateRouteModal = () => {
             <Picker
               selectedValue={values.truck_id}
               onValueChange={(itemValue, itemIndex) => {
-                handleChange('truck_id', itemValue.toString())
-                setTruckVin(trucksList[itemIndex].vin)
+                handleChange('truck_id', itemValue.toString());
+                setTruckVin(trucksList[itemIndex].vin);
                 //changeVin(itemIndex)
                 //handleChange('truck_vin', trucksList[itemIndex].vin)
-            }}>
+              }}>
               {trucksList.map((item, index) => {
                 return (
                   <Picker.Item
                     key={item.vin}
                     label={item.license_number}
                     value={item._id}
-                    
                   />
                 );
               })}
@@ -203,7 +202,7 @@ const CreateRouteModal = () => {
         </View>
 
         {/* Truck VIN */}
-        <AppTextInput 
+        <AppTextInput
           label="Truck VIN"
           name="truck_vin"
           value={truckVin}
@@ -240,7 +239,7 @@ const CreateRouteModal = () => {
           label="Time"
           name="time"
           value={values.time}
-          onChange={(val) => handleChange("time", val)}
+          onChange={(val) => handleChange('time', val)}
           validations={[isRequired]}
           errors={errors.time}
           setErrors={setErrors}
@@ -251,7 +250,7 @@ const CreateRouteModal = () => {
           label="Notes"
           name="notes"
           value={values.notes}
-          onChange={(val) => handleChange("notes", val)}
+          onChange={(val) => handleChange('notes', val)}
           validations={[isRequired]}
           errors={errors.notes}
           setErrors={setErrors}
@@ -259,7 +258,6 @@ const CreateRouteModal = () => {
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />
-
     </View>
   );
 };
