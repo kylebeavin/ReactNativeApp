@@ -11,9 +11,11 @@ interface Props {
   errors: any;
   setErrors: any;
   multiline?: boolean;
+  keyboardType?: any;
+  containerStyle?: {};
 }
 
-const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline}) => {
+const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline,keyboardType,containerStyle}) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef(null);
   
@@ -27,7 +29,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
   };
 
   return (
-    <View style={styles.fieldContainer}>
+    <View style={[styles.fieldContainer, !containerStyle ? null : containerStyle]}>
       <Text style={styles.text} onPress={() => ref.current!.focus()}>{label}</Text>
       <TextInput
         autoCapitalize="none"
@@ -44,6 +46,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
         }}
 
         multiline={!multiline ? false : true}
+        keyboardType={!keyboardType ? "default" : keyboardType}
       />
 
       <View style={[focused ? styles.isFocused : null, multiline ? {borderBottomColor: 'transparent'}: null]}></View>
@@ -58,7 +61,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
 
 const styles = StyleSheet.create({
   fieldContainer: {
-    //marginBottom: 10,
+    flex: 1,
   },
   isFocused: {
     position: 'absolute',

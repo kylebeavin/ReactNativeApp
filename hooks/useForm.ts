@@ -15,13 +15,13 @@ const checkProperties = (obj:any) => {
 }
 
 const useForm = <T, Z, Y>(formFields: T, formErrors: Z, formValidations: any, callback:() => void) :
-  { handleChange(name:string, value:string): void, handleSubmit(): void, values:T, errors:Z, setErrors: React.Dispatch<React.SetStateAction<Z>>} => {
+  { handleChange(name:string, value:any): void, handleSubmit(): void, values:T, errors:Z, setErrors: React.Dispatch<React.SetStateAction<Z>>} => {
     const [values, setValues] = useState<T>(formFields);
     const [errors, setErrors] = useState<Z>(formErrors);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const {show} = useContext(ToastContext); // ToDo: show error message on validation failure.
-
-    const handleChange = (name: string, value: string) => {
+    
+    const handleChange = (name: string, value: any) => {
         setValues({
             ...values,
             [name]: value
@@ -50,7 +50,7 @@ const useForm = <T, Z, Y>(formFields: T, formErrors: Z, formValidations: any, ca
         }))
 
         // Debug Validation Errors by uncommenting log.
-        console.log(errorObject)
+        // console.log(errorObject)
         // console.log(errors)
         
         setIsSubmitting(true);
