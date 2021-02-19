@@ -30,7 +30,7 @@ const RoutesScreen = () => {
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [drivers, setDrivers] = useState<SMT_User[]>([]);
-  const [inspections, setInspections] = useState<Inpsections[]>([]);
+  const [inspections, setInspections] = useState<any[]>([]);
 
   // Toggles
   const [truckToggle, setTruckToggle] = useState(false);
@@ -301,7 +301,7 @@ const RoutesScreen = () => {
         </TouchableOpacity>
         {!inspectionsToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="INSPECTIONS" modal="CreateInspectionsModal" />
+            <AppAddNew title="INSPECTION" modal="CreatePreTripInspectionModal" />
             {inspections.map((u, i) => {
               return (
                 <View style={styles.card} key={u._id}>

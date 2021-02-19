@@ -86,3 +86,13 @@ export enum VehicleType {
 export enum RouteEvents {
     routeEvents = "Route Events",
 }
+
+export enum SMT_Roles {
+    corporate = "corporate",
+    admin = "admin",
+    partner = "partner",
+    gm = "gm",
+    sales = "sales",
+    driver = "driver",
+    mechanic = "mechanic",
+}

@@ -18,6 +18,7 @@ import UpdateDemoModal from './Updates/UpdateDemoModal';
 import CreateTruckModal from './Creates/CreateTruckModal';
 import CreateRouteModal from './Creates/CreateRouteModal';
 import CreateDriverModal from './Creates/CreateDriverModal';
+import CreatePreTripInspectionModal from './Creates/CreatePreTripInspectionModal';
 
 interface Props {
     navigation: any;
@@ -48,6 +49,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <CreateRouteModal />;
       case "CreateDriverModal":
         return <CreateDriverModal />;
+      case "CreatePreTripInspectionModal":
+        return <CreatePreTripInspectionModal />
 
       //=== Update Modals ===//
       case "UpdateAccountModal":
