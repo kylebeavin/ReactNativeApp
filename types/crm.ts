@@ -37,7 +37,7 @@ export type Account = {
     phone: string;
     type: string;
     method: string;
-    created: string;
+    createdAt: string;
     is_active: boolean;
   }
   

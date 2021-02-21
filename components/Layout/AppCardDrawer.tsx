@@ -27,8 +27,8 @@ const AppCardDrawer: React.FC<Props> = ({navigation, isVisible, contacts, accoun
     return contacts.map((item, index) => (
       <View style={styles.contactCard} key={item._id}>
         <View>
-          <Text style={{ fontWeight: "bold" }}>{item.first_name}</Text>
-          <Text>Role Here</Text>
+          <Text style={{ fontWeight: "bold" }}>{item.first_name} {item.last_name}</Text>
+          <Text>{item.type}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.contactButton}>

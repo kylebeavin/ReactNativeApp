@@ -14,6 +14,7 @@ import {isRequired, isEmail} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 import useForm from '../../../hooks/useForm';
+import { isSuccessStatusCode } from '../../../utils/Helpers';
 
 interface Props {
   navigation: any;
@@ -23,7 +24,8 @@ interface Props {
 const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   //#region Form Initializers
   const formValues = {
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
     role: '',
@@ -33,7 +35,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   };
 
   const formErrors = {
-    name: [],
+    first_name: [],
+    last_name: [],
     email: [],
     phone: [],
     role: [],
@@ -43,7 +46,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   };
 
   const formValidations = {
-    name: [isRequired],
+    first_name: [isRequired],
+    last_name: [isRequired],
     email: [isRequired, isEmail],
     phone: [isRequired],
     role: [isRequired],
@@ -82,14 +86,14 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   const getFormData = async () => {
     const contact: Contact = {
       _id: '',
-      first_name: values.name,
-      last_name: '_',
+      first_name: values.first_name,
+      last_name: values.last_name,
       type: values.role,
       account_id: account._id,
       phone: values.phone,
       email: values.email,
       owner_id: values.owner,
-      created: '',
+      createdAt: '',
       is_active: values.status === 'Active' ? true : false,
       method: 'email',
     };
@@ -118,41 +122,45 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   async function postNewContact() {
     const contact = await getFormData();
 
-    const data = await fetch(`${Configs.TCMC_URI}/api/contacts`, {
+    await fetch(`${Configs.TCMC_URI}/api/contacts`, {
       method: 'POST',
       body: JSON.stringify(contact),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        return data;
+        if (isSuccessStatusCode(data.status)) {
+          show({message: data.message});
+          navigation.navigate('AccountsScreen');
+        } else {
+          show({message: data.message});
+        }
       })
-      .catch((err) => {
-        // ToDo: Come up with error handling strategy.
-        console.log(err);
-        return err;
-      });
-
-    navigation.navigate('AccountsScreen');
-
-    return data;
+      .catch((err) => show({message: 'Error: ' + err.message}));
   };
 
   return (
     <View>
       <ScrollView style={styles.form}>
-        {/* Name */}
+        {/* First Name */}
         <AppTextInput
-          label="Contact Name"
-          name="name"
-          value={values.name}
-          onChange={(val) => handleChange('name', val)}
+          label="First Name"
+          name="first_name"
+          value={values.first_name}
+          onChange={(val) => handleChange('first_name', val)}
           validations={[isRequired]}
-          errors={errors.name}
+          errors={errors.first_name}
+          setErrors={setErrors}
+        />
+
+        {/* Last Name */}
+        <AppTextInput
+          label="Last Name"
+          name="last_name"
+          value={values.last_name}
+          onChange={(val) => handleChange('last_name', val)}
+          validations={[isRequired]}
+          errors={errors.last_name}
           setErrors={setErrors}
         />
 

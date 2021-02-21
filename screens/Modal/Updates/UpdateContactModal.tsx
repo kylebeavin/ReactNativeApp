@@ -14,6 +14,7 @@ import AppTextInput from '../../../components/Layout/AppTextInput';
 import {isEmail, isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
+import { isSuccessStatusCode } from '../../../utils/Helpers';
 
 interface Props {
   navigation: any;
@@ -23,32 +24,38 @@ interface Props {
 const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
   //#region Form Initializers
   const formValues = {
-    name: contact.first_name,
+    first_name: contact.first_name,
+    last_name: contact.last_name,
     email: contact.email,
     phone: contact.phone,
     role: contact.type,
     owner: contact.owner_id,
     status: contact.is_active,
+    createdAt: contact.createdAt,
     notes: '',
   };
 
   const formErrors = {
-    name: [],
+    first_name: [],
+    last_name: [],
     email: [],
     phone: [],
     role: [],
     owner: [],
     status: [],
+    created: [],
     notes: [],
   };
 
   const formValidations = {
-    name: [isRequired],
+    first_name: [isRequired],
+    last_name: [isRequired],
     email: [isRequired, isEmail],
     phone: [isRequired],
     role: [isRequired],
     owner: [isRequired],
-    status: [isRequired],
+    status: [],
+    created: [],
     notes: [],
   };
 
@@ -81,15 +88,15 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
   const getFormData = async () => {
     const updatedContact: Contact = {
       _id: contact._id,
-      first_name: values.name,
-      last_name: contact.last_name,
+      first_name: values.first_name,
+      last_name: values.last_name,
       type: values.role,
       account_id: contact.account_id,
       phone: values.phone,
       email: values.email,
       owner_id: values.owner,
-      created: contact.created,
-      is_active: values.status === 'Active' ? true : false,
+      createdAt: values.createdAt,
+      is_active: values.status,
       method: contact.method,
     };
     return updatedContact;
@@ -97,7 +104,7 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
 
   const getOwnersDropDown = async (): Promise<SMT_User[]> => {
     let userList: SMT_User[] = [];
-
+    
     await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
       method: 'POST',
       body: JSON.stringify({group_id: grpId}),
@@ -114,27 +121,27 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
   };
 
   async function updateContact() {
-    const contact = await getFormData();
-
-    const data = await fetch(
-      `${Configs.TCMC_URI}/api/contacts/${contact._id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(contact),
-        headers: {'Content-Type': 'application/json', 'x-access-token': token},
-      },
-    )
-      .then((res) => res.json())
-      .then((data) => data)
-      .catch((err) => {
-        // ToDo: Come up with error handling strategy.
-        console.log(err);
-        return err;
-      });
-
-    navigation.navigate('AccountsScreen');
-
-    return data;
+    const updatedContact = await getFormData();
+    console.log(contact)
+    console.log(updatedContact)
+    await fetch(`${Configs.TCMC_URI}/api/contacts`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedContact),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => {
+        console.log(res.status)
+        return res.json()
+      })
+      .then((data) => {
+        if (isSuccessStatusCode(data.status)) {
+          show({message: data.message});
+          navigation.navigate('AccountsScreen');
+        } else {
+          show({message: data.message});
+        }
+      })
+      .catch((err) => show({message: 'Error: ' + err.message}));
   }
 
   return (
@@ -142,12 +149,23 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Contact Name"
-          name="name"
-          value={values.name}
-          onChange={(val) => handleChange('name', val)}
+          label="First Name"
+          name="first_name"
+          value={values.first_name}
+          onChange={(val) => handleChange('first_name', val)}
           validations={[isRequired]}
-          errors={errors.name}
+          errors={errors.first_name}
+          setErrors={setErrors}
+        />
+
+        {/* Last Name */}
+        <AppTextInput
+          label="Last Name"
+          name="last_name"
+          value={values.last_name}
+          onChange={(val) => handleChange('last_name', val)}
+          validations={[isRequired]}
+          errors={errors.last_name}
           setErrors={setErrors}
         />
 
@@ -213,27 +231,6 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
                   />
                 );
               })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Status */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>CONTACT STATUS</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.status}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('status', itemValue.toString())
-              }>
-              <Picker.Item
-                label={Status.active}
-                value={Status.active.toString()}
-              />
-              <Picker.Item
-                label={Status.inactive}
-                value={Status.inactive.toString()}
-              />
             </Picker>
           </View>
         </View>
