@@ -16,8 +16,8 @@ interface Props {
 
 const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
   //#region State Variables
-  const [email, setEmail] = useState('kyle.beavin@tcmcllc.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   
   const [emailValidator, setEmailValidator] = useState({
     isValid: false,
