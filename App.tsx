@@ -21,6 +21,7 @@ export default function App() {
   const [grpId, setGrpId] = useState("");
   const [id, setId] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [headerStyle, setHeaderStyle] = useState(1);
 
   const userSettings = {
     isAuth: isAuth,
@@ -28,16 +29,18 @@ export default function App() {
     grpId: grpId,
     id: id,
     displayName: displayName,
+    headerStyle: headerStyle,
     setDisplayName,
     setToken,
     setGrpId,
     setIsAuth,
-    setId
+    setId,
+    setHeaderStyle
   };
   
   useEffect(() => {
     // Clear User from Device
-    AsyncStorage.clear();
+    // ToDo: remove AsyncStorage.clear() replace with clear item method instead of clear all
 
     // Set My User for Testing
     // AsyncStorage.setItem('@smt_user', JSON.stringify({

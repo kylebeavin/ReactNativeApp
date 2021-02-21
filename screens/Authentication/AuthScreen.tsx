@@ -4,7 +4,6 @@ import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 import Colors from '../../constants/Colors';
 import AppButton from '../../components/Layout/AppButton';
 import Configs from '../../constants/Configs';
-import useAsyncStorage from '../../hooks/useAsyncStorage';
 import Layout from '../../constants/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppContext from '../../providers/AppContext';
@@ -77,11 +76,10 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
 
       {/* Image Container */}
       <View style={styles.imageContainer}>
-        <Image
+        <Image 
           style={styles.image}
-          source={require('../../assets/images/trashy_logo.jpg')}
+          source={require("../../assets/images/smt_logo.png")}
         />
-        <Text style={styles.title}>Smash My Trash</Text>
       </View>
 
       <View style={styles.form}>
@@ -187,7 +185,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
   },
   button: {
@@ -198,10 +196,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 10,
+    backgroundColor: Colors.SMT_Secondary_1_Light_1,
   },
   form: {
     flex: 1,
     width: '60%',
+    justifyContent: 'center',
     alignContent: 'center',
   },
   fieldContainer: {
@@ -214,18 +214,15 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   image: {
-    width: '70%',
-    height: '60%',
+    width: Layout.window.width,
+    height: 300,
     marginBottom: 5,
-    borderRadius: 5,
-    borderWidth: 3,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
   },
   imageContainer: {
     flex: 1,
-    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Colors.SMT_Tertiary_1,
   },
   needHelpContainer: {
     width: '100%',
