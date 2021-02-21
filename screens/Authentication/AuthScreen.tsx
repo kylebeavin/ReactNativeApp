@@ -16,8 +16,8 @@ interface Props {
 
 const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
   //#region State Variables
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('kyle.beavin@tcmcllc.com');
+  const [password, setPassword] = useState('password123');
   
   const [emailValidator, setEmailValidator] = useState({
     isValid: false,
@@ -29,7 +29,7 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
     message: '',
     isVisible: false,
   });
-  const {setId, setIsAuth, setToken, setGrpId, setDisplayName} = useContext(
+  const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr} = useContext(
     AppContext,
   );
   const {show} = useContext(ToastContext);
@@ -58,7 +58,8 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
         if (json.auth) {
           show({message: json.message});
           setToken(json.data.token);
-          setGrpId(json.data.group_id);
+          setGrpArr(json.data.group_id);
+          setGrpId(json.data.group_id[0])
           setId(json.data._id);
           setDisplayName(json.data.display_name);
           setIsAuth(true);
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.SMT_Tertiary_1,
+    elevation: 1,
   },
   needHelpContainer: {
     width: '100%',
@@ -241,9 +243,10 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
+    //borderWidth: 2,
     borderRadius: 3,
     backgroundColor: Colors.SMT_Tertiary_1,
+    elevation: 1,
   },
 });
 

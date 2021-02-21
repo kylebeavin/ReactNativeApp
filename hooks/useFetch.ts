@@ -7,8 +7,7 @@ export const useFetch = (url:string, method: string, body?: {}) => {
 	const {show} = useContext(ToastContext);
 
     const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
-	
-	let bodyObj = !body ? {group_id: grpId[0]} : body; 
+	let bodyObj = !body ? {group_id: grpId} : body; 
 	
 	const initialState = {
 		status: 'idle',

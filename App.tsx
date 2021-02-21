@@ -22,6 +22,7 @@ export default function App() {
   const [id, setId] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [headerStyle, setHeaderStyle] = useState(1);
+  const [grpArr, setGrpArr] = useState([]);
 
   const userSettings = {
     isAuth: isAuth,
@@ -30,12 +31,14 @@ export default function App() {
     id: id,
     displayName: displayName,
     headerStyle: headerStyle,
+    grpArr,
     setDisplayName,
     setToken,
     setGrpId,
     setIsAuth,
     setId,
-    setHeaderStyle
+    setHeaderStyle,
+    setGrpArr
   };
   
   useEffect(() => {
