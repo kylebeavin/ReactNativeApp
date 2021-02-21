@@ -44,7 +44,7 @@ const RoutesScreen = () => {
   const getTrucks = async () => {
     await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId[0]}),
+      body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => {
@@ -64,7 +64,7 @@ const RoutesScreen = () => {
   const getRoutes = async () => {
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
       //method: 'POST',
-      //body: JSON.stringify({group_id: grpId[0]}),
+      //body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => {
@@ -84,7 +84,7 @@ const RoutesScreen = () => {
   const getDrivers = async () => {
     await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId[0]}),
+      body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => {
@@ -105,7 +105,7 @@ const RoutesScreen = () => {
   const getInspections = async () => {
     await fetch(`${Configs.TCMC_URI}/api/pre-tripBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId[0]}),
+      body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => {

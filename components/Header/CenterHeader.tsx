@@ -35,7 +35,6 @@ const CenterHeader: React.FC<Props> = (props) => {
                 renderItem={(item) => {
                     return (
                       <TouchableOpacity
-                        hitSlop={{top: 100, bottom: 100, left: 100, right: 100}}
                         onPress={() => {
                             setToggle(!toggle);
                             setGrpId(item.item);

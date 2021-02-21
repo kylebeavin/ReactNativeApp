@@ -177,7 +177,7 @@ const ServicesScreen: React.FC<Props> = () => {
         <AppList
           url={`${Configs.TCMC_URI}/api/ordersBy`}
           httpMethod="POST"
-          params={{group_id: grpId[0], start_date: {$gte: greaterThanDate,$lt: lessThanDate}}}
+          params={{group_id: grpId, start_date: {$gte: greaterThanDate,$lt: lessThanDate}}}
           renderItem={(u: any, i: number) => {
             return (
               <View style={styles.card} key={i}>

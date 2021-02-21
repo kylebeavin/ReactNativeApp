@@ -122,7 +122,7 @@ const CreateRouteModal = () => {
   const getFormData = async () => {
     const route: Route = {
       _id: '',
-      group_id: grpId[0],
+      group_id: grpId,
       truck_id: values.truck_id,
       is_active: values.is_active,
       start_location: values.start_location,

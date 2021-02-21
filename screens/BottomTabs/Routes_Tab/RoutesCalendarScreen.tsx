@@ -164,7 +164,7 @@ const RoutesCalendarScreen = () => {
           url={`${Configs.TCMC_URI}/api/routesBy`}
           httpMethod="POST"
           params={{
-            group_id: grpId[0],
+            group_id: grpId,
             time: {$gte: greaterThanDate, $lt: lessThanDate},
           }}
           renderItem={(u: any, i: number) => {

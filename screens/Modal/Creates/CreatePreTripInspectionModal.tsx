@@ -215,7 +215,7 @@ const CreatePreTripInspectionModal = () => {
   const getFormData = async () => {
     const preTripInspection = {
       // Identify truck
-      group_id: grpId[0],
+      group_id: grpId,
       owner_id: id,
       is_active: values.is_active,
       type: type,
