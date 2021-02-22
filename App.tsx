@@ -21,9 +21,9 @@ export default function App() {
   const [grpId, setGrpId] = useState("");
   const [id, setId] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [headerStyle, setHeaderStyle] = useState(1);
+  const [headerStyle, setHeaderStyle] = useState(Math.floor(Math.random() * 3) + 1);
   const [grpArr, setGrpArr] = useState([]);
-
+  
   const userSettings = {
     isAuth: isAuth,
     token: token,

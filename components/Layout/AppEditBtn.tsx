@@ -6,19 +6,19 @@ import Colors from '../../constants/Colors';
 
 interface Props {
     item: any;
+    modal: string;
 }
 
-const AppEditBtn: React.FC<Props> = ({item}) => {
+const AppEditBtn: React.FC<Props> = ({item, modal}) => {
     const navigation = useNavigation();
     return (
       <View>
         {/* Edit Button */}
         <View style={styles.editButtonContainer}>
           <TouchableOpacity
-            //style={{ paddingHorizontal: 10, paddingVertical: 5 }}
             onPress={() =>
               navigation.navigate("Modal", {
-                modal: "UpdateAccountModal",
+                modal: modal,
                 item,
               })
             }

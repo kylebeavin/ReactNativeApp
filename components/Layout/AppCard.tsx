@@ -26,7 +26,8 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
         <View style={{ paddingHorizontal: 20 }}>
         <View style={styles.card}>
 
-          <AppEditBtn item={item} />
+          {/* Edit Button */}
+          <AppEditBtn item={item} modal="UpdateAccountModal" />
 
           {/* Card Title */}
           <View>
