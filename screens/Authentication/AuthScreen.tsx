@@ -11,33 +11,20 @@ import {isValidEmail, isValidPassword} from '../../utils/Helpers';
 import {ToastContext} from '../../providers/ToastProvider';
 
 interface Props {
-  isSignedIn: () => void;
 }
 
-const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
+const AuthScreen: React.FC<Props> = () => {
   //#region State Variables
   const [email, setEmail] = useState('kyle.beavin@tcmcllc.com');
   const [password, setPassword] = useState('password123');
-  
-  const [emailValidator, setEmailValidator] = useState({
-    isValid: false,
-    message: '',
-    isVisible: false,
-  });
-  const [passwordValidator, setPasswordValidator] = useState({
-    isValid: false,
-    message: '',
-    isVisible: false,
-  });
-  const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr} = useContext(
-    AppContext,
-  );
+  const [emailValidator, setEmailValidator] = useState({isValid: false, message: '', isVisible: false});
+  const [passwordValidator, setPasswordValidator] = useState({isValid: false, message: '', isVisible: false});
+  const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr} = useContext(AppContext);
   const {show} = useContext(ToastContext);
 
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   //#endregion
-  console.log(Configs.TCMC_URI)
 
   const signIn = async () => {
     let user = {
@@ -50,13 +37,9 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
       body: JSON.stringify(user),
       headers: {'Content-type': 'application/json; charset=UTF-8'},
     })
-      .then((res) => {
-        console.log(res.url)
-        return res.json()
-      })
+      .then((res) => res.json())
       .then((json) => {
         if (json.auth) {
-          show({message: json.message});
           setToken(json.data.token);
           setGrpArr(json.data.group_id);
           setGrpId(json.data.group_id[0])
@@ -68,8 +51,6 @@ const AuthScreen: React.FC<Props> = ({isSignedIn}) => {
         }
       })
       .catch((err) => show({message: 'Error: ' + err.message}));
-
-    isSignedIn();
   };
 
   return (

@@ -183,7 +183,7 @@ const CreatePreTripInspectionModal = () => {
         return res.json();
       })
       .then((data) => {
-        if (data.status == 'success') {
+        if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
           setType(data.data[0].vin);
           //handleChange("truck_vin", data.data[0].vin);

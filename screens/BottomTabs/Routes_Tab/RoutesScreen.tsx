@@ -52,7 +52,7 @@ const RoutesScreen = () => {
         return res.json();
       })
       .then((data) => {
-        if (data.status == 'success') {
+        if (isSuccessStatusCode(data.status)) {
           setTrucks(data.data);
         } else {
           show({message: data.message});
@@ -72,7 +72,7 @@ const RoutesScreen = () => {
         return res.json();
       })
       .then((data) => {
-        if (data.status == 'success') {
+        if (isSuccessStatusCode(data.status)) {
           setRoutes(data.data);
         } else {
           show({message: data.message});
@@ -93,7 +93,7 @@ const RoutesScreen = () => {
       })
       .then((data) => {
         console.log(data)
-        if (data.status == 'success') {
+        if (isSuccessStatusCode(data.status)) {
           setDrivers(data.data);
         } else {
           show({message: data.message});
@@ -114,7 +114,7 @@ const RoutesScreen = () => {
       })
       .then((data) => {
         console.log(data)
-        if (data.status == 'success') {
+        if (isSuccessStatusCode(data.status)) {
           setInspections(data.data);
         } else {
           show({message: data.message});
