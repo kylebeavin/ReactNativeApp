@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, {useContext} from 'react';
 import {
   StyleSheet,
@@ -18,8 +19,9 @@ interface Props {
 }
 
 const AccountSettingsMenu: React.FC<Props> = (props) => {
-  const {headerStyle, setHeaderStyle} = useContext(AppContext);
-
+  const {role, headerStyle, setHeaderStyle} = useContext(AppContext);
+  const navigation = useNavigation();
+  
   const handleOnPress = (val: number) => {
     setHeaderStyle(val);
   };
@@ -30,11 +32,10 @@ const AccountSettingsMenu: React.FC<Props> = (props) => {
         styles.settingsListContainer,
         props.isVisible ? {display: 'flex'} : {display: 'none'},
       ]}>
-      <AppTitle title={props.title}/>
+      <AppTitle title={props.title} />
 
       {/* Account Settings Menu */}
       <View style={styles.settingsItemsContainer}>
-
         <View style={styles.settingsItem}>
           <View style={styles.accountSettingsLabel}>
             <Text style={styles.settingsItemText}>Edit Display Name</Text>
@@ -49,34 +50,53 @@ const AccountSettingsMenu: React.FC<Props> = (props) => {
           <View style={styles.accountSettingsLabel}>
             <Text style={styles.settingsItemText}>Header Style</Text>
           </View>
-          <View style={[styles.accountSettingsInput, {flexDirection: 'row', marginRight: 45}]}>
+          <View
+            style={[
+              styles.accountSettingsInput,
+              {flexDirection: 'row', marginRight: 45},
+            ]}>
             <TouchableOpacity style={[styles.headerStyle]}>
               <Text
-                style={[styles.text, headerStyle === 1 ? styles.selected : null]}
-                onPress={() => handleOnPress(1)}
-              >
+                style={[
+                  styles.text,
+                  headerStyle === 1 ? styles.selected : null,
+                ]}
+                onPress={() => handleOnPress(1)}>
                 1
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.headerStyle]}>
               <Text
-                style={[styles.text, headerStyle === 2 ? styles.selected : null]}
-                onPress={() => handleOnPress(2)}
-              >
+                style={[
+                  styles.text,
+                  headerStyle === 2 ? styles.selected : null,
+                ]}
+                onPress={() => handleOnPress(2)}>
                 2
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.headerStyle}>
               <Text
-                style={[styles.text, headerStyle === 3 ? styles.selected : null]}
-                onPress={() => handleOnPress(3)}
-              >
+                style={[
+                  styles.text,
+                  headerStyle === 3 ? styles.selected : null,
+                ]}
+                onPress={() => handleOnPress(3)}>
                 3
               </Text>
             </TouchableOpacity>
-            {/* <Ionicons style={styles.settingsItemIcon} name="md-person" /> */}
           </View>
         </View>
+
+        {role !== 'admin' ? null : (
+          <TouchableOpacity
+            style={styles.settingsItem}
+            onPress={() => navigation.navigate("Modal", {modal: "CreateGroupModal"})}>
+            <View style={styles.accountSettingsLabel}>
+              <Text style={styles.settingsItemText}>Create New Franchise Group</Text>
+            </View>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
           style={styles.settingsItem}

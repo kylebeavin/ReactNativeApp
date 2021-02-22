@@ -16,25 +16,28 @@ export default function App() {
   const [token, setToken] = useState("");
   const [grpId, setGrpId] = useState("");
   const [id, setId] = useState("");
+  const [role, setRole] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [headerStyle, setHeaderStyle] = useState(Math.floor(Math.random() * 3) + 1);
   const [grpArr, setGrpArr] = useState([]);
   
   const userSettings = {
-    isAuth: isAuth,
-    token: token,
-    grpId: grpId,
-    id: id,
-    displayName: displayName,
-    headerStyle: headerStyle,
+    isAuth,
+    token,
+    grpId,
+    id,
+    displayName,
+    headerStyle,
     grpArr,
+    role,
     setDisplayName,
     setToken,
     setGrpId,
     setIsAuth,
     setId,
     setHeaderStyle,
-    setGrpArr
+    setGrpArr,
+    setRole
   };
 
   if (!isLoadingComplete) {

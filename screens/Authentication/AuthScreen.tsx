@@ -19,7 +19,7 @@ const AuthScreen: React.FC<Props> = () => {
   const [password, setPassword] = useState('password123');
   const [emailValidator, setEmailValidator] = useState({isValid: false, message: '', isVisible: false});
   const [passwordValidator, setPasswordValidator] = useState({isValid: false, message: '', isVisible: false});
-  const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr} = useContext(AppContext);
+  const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr, setRole} = useContext(AppContext);
   const {show} = useContext(ToastContext);
 
   const emailRef = useRef<TextInput>(null);
@@ -45,6 +45,7 @@ const AuthScreen: React.FC<Props> = () => {
           setGrpId(json.data.group_id[0])
           setId(json.data._id);
           setDisplayName(json.data.display_name);
+          setRole(json.data.role[0]);
           setIsAuth(true);
         } else {
           show({message: 'Login Failed.'}); // ToDo: need to update response json to provide message.

@@ -1,4 +1,5 @@
 export const isRequired = (val: string) => {
+  console.log(val)
   return val.length > 0 ? '' : 'Can not be blank';
 };
 

@@ -3,7 +3,7 @@ import { ToastContext } from '../providers/ToastProvider';
 
 const checkProperties = (obj:any) => {
     let isEmpty = true;
-
+    
     Object.keys(obj).map((key: string,index: number) => {
         obj[key].map((k:string, index:number) => {
             if (k.length !== 0) {
