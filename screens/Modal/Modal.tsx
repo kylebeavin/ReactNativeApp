@@ -20,6 +20,8 @@ import CreateRouteModal from './Creates/CreateRouteModal';
 import CreateDriverModal from './Creates/CreateDriverModal';
 import CreatePreTripInspectionModal from './Creates/CreatePreTripInspectionModal';
 import CreateGroupModal from './Creates/CreateGroupModal';
+import UpdateRouteModal from './Updates/UpdateRouteModal';
+import AssignRouteModal from './Routes/AssignRouteModal';
 
 interface Props {
     navigation: any;
@@ -67,9 +69,15 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
       case "UpdateAgreementModal":
         return <UpdateAgreementModal />;
       case "UpdateOrderModal":
-        return <UpdateOrderModal order={item}/>;
+        return <UpdateOrderModal order={item} />;
       case "UpdateDemoModal":
         return <UpdateDemoModal />;
+      case "UpdateRouteModal":
+        return <UpdateRouteModal route={item} />;
+
+      //=== Route Modals ===//
+      case "AssignRouteModal":
+        return <AssignRouteModal route={item} />
 
       default:
         return null;

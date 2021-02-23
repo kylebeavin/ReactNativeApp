@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -11,30 +11,44 @@ import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
-import {formatDate, formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
+import {isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import {TruckServiceStatus, VehicleType} from '../../../types/enums';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
-import { TextInputMask } from 'react-native-masked-text';
-import AppButton from '../../../components/Layout/AppButton';
-import { Calendar } from 'react-native-calendars';
 
-const CreateRouteModal = () => {
+interface Props {
+  route: Route;
+}
+
+const UpdateRouteModal: React.FC<Props> = () => {
   //#region Form Initializers
   const formValues = {
+    truck_id: '',
+    is_active: true,
     start_location: '',
-    time: formatDateString(new Date().toString()),
+    driver: '',
+    truck_vin: '',
+    service_stop: [],
+    time: new Date().toString(),
     notes: '',
   };
-  console.log(new Date())
   const formErrors = {
+    truck_id: [],
+    is_active: [],
     start_location: [],
+    driver: [],
+    truck_vin: [],
+    service_stop: [],
     time: [],
     notes: [],
   };
   const formValidations = {
+    truck_id: [],
+    is_active: [],
     start_location: [isRequired],
+    driver: [isRequired],
+    truck_vin: [],
+    service_stop: [],
     time: [isRequired],
     notes: [],
   };
@@ -53,7 +67,6 @@ const CreateRouteModal = () => {
 
   // State
   const [truckVin, setTruckVin] = useState('');
-  const [showCalendar, setShowCalendar] = useState(false);
 
   // Drop Down
   const [trucksList, setTrucksList] = useState<Truck[]>([]);
@@ -83,6 +96,7 @@ const CreateRouteModal = () => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
           setTruckVin(data.data[0].vin);
+          //handleChange("truck_vin", data.data[0].vin);
         } else {
           show({message: data.message});
         }
@@ -112,14 +126,14 @@ const CreateRouteModal = () => {
     const route: Route = {
       _id: '',
       group_id: grpId,
-      truck_id: '',
-      is_active: true,
+      truck_id: values.truck_id,
+      is_active: values.is_active,
       route_stage: 'unassigned',
       start_location: values.start_location,
-      driver: '',
-      truck_vin: '_',
-      service_stop: [],
-      time: new Date(values.time),
+      driver: values.driver,
+      truck_vin: truckVin,
+      service_stop: values.service_stop,
+      time: values.time,
       notes: values.notes,
     };
     return route;
@@ -148,8 +162,8 @@ const CreateRouteModal = () => {
       .catch((err) => show({message: err.message}));
   }
 
-  const openCalendar = (show: boolean) => {
-    setShowCalendar(show);
+  const changeVin = (itemIndex: number) => {
+    //handleChange('truck_vin', trucksList[itemIndex].vin)
   };
 
   return (
@@ -166,32 +180,74 @@ const CreateRouteModal = () => {
           setErrors={setErrors}
         />
 
-        {/* Time */}
+        {/* Truck */}
         <View style={styles.fieldContainer}>
-          <View style={styles.columnContainer}>
-            <View style={styles.column}>
-              <Text style={styles.text}>Start Date</Text>
-              <View style={styles.textInput}>
-                <TextInputMask
-                  type={'datetime'}
-                  options={{
-                    format: 'MM/DD/YYYY',
-                  }}
-                  value={values.time}
-                  onChangeText={(text) => handleChange('time', text)}
-                />
-              </View>
-            </View>
-            <View style={[styles.column, styles.calendarButton]}>
-              <AppButton
-                title="Calendar"
-                onPress={() => openCalendar(true)}
-                icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
-                backgroundColor={Colors.SMT_Secondary_2}
-              />
-            </View>
+          <Text style={styles.text}>Truck</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.truck_id}
+              onValueChange={(itemValue, itemIndex) => {
+                handleChange('truck_id', itemValue.toString());
+                setTruckVin(trucksList[itemIndex].vin);
+                //changeVin(itemIndex)
+                //handleChange('truck_vin', trucksList[itemIndex].vin)
+              }}>
+              {trucksList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item.vin}
+                    label={item.license_number}
+                    value={item._id}
+                  />
+                );
+              })}
+            </Picker>
           </View>
         </View>
+
+        {/* Truck VIN */}
+        <AppTextInput
+          label="Truck VIN"
+          name="truck_vin"
+          value={truckVin}
+          onChange={(val) => setTruckVin(val)}
+          validations={[isRequired]}
+          errors={errors.truck_vin}
+          setErrors={setErrors}
+        />
+
+        {/* Driver */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Driver</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.driver}
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange('driver', itemValue.toString())
+              }>
+              {ownersList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item._id}
+                    label={item.first_name + ' ' + item.last_name}
+                    value={item._id}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+        </View>
+
+        {/* Time */}
+        <AppTextInput
+          label="Time"
+          name="time"
+          value={values.time}
+          onChange={(val) => handleChange('time', val)}
+          validations={[isRequired]}
+          errors={errors.time}
+          setErrors={setErrors}
+        />
 
         {/* Notes */}
         <AppTextInput
@@ -206,20 +262,6 @@ const CreateRouteModal = () => {
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />
-
-      {showCalendar ? (
-        <TouchableOpacity
-          style={styles.calendarPopup}
-          onPress={() => setShowCalendar(false)}>
-          <Calendar
-            style={{borderRadius: 4}}
-            onDayPress={(day) => {
-              handleChange('time', formatDateString(day.dateString));
-              setShowCalendar(false);
-            }}
-          />
-        </TouchableOpacity>
-      ) : null}
     </View>
   );
 };
@@ -232,7 +274,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
   },
-  //=== Date Fields ===//
   fieldContainer: {
     marginBottom: 10,
   },
@@ -240,38 +281,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.SMT_Secondary_1,
   },
-  textInput: {
-    paddingLeft: 15,
-    paddingVertical: 5,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
-    borderRadius: 3,
-  },
   picker: {
     paddingLeft: 15,
+    //paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,
-  },
-  columnContainer: {
-    flexDirection: 'row',
-  },
-  column: {
-    flex: 1,
-  },
-  calendarButton: {
-    flex: 0,
-    marginTop: 22,
-    marginBottom: -3,
-    marginLeft: 20,
-  },
-  calendarPopup: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.55)',
   },
 });
 
-export default CreateRouteModal;
+export default UpdateRouteModal;

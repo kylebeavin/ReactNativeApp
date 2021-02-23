@@ -46,6 +46,7 @@ const RouteDetailsScreen : React.FC<Props> = ({route}) => {
           <Text>driver: {route.params.route.driver}</Text>
           <Text>group_id: {route.params.route.group_id}</Text>
           <Text>is_active: {route.params.route.is_active}</Text>
+          <Text>route_stage: {route.params.route.route_stage}</Text>
           <Text>notes: {route.params.route.notes}</Text>
           <Text>service_stop: {route.params.route.service_stop}</Text>
           <Text>start_location: {route.params.route.start_location}</Text>

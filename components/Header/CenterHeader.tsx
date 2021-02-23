@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View, FlatList} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, Text, View, FlatList, ShadowPropTypesIOS} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 
@@ -7,15 +7,42 @@ import AppContext from '../../providers/AppContext';
 import Colors from '../../constants/Colors';
 import AppButton from '../Layout/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Configs from '../../constants/Configs';
+import { ToastContext } from '../../providers/ToastProvider';
+import { Group } from '../../types';
 
 interface Props {
     text: string;
 }
 
 const CenterHeader: React.FC<Props> = (props) => {
-    const {grpArr, setGrpId, grpId} = useContext(AppContext);
+    const {grpArr, setGrpId, grpId, token} = useContext(AppContext);
+    const {show} = useContext(ToastContext);
+    const [grpName, setGrpName] = useState("");
+    const [groupsList, setGroupsList] = useState<Group[]>([]);
     const [toggle, setToggle] = useState(false);
     const navigation = useNavigation();
+
+    useEffect(() => {
+      getGroupsList();
+    }, []);
+
+    const getGroupsList = async () => {
+      await fetch(`${Configs.TCMC_URI}/api/groupsBy`, {
+        method: 'POST',
+        body: JSON.stringify({_id: grpArr}),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token}
+      })
+        .then((res) => {
+          console.log(res.status);
+          return res.json();
+        })
+          .then((data) => {
+            setGrpName(data.data.filter((group: Group) => group._id === grpId)[0].name)
+            setGroupsList(data.data);
+          })
+          .catch((err) => show({message: err.message}));
+    };
     
     return (
       <View style={styles.container}>
@@ -23,26 +50,27 @@ const CenterHeader: React.FC<Props> = (props) => {
           <TouchableOpacity
             style={[styles.picker, !toggle ? null : styles.open]}
             onPress={() => setToggle(!toggle)}>
-            <Text style={styles.itemTextStyle}>{grpId}</Text>
+            <Text style={styles.itemTextStyle}>{grpName}</Text>
           </TouchableOpacity>
         </View>
 
         {!toggle ? null : (
           <View style={styles.itemContainer}>
               <FlatList
-                data={grpArr}
-                keyExtractor={item => item}
-                renderItem={(item) => {
+                data={groupsList}
+                keyExtractor={item => item.name}
+                renderItem={(item: any) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
                             setToggle(!toggle);
-                            setGrpId(item.item);
+                            setGrpId(item.item._id);
+                            setGrpName(item.item.name);
                             navigation.navigate("DashboardScreen");
                         }}
                         style={styles.itemWrapper}
                       >
-                        <Text style={styles.itemTextStyle}>{item.item}</Text>
+                        <Text style={styles.itemTextStyle}>{item.item.name}</Text>
                       </TouchableOpacity>
                     );
                 }}

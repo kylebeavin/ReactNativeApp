@@ -1,5 +1,6 @@
 //=== Franchise ===//
 export type Group = {
+  _id: string
   address: Address;
   dba: string;
   ein: string;

@@ -8,7 +8,6 @@ import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
-import {Account} from '../../../types/crm';
 import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
@@ -21,12 +20,10 @@ import { Calendar } from 'react-native-calendars';
 const CreateGroupModal = () => {
   //#region Form Initializers
   const formValues = {
-    address: {
-      address_city: '',
-      address_state: '',
-      address_street: '',
-      address_zip: '',
-    },
+    address_city: '',
+    address_state: '',
+    address_street: '',
+    address_zip: '',
     dba: '',
     ein: '',
     email: '',
@@ -89,7 +86,7 @@ const CreateGroupModal = () => {
   //#region State Variables
   const navigation = useNavigation();
 
-  const {grpId, token, id, displayName} = useContext(AppContext);
+  const {token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const {handleChange, handleSubmit, values, errors, setErrors} = useForm(
     formValues,
@@ -105,30 +102,30 @@ const CreateGroupModal = () => {
   //#endregion
 
   const getFormData = async () => {
-    // const group: Group = {
-    //     address: {
-    //         address_city: values.address.address_city,
-    //         address_state: values.address.address_state,
-    //         address_street: values.address.address_street,
-    //         address_zip: values.address.address_zip,
-    //     },
-    //     dba: values.dba,
-    //     ein: values.ein,
-    //     email: values.email,
-    //     is_active: values.is_active,
-    //     launch_date: values.launch_date,
-    //     legal_company: values.legal_company,
-    //     name: values.name,
-    //     phone: values.phone,
-    //     region: values.region,
-    //     signing_date: values.signing_date,
-    //     tax_rate: values.tax_rate,
-    //     territory_zips: values.territory_zips,
-    //     time_zone: values.time_zone,
-    //     webpage: values.webpage,
-    // };
-    const group: Group = {...values};
-
+    const group: Group = {
+        _id: '',
+        address: {
+            address_city: values.address_city,
+            address_state: values.address_state,
+            address_street: values.address_street,
+            address_zip: values.address_zip,
+        },
+        dba: values.dba,
+        ein: values.ein,
+        email: values.email,
+        is_active: values.is_active,
+        launch_date: values.launch_date,
+        legal_company: values.legal_company,
+        name: values.name,
+        phone: values.phone,
+        region: values.region,
+        signing_date: values.signing_date,
+        tax_rate: values.tax_rate,
+        territory_zips: values.territory_zips,
+        time_zone: values.time_zone,
+        webpage: values.webpage,
+    };
+    
     return group;
   };
 
@@ -210,7 +207,7 @@ const CreateGroupModal = () => {
         <AppTextInput
           label="City"
           name="address_city"
-          value={values.address.address_city}
+          value={values.address_city}
           onChange={(val) => handleChange('address_city', val)}
           validations={[isRequired]}
           errors={errors.address_city}
@@ -221,7 +218,7 @@ const CreateGroupModal = () => {
         <AppTextInput
           label="State"
           name="address_state"
-          value={values.address.address_state}
+          value={values.address_state}
           onChange={(val) => handleChange('address_state', val)}
           validations={[isRequired]}
           errors={errors.address_state}
@@ -232,7 +229,7 @@ const CreateGroupModal = () => {
         <AppTextInput
           label="Street"
           name="address_street"
-          value={values.address.address_street}
+          value={values.address_street}
           onChange={(val) => handleChange('address_street', val)}
           validations={[isRequired]}
           errors={errors.address_street}
@@ -243,7 +240,7 @@ const CreateGroupModal = () => {
         <AppTextInput
           label="Zip"
           name="address_zip"
-          value={values.address.address_zip}
+          value={values.address_zip}
           onChange={(val) => handleChange('address_zip', val)}
           validations={[isRequired]}
           errors={errors.address_zip}

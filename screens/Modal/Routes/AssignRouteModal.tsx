@@ -11,30 +11,49 @@ import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
-import {formatDate, formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
+import {formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import {TruckServiceStatus, VehicleType} from '../../../types/enums';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import { TextInputMask } from 'react-native-masked-text';
 import AppButton from '../../../components/Layout/AppButton';
 import { Calendar } from 'react-native-calendars';
 
-const CreateRouteModal = () => {
+interface Props {
+  route: Route;
+}
+
+const AssignRouteModal: React.FC<Props> = ({route}) => {
   //#region Form Initializers
   const formValues = {
-    start_location: '',
-    time: formatDateString(new Date().toString()),
-    notes: '',
+    truck_id: route.truck_id,
+    is_active: route.is_active,
+    start_location: route.start_location,
+    route_stage: route.route_stage,
+    driver: route.driver,
+    truck_vin: route.truck_vin,
+    service_stop: route.service_stop,
+    time: getDateStringsFromDate(route.time).date,
+    notes: route.notes,
   };
-  console.log(new Date())
+  
   const formErrors = {
+    truck_id: [],
+    is_active: [],
     start_location: [],
+    driver: [],
+    truck_vin: [],
+    service_stop: [],
     time: [],
     notes: [],
   };
   const formValidations = {
+    truck_id: [],
+    is_active: [],
     start_location: [isRequired],
+    driver: [isRequired],
+    truck_vin: [],
+    service_stop: [],
     time: [isRequired],
     notes: [],
   };
@@ -48,7 +67,7 @@ const CreateRouteModal = () => {
     formValues,
     formErrors,
     formValidations,
-    postNewRoute,
+    assignRoute,
   );
 
   // State
@@ -109,26 +128,26 @@ const CreateRouteModal = () => {
   };
 
   const getFormData = async () => {
-    const route: Route = {
-      _id: '',
-      group_id: grpId,
-      truck_id: '',
-      is_active: true,
-      route_stage: 'unassigned',
+    const reassignedRoute: Route = {
+      _id: route._id,
+      group_id: route.group_id,
+      truck_id: values.truck_id,
+      is_active: values.is_active,
+      route_stage: values.route_stage,
       start_location: values.start_location,
-      driver: '',
-      truck_vin: '_',
-      service_stop: [],
+      driver: values.driver,
+      truck_vin: truckVin,
+      service_stop: values.service_stop,
       time: new Date(values.time),
       notes: values.notes,
     };
-    return route;
+    return reassignedRoute;
   };
 
-  async function postNewRoute() {
+  async function assignRoute() {
     const route: Route = await getFormData();
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
@@ -166,6 +185,53 @@ const CreateRouteModal = () => {
           setErrors={setErrors}
         />
 
+        {/* Truck */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Truck</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.truck_id}
+              onValueChange={(itemValue, itemIndex) => {
+                handleChange('truck_id', itemValue.toString());
+                setTruckVin(trucksList[itemIndex].vin);
+                //changeVin(itemIndex)
+                //handleChange('truck_vin', trucksList[itemIndex].vin)
+              }}>
+              {trucksList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item.vin}
+                    label={item.license_number}
+                    value={item._id}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+        </View>
+
+        {/* Driver */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Driver</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.driver}
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange('driver', itemValue.toString())
+              }>
+              {ownersList.map((item, index) => {
+                return (
+                  <Picker.Item
+                    key={item._id}
+                    label={item.first_name + ' ' + item.last_name}
+                    value={item._id}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+        </View>
+
         {/* Time */}
         <View style={styles.fieldContainer}>
           <View style={styles.columnContainer}>
@@ -199,7 +265,7 @@ const CreateRouteModal = () => {
           name="notes"
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
-          validations={[isRequired]}
+          validations={[]}
           errors={errors.notes}
           setErrors={setErrors}
         />
@@ -274,4 +340,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateRouteModal;
+export default AssignRouteModal;

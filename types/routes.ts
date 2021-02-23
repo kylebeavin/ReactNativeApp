@@ -30,6 +30,7 @@ export type Route = {
   group_id: string;
   truck_id: string;
   is_active: boolean;
+  route_stage: string;
   start_location: string;
   driver: string;
   truck_vin: string;
@@ -40,6 +41,7 @@ export type Route = {
 
 export type PreTripInspection = {
   // Identify truck
+  _id: string;
 	group_id: string;
 	owner_id: string;
 	is_active: boolean;
