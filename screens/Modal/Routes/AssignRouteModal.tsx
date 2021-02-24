@@ -71,7 +71,6 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
   );
 
   // State
-  const [truckVin, setTruckVin] = useState('');
   const [showCalendar, setShowCalendar] = useState(false);
 
   // Drop Down
@@ -101,7 +100,6 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
-          setTruckVin(data.data[0].vin);
         } else {
           show({message: data.message});
         }
@@ -133,10 +131,10 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       group_id: route.group_id,
       truck_id: values.truck_id,
       is_active: values.is_active,
-      route_stage: values.route_stage,
+      route_stage: "assigned",
       start_location: values.start_location,
       driver: values.driver,
-      truck_vin: truckVin,
+      truck_vin: route.truck_vin,
       service_stop: values.service_stop,
       time: new Date(values.time),
       notes: values.notes,
@@ -191,12 +189,7 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.truck_id}
-              onValueChange={(itemValue, itemIndex) => {
-                handleChange('truck_id', itemValue.toString());
-                setTruckVin(trucksList[itemIndex].vin);
-                //changeVin(itemIndex)
-                //handleChange('truck_vin', trucksList[itemIndex].vin)
-              }}>
+              onValueChange={(itemValue, itemIndex) => handleChange('truck_id', itemValue.toString())}>
               {trucksList.map((item, index) => {
                 return (
                   <Picker.Item

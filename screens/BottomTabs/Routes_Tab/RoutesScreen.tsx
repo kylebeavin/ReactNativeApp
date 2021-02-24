@@ -18,7 +18,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {SMT_User} from '../../../types';
 import {Truck, Route, PreTripInspection} from '../../../types/routes';
-import {isSuccessStatusCode} from '../../../utils/Helpers';
+import {getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
 
 const RoutesScreen = () => {
   //#region Use State Variables
@@ -217,8 +217,8 @@ const RoutesScreen = () => {
                     }}>
                     <AppButton
                       outlined
-                      title="See Details"
-                      onPress={() => console.log('Truck Details')}
+                      title="Details"
+                      onPress={() => navigation.navigate("TruckDetailsScreen", {truck: u})}
                     />
                     <View
                       style={{
@@ -264,8 +264,8 @@ const RoutesScreen = () => {
                     }}>
                     <AppButton
                       outlined
-                      title="See Details"
-                      onPress={() => console.log('Route Details')}
+                      title="Details"
+                      onPress={() => navigation.navigate("RouteDetailsScreen", {route: u})}
                     />
                     <View
                       style={{
@@ -397,9 +397,9 @@ const RoutesScreen = () => {
             {unassigned.map((u, i) => {
               return (
                 <View style={styles.card} key={u._id}>
-                  <Text>Name: {u._id}</Text>
-                  <Text>Stage: {u.route_stage}</Text>
-                  <Text>Notes: {u.notes}</Text>
+                  <Text>Route #: {u._id}</Text>
+                  <Text style={{marginBottom: 5}}>Date: {getDateStringsFromDate(u.time).date}</Text>
+                  <Text style={{marginBottom: 5}}>Notes: {u.notes}</Text>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -415,8 +415,8 @@ const RoutesScreen = () => {
                         flexDirection: 'row',
                       }}>
                       <AppButton
-                        title="Claim Route"
-                        onPress={() => console.log('Claim Route')}
+                        title="Assign"
+                        onPress={() => navigation.navigate("Modal", {modal: "AssignRouteModal", item: u})}
                       />
                     </View>
                   </View>
@@ -438,9 +438,22 @@ const RoutesScreen = () => {
               console.log(u)
               return (
                 <View style={styles.card} key={u._id}>
-                  <Text>Name: {u._id}</Text>
-                  <Text>Stage: {u.route_stage}</Text>
-                  <Text>Notes: {u.notes}</Text>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <View style={{flex: 1, marginRight: 10}}>
+                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>#{u._id}</Text>
+                      <Text numberOfLines={1} style={{color: 'black'}}>Driver: {u.driver}</Text>
+                      <Text numberOfLines={1} style={{color: 'black'}}>Truck #{u.truck_id}</Text>
+                      <Text numberOfLines={1} style={{marginBottom: 5, color: "black"}}>Notes: {u.notes}</Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
+                        {getDateStringsFromDate(u.time).date}
+                      </Text>
+                      <Text style={{fontWeight: 'bold', textAlign: 'right'}}>Stops: 00</Text>
+                    </View>
+                  </View>
+
                   <View
                     style={{
                       flexDirection: 'row',
@@ -449,7 +462,9 @@ const RoutesScreen = () => {
                     <AppButton
                       outlined
                       title="Details"
-                      onPress={() => navigation.navigate("RouteDetailsScreen", {route: u})}
+                      onPress={() =>
+                        navigation.navigate('RouteDetailsScreen', {route: u})
+                      }
                     />
                     <View
                       style={{
@@ -457,7 +472,12 @@ const RoutesScreen = () => {
                       }}>
                       <AppButton
                         title="Reassign"
-                        onPress={() => navigation.navigate("Modal", {modal: "AssignRouteModal", item: u})}
+                        onPress={() =>
+                          navigation.navigate('Modal', {
+                            modal: 'AssignRouteModal',
+                            item: u,
+                          })
+                        }
                       />
                     </View>
                   </View>

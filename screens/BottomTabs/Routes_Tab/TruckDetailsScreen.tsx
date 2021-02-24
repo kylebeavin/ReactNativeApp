@@ -4,24 +4,25 @@ import {StyleSheet, View, ScrollView, TouchableOpacity, Text} from 'react-native
 import AppButton from '../../../components/Layout/AppButton';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
-import { Route } from '../../../types/routes';
+import { Truck } from '../../../types/routes';
 
 interface Props {
     route: any;
 }
 
 const RouteDetailsScreen : React.FC<Props> = ({route}) => {
+    const truck: Truck = route.params.truck;
+    console.log(truck);
     //#region Use State Variables
     const navigation = useNavigation()
     
     // Toggles
     const [inspectionsToggle, setInspectionsToggle] = useState(false);
-    const [stopsToggle, setStopsToggle] = useState(false);
     //#endregion
 
   return (
     <View>
-      <AppTitle title="Route Detail" help search />
+      <AppTitle title="Truck Detail" help search />
 
       <ScrollView
         style={styles.scrollView}
@@ -43,29 +44,39 @@ const RouteDetailsScreen : React.FC<Props> = ({route}) => {
       </AppNavBtnGrp>
 
       <View style={{paddingLeft: 10}}>
-          <Text>_id: {route.params.route._id}</Text>
-          <Text>driver: {route.params.route.driver}</Text>
-          <Text>group_id: {route.params.route.group_id}</Text>
-          <Text>is_active: {route.params.route.is_active}</Text>
-          <Text>route_stage: {route.params.route.route_stage}</Text>
-          <Text>notes: {route.params.route.notes}</Text>
-          <Text>service_stop: {route.params.route.service_stop}</Text>
-          <Text>start_location: {route.params.route.start_location}</Text>
-          <Text>time: {route.params.route.time}</Text>
-          <Text>truck_id: {route.params.route.truck_id}</Text>
-          <Text>truck_vin: {route.params.route.truck_vin}</Text>
+          <Text>_id: {truck._id}</Text>
+          <Text>body_subtype: {truck.body_subtype}</Text>
+          <Text>body_type: {truck.body_type}</Text>
+          <Text>color: {truck.color}</Text>
+          <Text>documents: {truck.documents}</Text>
+          <Text>group_id: {truck.group_id}</Text>
+          <Text>hours: {truck.hours}</Text>
+          <Text>is_active: {truck.is_active}</Text>
+          <Text>license_number: {truck.license_number}</Text>
+          <Text>msrp: {truck.msrp}</Text>
+          <Text>name: {truck.name}</Text>
+          <Text>odo: {truck.odo}</Text>
+          <Text>operator: {truck.operator}</Text>
+          <Text>ownership: {truck.ownership}</Text>
+          <Text>pictures: {truck.pictures}</Text>
+          <Text>service_history: {truck.service_history}</Text>
+          <Text>service_status: {truck.service_status}</Text>
+          <Text>trim: {truck.trim}</Text>
+          <Text>registration: {truck.registration}</Text>
+          <Text>vehicle_make: {truck.vehicle_make}</Text>
+          <Text>vehicle_model: {truck.vehicle_model}</Text>
+          <Text>vehicle_type: {truck.vehicle_type}</Text>
+          <Text>vin: {truck.vin}</Text>
+          <Text>year: {truck.year}</Text>
+
+
       </View>
 
       <TouchableOpacity onPress={() => setInspectionsToggle(!inspectionsToggle)}>
         <AppTitle title="Inspections" />
       </TouchableOpacity>
-      {!inspectionsToggle ? null : <View style={{paddingLeft: 10}}><Text>Hello World!</Text></View>}
+      {!inspectionsToggle ? null : <View style={{paddingLeft: 10, marginBottom: 50}}><Text>Hello World!</Text></View>}
       
-      <TouchableOpacity onPress={() => setStopsToggle(!stopsToggle)}>
-        <AppTitle title="Stops" />
-      </TouchableOpacity>
-      {!stopsToggle ? null : <View style={{paddingLeft: 10}}><Text>Hello stops!</Text></View>}
-
       </ScrollView>
     </View>
   );
