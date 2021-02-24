@@ -12,7 +12,7 @@ interface Props {
 
 const RouteDetailsScreen : React.FC<Props> = ({route}) => {
     const truck: Truck = route.params.truck;
-    console.log(truck);
+    
     //#region Use State Variables
     const navigation = useNavigation()
     
@@ -68,15 +68,13 @@ const RouteDetailsScreen : React.FC<Props> = ({route}) => {
           <Text>vehicle_type: {truck.vehicle_type}</Text>
           <Text>vin: {truck.vin}</Text>
           <Text>year: {truck.year}</Text>
-
-
       </View>
 
-      <TouchableOpacity onPress={() => setInspectionsToggle(!inspectionsToggle)}>
+      <TouchableOpacity style={{marginBottom: 5}} onPress={() => setInspectionsToggle(!inspectionsToggle)}>
         <AppTitle title="Inspections" />
       </TouchableOpacity>
       {!inspectionsToggle ? null : <View style={{paddingLeft: 10, marginBottom: 50}}><Text>Hello World!</Text></View>}
-      
+      <View style={{marginBottom: 50}}></View>
       </ScrollView>
     </View>
   );

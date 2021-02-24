@@ -13,9 +13,10 @@ interface Props {
   multiline?: boolean;
   keyboardType?: any;
   containerStyle?: {};
+  disabled?: boolean;
 }
 
-const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline,keyboardType,containerStyle}) => {
+const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline,keyboardType,containerStyle, disabled}) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef(null);
   
@@ -34,7 +35,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
-        style={styles.textInput}
+        style={[styles.textInput, disabled ? {backgroundColor: Colors.SMT_Secondary_1_Light_1} : null]}
         ref={ref}
         value={value}
         onChange={(e) => onChange(e.nativeEvent.text, name)}
@@ -47,6 +48,7 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
 
         multiline={!multiline ? false : true}
         keyboardType={!keyboardType ? "default" : keyboardType}
+        editable={disabled ? false : true}
       />
 
       <View style={[focused ? styles.isFocused : null, multiline ? {borderBottomColor: 'transparent'}: null]}></View>

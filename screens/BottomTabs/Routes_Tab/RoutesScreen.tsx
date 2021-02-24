@@ -11,6 +11,7 @@ import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppButton from '../../../components/Layout/AppButton';
 import AppList from '../../../components/Layout/AppList';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import AppRouteStageIndicator from '../../../components/Layout/AppRouteStageIndicator';
 import AppTitle from '../../../components/Layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -115,7 +116,6 @@ const RoutesScreen = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           setInspections(data.data);
         } else {
@@ -253,36 +253,22 @@ const RoutesScreen = () => {
             <AppAddNew title="ROUTE" modal="CreateRouteModal" />
             {routes.map((u, i) => {
               return (
-                <View style={styles.card} key={u._id}>
-                  <Text>
-                    Route: {u._id}, Start: {u.start_location}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <AppButton
-                      outlined
-                      title="Details"
-                      onPress={() => navigation.navigate("RouteDetailsScreen", {route: u})}
-                    />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                      }}>
-                      <AppButton
-                        title="Inspections"
-                        onPress={() => console.log('Route Inspections')}
-                      />
-                      <AppButton
-                        title="Optimize"
-                        onPress={() => console.log('Optimize Route')}
-                        backgroundColor={Colors.SMT_Secondary_2_Light_1}
-                      />
+                <TouchableOpacity
+                  style={styles.card}
+                  key={u._id}
+                  onPress={() =>
+                    navigation.navigate('RouteDetailsScreen', {route: u})
+                  }>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                      <AppRouteStageIndicator route={u} />
+                    </View>
+                    <View style={{flex: 1}}>
+                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>#{u._id}</Text>
+                      <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.time).date}</Text>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </View>
@@ -293,11 +279,11 @@ const RoutesScreen = () => {
             getDrivers();
             setDriverToggle(!driverToggle);
           }}>
-          <AppTitle title="Drivers" />
+          <AppTitle title="Users" />
         </TouchableOpacity>
         {!driverToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="DRIVER" modal="CreateDriverModal" />
+            <AppAddNew title="USER" modal="CreateUserModal" />
             {drivers.map((u, i) => {
               return (
                 <View style={styles.card} key={u._id}>
@@ -311,8 +297,8 @@ const RoutesScreen = () => {
                     }}>
                     <AppButton
                       outlined
-                      title="Driver Profile"
-                      onPress={() => console.log('Driver Profile')}
+                      title="Details"
+                      onPress={() => navigation.navigate("UserDetailsScreen", {user: u})}
                     />
                     <View
                       style={{
@@ -435,7 +421,6 @@ const RoutesScreen = () => {
         {!assignedToggle ? null : (
           <View style={styles.subList}>
             {assigned.map((u, i) => {
-              console.log(u)
               return (
                 <View style={styles.card} key={u._id}>
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

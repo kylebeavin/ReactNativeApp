@@ -16,7 +16,7 @@ import {SMT_Roles} from '../../../types/enums';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 
-const CreateDriverModal = () => {
+const CreateUserModal = () => {
   //#region Form Initializers
   const formValues = {
     first_name: "",
@@ -64,12 +64,12 @@ const CreateDriverModal = () => {
     formValues,
     formErrors,
     formValidations,
-    postNewDriver,
+    postNewUser,
   );
   //#endregion
 
   const getFormData = async () => {
-    const driver: SMT_User = {
+    const user: SMT_User = {
         _id: "",
         first_name: values.first_name,
         last_name: values.last_name,
@@ -82,10 +82,10 @@ const CreateDriverModal = () => {
         created: values.created,
         is_active: values.is_active,
     };
-    return driver;
+    return user;
   };
 
-  async function postNewDriver() {
+  async function postNewUser() {
     const driver: SMT_User = await getFormData();
     await fetch(`${Configs.TCMC_URI}/api/users`, {
       method: 'POST',
@@ -218,4 +218,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateDriverModal;
+export default CreateUserModal;

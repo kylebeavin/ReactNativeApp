@@ -6,7 +6,7 @@ import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
 import ModalButtons from '../ModalButtons';
 import useForm from '../../../hooks/useForm';
-import {Truck} from '../../../types/routes';
+import {Route, Truck} from '../../../types/routes';
 import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
@@ -16,6 +16,7 @@ import AppTextInput from '../../../components/Layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/Layout/AppCheckBox';
+import { RouteStages } from '../../../types/enums';
 
 const CreatePreTripInspectionModal = () => {
   //#region Form Initializers
@@ -26,6 +27,7 @@ const CreatePreTripInspectionModal = () => {
     is_active: true,
     type: '',
     truck_id: '',
+    route_id: '',
 
     // Truck Checklist
     odometer_reading: '',
@@ -67,6 +69,7 @@ const CreatePreTripInspectionModal = () => {
     is_active: [],
     type: [],
     truck_id: [],
+    route_id: [],
 
     // Truck Checklist
     odometer_reading: [],
@@ -106,8 +109,9 @@ const CreatePreTripInspectionModal = () => {
     group_id: [],
     owner_id: [],
     is_active: [],
-    type: [isRequired],
+    type: [],
     truck_id: [isRequired],
+    route_id: [],
 
     // Truck Checklist
     odometer_reading: [isRequired],
@@ -161,15 +165,12 @@ const CreatePreTripInspectionModal = () => {
   // Drop Down
   const [trucksList, setTrucksList] = useState<Truck[]>([]);
   const [ownersList, setOwnersList] = useState<SMT_User[]>([]);
+  const [routesList, setRoutesList] = useState<Route[]>([]);
   //#endregion
 
   useEffect(() => {
     getTrucksDropDown();
-    getOwnersDropDown()
-      .then((data) => {
-        setOwnersList(data);
-      })
-      .catch((err) => show({message: err.message}));
+    getRoutesDropDown();
   }, []);
 
   const getTrucksDropDown = async () => {
@@ -186,7 +187,6 @@ const CreatePreTripInspectionModal = () => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
           setType(data.data[0].vin);
-          //handleChange("truck_vin", data.data[0].vin);
         } else {
           show({message: data.message});
         }
@@ -194,10 +194,8 @@ const CreatePreTripInspectionModal = () => {
       .catch((err) => show({message: err.message}));
   };
 
-  const getOwnersDropDown = async (): Promise<SMT_User[]> => {
-    let userList: SMT_User[] = [];
-
-    await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
+  const getRoutesDropDown = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
       method: 'POST',
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
@@ -206,10 +204,15 @@ const CreatePreTripInspectionModal = () => {
         console.log(res.status);
         return res.json();
       })
-      .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
-
-    return userList;
+      .then((data) => {
+        if (isSuccessStatusCode(data.status)) {
+          data.data.unshift({_id: "-- No Route Selected --"})
+          setRoutesList(data.data);
+        } else {
+          show({message: data.message});
+        }
+      })
+      .catch((err) => show({message: err.message}));
   };
 
   const getFormData = async () => {
@@ -220,6 +223,7 @@ const CreatePreTripInspectionModal = () => {
       is_active: values.is_active,
       type: type,
       truck_id: values.truck_id,
+      route_id: values.route_id,
 
       // Truck Checklist
       odometer_reading: values.odometer_reading,
@@ -268,9 +272,11 @@ const CreatePreTripInspectionModal = () => {
         console.log(res.status);
         return res.json();
       })
-      .then((data) => {
-        console.log(data);
+      .then(async (data) => {
         if (isSuccessStatusCode(data.status)) {
+          if (preTripInspection.route_id !== "-- No Route Selected --") {
+            await updateRouteStage(preTripInspection);
+          }
           show({message: data.message});
           navigation.navigate('RoutesScreen');
         } else {
@@ -279,6 +285,26 @@ const CreatePreTripInspectionModal = () => {
       })
       .catch((err) => show({message: err.message}));
   }
+
+  const updateRouteStage = async (inspection: any) => {
+    await fetch(`${Configs.TCMC_URI}/api/routes`, {
+      method: 'PUT',
+      body: JSON.stringify({_id: inspection.route_id, inspection_id: inspection._id, route_stage: RouteStages.inspected}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => {
+        console.log(res.status);
+        return res.json();
+      })
+      .then((data) => {
+        if (isSuccessStatusCode(data.status)) {
+          show({message: data.message});
+        } else {
+          show({message: data.message});
+        }
+      })
+      .catch((err) => show({message: err.message}));
+  };
 
   return (
     <View>
@@ -313,9 +339,10 @@ const CreatePreTripInspectionModal = () => {
             name="type"
             value={type.toString()}
             onChange={(val) => setType(val)}
-            validations={[isRequired]}
+            validations={[]}
             errors={errors.type}
             setErrors={setErrors}
+            disabled
           />
         </View>
 
@@ -349,7 +376,7 @@ const CreatePreTripInspectionModal = () => {
         </View>
 
         <View style={styles.formGroup}>
-          <View style={{flex: 0.5, marginRight: 15}}>
+          <View style={{flex: 1, marginRight: 15}}>
             {/* Machine Hours */}
             <AppTextInput
               label="Machine Hours"
@@ -361,6 +388,27 @@ const CreatePreTripInspectionModal = () => {
               setErrors={setErrors}
               keyboardType="number-pad"
             />
+          </View>
+          <View style={{flex: 1}}>
+            {/* Route */}
+            <View style={styles.fieldContainer}>
+              <Text style={styles.text}>Route</Text>
+              <View style={[styles.picker, {height: 42}]}>
+                <Picker
+                  selectedValue={values.route_id}
+                  onValueChange={(itemValue, itemIndex) => handleChange('route_id', itemValue.toString())}>
+                  {routesList.map((item, index) => {
+                    return (
+                      <Picker.Item
+                        key={item._id}
+                        label={item._id}
+                        value={item._id}
+                      />
+                    );
+                  })}
+                </Picker>
+              </View>
+            </View>
           </View>
         </View>
 

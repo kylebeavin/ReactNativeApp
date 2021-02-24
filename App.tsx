@@ -18,6 +18,7 @@ export default function App() {
   const [id, setId] = useState("");
   const [role, setRole] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [image, setImage] = useState("");
   const [headerStyle, setHeaderStyle] = useState(Math.floor(Math.random() * 3) + 1);
   const [grpArr, setGrpArr] = useState([]);
   
@@ -30,6 +31,7 @@ export default function App() {
     headerStyle,
     grpArr,
     role,
+    image,
     setDisplayName,
     setToken,
     setGrpId,
@@ -37,7 +39,8 @@ export default function App() {
     setId,
     setHeaderStyle,
     setGrpArr,
-    setRole
+    setRole,
+    setImage,
   };
 
   if (!isLoadingComplete) {

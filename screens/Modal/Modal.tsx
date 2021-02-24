@@ -17,7 +17,7 @@ import UpdateOrderModal from './Updates/UpdateOrderModal';
 import UpdateDemoModal from './Updates/UpdateDemoModal';
 import CreateTruckModal from './Creates/CreateTruckModal';
 import CreateRouteModal from './Creates/CreateRouteModal';
-import CreateDriverModal from './Creates/CreateDriverModal';
+import CreateUserModal from './Creates/CreateUserModal';
 import CreatePreTripInspectionModal from './Creates/CreatePreTripInspectionModal';
 import CreateGroupModal from './Creates/CreateGroupModal';
 import UpdateRouteModal from './Updates/UpdateRouteModal';
@@ -50,8 +50,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <CreateTruckModal />;
       case "CreateRouteModal":
         return <CreateRouteModal />;
-      case "CreateDriverModal":
-        return <CreateDriverModal />;
+      case "CreateUserModal":
+        return <CreateUserModal />;
       case "CreatePreTripInspectionModal":
         return <CreatePreTripInspectionModal />;
       case "CreateGroupModal":

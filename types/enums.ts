@@ -96,3 +96,13 @@ export enum SMT_Roles {
     driver = "driver",
     mechanic = "mechanic",
 }
+
+export enum RouteStages {
+    empty = "Empty",
+    built = "Built",
+    routed = "Routed",
+    assigned = "Assigned",
+    inspected = "Inspected",
+    finalized = "Finalized",
+    completed = "Completed"
+}

@@ -14,7 +14,7 @@ interface Props {
 
 const RightHeader: React.FC<Props> = (props) => {
     const navigation = useNavigation();
-    const {headerStyle, displayName} = useContext(AppContext);
+    const {headerStyle, displayName, image} = useContext(AppContext);
 
     const renderRightHeader = () => {
       if (headerStyle === 1) {
@@ -25,6 +25,7 @@ const RightHeader: React.FC<Props> = (props) => {
               size={55}
                 rounded
                 containerStyle={styles.avatar}
+                source={image === null || image === undefined || image === "" ? {uri: null} : {uri: image}}
                 icon={{ name: "ios-images", type: "ionicon", size: 40, color: Colors.SMT_Primary_1 }}
               />
               <Text style={styles.text}>{props.text}</Text>
@@ -35,12 +36,6 @@ const RightHeader: React.FC<Props> = (props) => {
         return (
           <View style={styles.container2}>
           <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
-            {/* <Avatar
-            size={55}
-              rounded
-              containerStyle={styles.avatar}
-              icon={{ name: "ios-images", type: "ionicon", size: 40, color: Colors.SMT_Primary_1 }}
-            /> */}
             <Ionicons
               style={styles.icon2}
               name="ios-images"
