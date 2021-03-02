@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
 });
 
 AppButton.defaultProps = {
-  backgroundColor: Colors.SMT_Primary_1,
+  backgroundColor: Colors.SMT_Secondary_2_Dark_1,
   color: Colors.SMT_Tertiary_1,
 };
 
