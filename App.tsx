@@ -9,6 +9,7 @@ import AuthScreen from './screens/Authentication/AuthScreen';
 import ToastProvider from './providers/ToastProvider';
 import AppToast from './components/Layout/AppToast';
 import AppContext from './providers/AppContext';
+import RoutesMapScreen from './screens/BottomTabs/Routes_Tab/RoutesMapScreen';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -49,7 +50,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <AppContext.Provider value={userSettings}>
-          <ToastProvider>
+          {/* <ToastProvider>
             <StatusBar translucent backgroundColor="transparent" />
             <AppToast />
             {!isAuth ?
@@ -57,7 +58,8 @@ export default function App() {
               :
               <Navigation />
             }
-          </ToastProvider>
+          </ToastProvider> */}
+          <RoutesMapScreen/>
         </AppContext.Provider>
       </SafeAreaProvider>
     );

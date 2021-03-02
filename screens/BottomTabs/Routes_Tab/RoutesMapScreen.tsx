@@ -1,14 +1,31 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
+import MapboxGL from '@react-native-mapbox-gl/maps'
+import {IS_ANDROID} from '../../../utils/platform';
+//const mapStyle = 'mapbox://styles/mapbox/streets-v11'
+MapboxGL.setAccessToken("pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2tqc3V4NDE1MGN4ajJ1bDU2ajBmcjdzMSJ9.2sZgl13QF0Ge2vI_frDhTg")
 
 const RoutesMapScreen = () => {
-   //#region Use State Variables
-   const navigation = useNavigation();
-   //#endregion
+ 
+const [permissions, setPermissions] = useState({isFetchingAndroidPermission: IS_ANDROID,
+  isAndroidPermissionGranted: false})
+   
+   useEffect(()=>{
+     const getPermissions = async ()=>{
+    if (IS_ANDROID) {
+      const isGranted = await MapboxGL.requestAndroidLocationPermissions();
+      setPermissions({
+        isAndroidPermissionGranted: isGranted,
+        isFetchingAndroidPermission: false,
+      });
+    }
+  }
+  getPermissions()
+   },[])
  
    return (
      <View>
@@ -19,7 +36,7 @@ const RoutesMapScreen = () => {
            contentContainerStyle={styles.contentContainer}
        >
  
-       <AppNavBtnGrp>
+       {/* <AppNavBtnGrp>
              <AppButton
                title="Routes"
                onPress={() => navigation.navigate("RoutesScreen")}
@@ -37,7 +54,8 @@ const RoutesMapScreen = () => {
                outlined={false}
              />
              </View>
-       </AppNavBtnGrp>
+       </AppNavBtnGrp> */}
+        <Text>hello</Text>
        </ScrollView>
      </View>
    );
@@ -52,6 +70,10 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 10
       },
+      mapWrapper:{
+        width:'100%',
+        height:'100%'
+      }
 })
 
 export default RoutesMapScreen;
