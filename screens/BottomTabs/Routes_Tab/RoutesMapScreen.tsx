@@ -8,20 +8,14 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import {IS_ANDROID} from '../../../utils/platform';
 import {directionsClient} from '../../../utils/mapDirectionsApi';
 import {lineString as makeLineString, point, featureCollection,feature} from '@turf/helpers';
+import arrowIcon from '../../../assets/images/arrow2.png';
 //const mapStyle = 'mapbox://styles/mapbox/streets-v11'
 MapboxGL.setAccessToken(
   'pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2tqc3V4NDE1MGN4ajJ1bDU2ajBmcjdzMSJ9.2sZgl13QF0Ge2vI_frDhTg',
 );
 const truckLocation = [-83.093, 42.376];
 const warehouseLocation = [-83.083, 42.363];
-const lastQueryTime = 0;
-const lastAtRestaurant = 0;
-const keepTrack = [];
-const currentSchedule = [];
-const currentRoute = null;
-const pointHopper = {};
-const pause = true;
-const speedFactor = 50;
+
 const layerStyles = {
   origin: {
     circleRadius: 5,
@@ -41,6 +35,11 @@ const layerStyles = {
     lineColor: '#314ccd',
     lineWidth: 3,
   },
+  arrows:{
+    iconImage: arrowIcon,
+    iconAllowOverlap: true,
+    symbolPlacement:'line'
+  }
 };
 const mapQueryUrl = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/-83.093,42.376;-83.083,42.363?geometries=geojson&access_token=pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2p2NWkydHZ0MGdtMDN5bzAwZTRmdW5qZCJ9.JkIb7AEYASdKtZXur-rDJQ"
 
@@ -88,6 +87,17 @@ const RoutesMapScreen = () => {
       </MapboxGL.ShapeSource>
     );
   }
+  const renderArrows = ()=>{
+    if (!routeData ) {
+      return null;
+    }
+console.log('iamhere')
+    return (
+      <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
+        <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
+      </MapboxGL.ShapeSource>
+    );
+  }
 
   return (
     <View>
@@ -122,6 +132,7 @@ const RoutesMapScreen = () => {
           <MapboxGL.PointAnnotation id='truckLocation' coordinate={truckLocation}/>
           <MapboxGL.PointAnnotation id='warehouseLocation' coordinate={warehouseLocation}/>
           {renderRoute()}
+          {renderArrows()}
         </MapboxGL.MapView>
       </View>
     </View>
