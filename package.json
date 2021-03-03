@@ -19,6 +19,7 @@
     "@react-navigation/bottom-tabs": "^5.11.2",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
+    "@turf/helpers": "^6.3.0",
     "mapbox-gl": "^2.1.1",
     "react": "16.13.1",
     "react-native": "0.63.4",
