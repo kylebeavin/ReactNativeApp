@@ -143,6 +143,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
       is_demo: isDemo,
       is_active: true,
       url: values.fileUploadUrl,
+      order_status: order.order_status,
       notes: values.notes,
     };
     return newOrder;

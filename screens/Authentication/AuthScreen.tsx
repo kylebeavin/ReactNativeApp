@@ -140,7 +140,7 @@ const AuthScreen: React.FC<Props> = () => {
         {/* Buttons */}
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
-            <AppButton title="Log In" onPress={() => signIn()} />
+            <AppButton title="Log In" onPress={() => signIn()} backgroundColor={Colors.SMT_Primary_1}/>
           </View>
         </View>
       </View>

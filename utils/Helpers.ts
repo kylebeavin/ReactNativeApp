@@ -20,7 +20,7 @@ export const formatDateString = (oldString: string) :string => {
 ///Params: A JavaScript Date.
 ///Returns: An object with a date string and time string for use in forms.
 //#endregion
-export const getDateStringsFromDate = (date: Date) : {date: string, time: string} => {
+export const getDateStringsFromDate = (date: any) : {date: string, time: string} => {
     let dateObject = {date: "", time: ""};
     let stringArr: string[] = date.toString().split("T")
     let dateStringArr: string[] = stringArr[0].split("-");

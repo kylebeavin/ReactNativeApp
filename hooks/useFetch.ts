@@ -45,7 +45,7 @@ export const useFetch = (url:string, method: string, body?: {}) => {
                         method: method,
                         body: JSON.stringify(bodyObj)
                     });
-                    console.log('\n',"Response from: ", url,'\n', "Status Code: ", response.status,'\n', "Body Sent: ",bodyObj)
+                    //console.log('\n',"Response from: ", url,'\n', "Status Code: ", response.status,'\n', "Body Sent: ",bodyObj)
 					const data = await response.json();
 					cache.current[url + body] = data;
 					if (cancelRequest) return;

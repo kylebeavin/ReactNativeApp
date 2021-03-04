@@ -22,8 +22,9 @@ export type Agreement = {
 
 export type Order = {
     _id: string;
+    order_id: string;
     agreement_id?: string;
-    account_id: string;
+    account_id: {account_name: string};
     group_id: string;
     is_recurring: boolean;
     services: string;
@@ -40,6 +41,7 @@ export type Order = {
     is_active: boolean;
     notes: string;
     url: string;
+    order_status: string;
 }
 
 export type Demo = {

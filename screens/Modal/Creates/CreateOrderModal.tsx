@@ -127,6 +127,7 @@ const CreateOrderModal: React.FC<Props> = () => {
     const order: Order = {
       _id: '',
       account_id: values.account,
+      agreement_id: '',
       group_id: grpId,
       is_recurring: isRecurring,
       services: services,
@@ -142,6 +143,7 @@ const CreateOrderModal: React.FC<Props> = () => {
       is_demo: isDemo,
       is_active: true,
       url: values.fileUploadUrl,
+      order_status: "not started",
       notes: values.notes,
     };
     return order;
@@ -159,14 +161,19 @@ const CreateOrderModal: React.FC<Props> = () => {
         return res.json();
       })
       .then((data) => {
+        console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('OrdersScreen');
         } else {
+          console.log(data)
           show({message: data.message});
         }
       })
-      .catch((err) => show({message: err.message}));
+      .catch((err) => {
+        console.log(err)
+        show({message: err.message})
+      });
   }
 
   const openStartDateCalendar = (show: boolean) => {

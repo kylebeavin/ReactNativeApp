@@ -6,7 +6,7 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Configs from '../../../constants/Configs';
 import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
@@ -14,22 +14,19 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {Order} from '../../../types/service';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import {useIsFocused} from '@react-navigation/native';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {getRequestHeadersAsync} from '../../../utils/Helpers';
-import {Picker} from '@react-native-picker/picker';
-import {SortOrdersList} from '../../../types/enums';
 import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppAddNew from '../../../components/Layout/AppAddNew';
-import { useFetch } from '../../../hooks/useFetch';
+import AppContext from '../../../providers/AppContext';
+import {useContext} from 'react';
+import {ToastContext} from '../../../providers/ToastProvider';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import { getDateStringsFromDate } from '../../../utils/Helpers';
 
-interface Props {
-  navigation: any;
-}
-
-const ServicesScreen: React.FC<Props> = ({navigation}) => {
+const ServicesScreen = () => {
   //#region Use State Variables
-  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/ordersBy`, 'POST');
+  const navigation = useNavigation();
+  const {grpId, token} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
   const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const isFocused = useIsFocused();
@@ -38,13 +35,19 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
   //#endregion
 
   useEffect(() => {
-    if (status === "fetched") {
-      getOrders();
-    }
-  }, [isFocused, status]);
+    getOrders();
+  }, [isFocused]);
 
   const getOrders = async () => {
-    setOrders(data.data);
+    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => res.json())
+      .then((json) => setOrders(json.data))
+      .catch((err) => show({message: err.message}));
+
     setIsLoading(false);
   };
 
@@ -75,7 +78,9 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
           </View>
         </AppNavBtnGrp>
 
-        {orders.length === 0 ? null : <AppAddNew title="ORDER" modal="CreateOrderModal"/>}
+        {orders.length === 0 ? null : (
+          <AppAddNew title="ORDER" modal="CreateOrderModal" />
+        )}
 
         {isLoading ? (
           <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
@@ -87,27 +92,30 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
             ) : (
               orders.map((u, i) => {
                 return (
-                  <View style={styles.card} key={i}>
-
-                    <AppEditBtn item={u}/>
-
-                    <View style={styles.title}>
-                      <Text style={styles.titleText}>Name Here - {u.services}</Text>
-                      <Text style={styles.titleText}>Status:
-                        <Text style={{fontWeight: 'bold', color: Colors.SMT_Secondary_2_Light_1}}> On Schedule</Text>
-                      </Text>
+                  <TouchableOpacity
+                    style={styles.card}
+                    key={i}
+                    onPress={() =>
+                      navigation.navigate('OrderDetailsScreen', {order: u})
+                    }>
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.titleText}>{u.order_id}</Text>
+                        <Text>{u.account_id.account_name}</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.start_date).date}</Text>
+                        <Text
+                          style={{
+                            fontWeight: 'bold',
+                            color: Colors.SMT_Secondary_2_Light_1,
+                            textAlign: 'right',
+                          }}>
+                          {u.order_status}
+                        </Text>
+                      </View>
                     </View>
-
-                    <View style={styles.content}>
-                      <Text>Driver: Name Here</Text>
-                      <Text>Notes: {u.notes}</Text>
-                    </View>
-
-                    <View style={styles.btnContainer}>
-                      <AppButton title="Complete" onPress={() => console.log("Complete")} />
-                      <AppButton title="Report" onPress={() => console.log("Complete")} outlined />
-                    </View>
-                  </View>
+                  </TouchableOpacity>
                 );
               })
             )}
@@ -121,46 +129,18 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
+    marginBottom: 3,
     borderWidth: 1,
     borderColor: Colors.SMT_Secondary_2_Light_1,
     borderRadius: 3,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  title: {
-    marginBottom: 10,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
   },
   titleText: {
     fontWeight: 'bold',
   },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  content: {
-    marginBottom: 10,
-  },
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 20,
-  },
   contentContainer: {
     // This is the scrollable part
-  },
-  column2: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  picker: {
-    flex: 1,
-    paddingLeft: 15,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
-    borderRadius: 3,
-    height: 36,
-    overflow: 'hidden',
   },
   screen: {
     marginBottom: 36,
@@ -169,13 +149,6 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     paddingHorizontal: 10,
-  },
-  status: {},
-  statusValid: {
-    color: Colors.Success,
-  },
-  statusInvalid: {
-    color: Colors.Info,
   },
 });
 
