@@ -6,7 +6,6 @@ import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import {IS_ANDROID} from '../../../utils/platform';
-import {directionsClient} from '../../../utils/mapDirectionsApi';
 import {lineString as makeLineString, point, featureCollection,feature} from '@turf/helpers';
 import arrowIcon from '../../../assets/images/arrow2.png';
 //const mapStyle = 'mapbox://styles/mapbox/streets-v11'
