@@ -37,12 +37,41 @@ const getRouteAddresses = async ()=>{
     
   })
   const data = await response.json()
-  console.log(data)
-  let {start_location, service_stops} = data.data[0]
-  let urls = [`mapboxBaseUrl${start_location}.json?access_token=${mapboxToken}`]
-  
-  
-  return data
+ //console.log(data)
+  let {start_location, service_stop} = data.data[0]
+  let addresses = [start_location, ...service_stop]
+  console.log(addresses)
+  let formattedAddressStrings = addresses.map(address=>{
+    return address.split(' ').join("%20")
+  })
+  //let fetchUrls = addresses.map(address=>fetch(`mapboxBaseUrl${address}.json?access_token=${mapboxToken}`))
+  // let urls = [`mapboxBaseUrl${start_location}.json?access_token=${mapboxToken}`]
+  // let create urls
+  console.log('here', formattedAddressStrings)
+  console.log(`mapboxBaseUrl${formattedAddressStrings[0]}.json?access_token=${mapboxToken}`)
+  const coordsStore:any = []
+  fetch(`${mapboxBaseUrl}${formattedAddressStrings[0]}.json?access_token=${mapboxToken}`)
+  .then(res=>res.json())
+  .then(data=>console.log(data.features[0].center))
+  .catch(err=>console.log(err))
+  let requests = formattedAddressStrings.map(address=>fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`))
+  //const getAllPromises = Promise.all(fetchUrls)
+  Promise.all(requests)
+  .then(responses => {
+    return Promise.all(responses.map(function (response) {
+      return response.json();
+  }
+  ))
+}
+  ) 
+  .then(data=>{
+    data.forEach(curData=>{
+      console.log(curData.features[0].center)
+       coordsStore.push(curData.features[0].center)
+      })
+      console.log('hello',coordsStore)
+  })
+  return coordsStore
 }
   return(
     <PermissionContext.Provider value={{permissions, getPermissions, getRouteAddresses}}>
