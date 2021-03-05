@@ -10,6 +10,7 @@ import ToastProvider from './providers/ToastProvider';
 import AppToast from './components/Layout/AppToast';
 import AppContext from './providers/AppContext';
 import RoutesMapScreen from './screens/BottomTabs/Routes_Tab/RoutesMapScreen';
+import {Permission} from './providers/PermissionContext'
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -59,7 +60,12 @@ export default function App() {
               <Navigation />
             }
           </ToastProvider> */}
+     <Permission>
+
           <RoutesMapScreen/>
+     </Permission>
+
+        
         </AppContext.Provider>
       </SafeAreaProvider>
     );

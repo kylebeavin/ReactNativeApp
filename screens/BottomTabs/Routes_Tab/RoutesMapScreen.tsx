@@ -1,13 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useContext} from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import {IS_ANDROID} from '../../../utils/platform';
+import {IS_ANDROID} from '../../../providers/PermissionContext';
 import {lineString as makeLineString, point, featureCollection,feature} from '@turf/helpers';
 import arrowIcon from '../../../assets/images/arrow2.png';
+import {PermissionContext} from '../../../providers/PermissionContext'
 //const mapStyle = 'mapbox://styles/mapbox/streets-v11'
 MapboxGL.setAccessToken(
   'pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2tqc3V4NDE1MGN4ajJ1bDU2ajBmcjdzMSJ9.2sZgl13QF0Ge2vI_frDhTg',
@@ -37,29 +38,30 @@ const layerStyles = {
   arrows:{
     iconImage: arrowIcon,
     iconAllowOverlap: true,
-    symbolPlacement:'line'
+   symbolPlacement:'line'
   }
 };
-const mapQueryUrl = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/-83.093,42.376;-83.083,42.363?geometries=geojson&access_token=pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2p2NWkydHZ0MGdtMDN5bzAwZTRmdW5qZCJ9.JkIb7AEYASdKtZXur-rDJQ"
+const mapQueryUrl = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/-83.093,42.376;-83.083,42.363?geometries=geojson&access_token=pk.eyJ1Ijoic3VyaTIwMjEiLCJhIjoiY2tsd2l4bmxsMGpiYTJxbzB0NDQ5OW02MyJ9.ZLKmHBS2koQxLD754TEujA"
 
 const RoutesMapScreen = () => {
-  const [permissions, setPermissions] = useState({
-    isFetchingAndroidPermission: IS_ANDROID,
-    isAndroidPermissionGranted: false,
-  });
+  const {getPermissions,getRouteAddresses} = useContext(PermissionContext)
+  // const [permissions, setPermissions] = useState({
+  //   isFetchingAndroidPermission: IS_ANDROID,
+  //   isAndroidPermissionGranted: false,
+  // });
   const [coordinates, setCoordinates] = useState([-73.99155, 40.73581]);
   const [routeData, setRouteData] = useState()
 
   useEffect(() => {
-    const getPermissions = async () => {
-      if (IS_ANDROID) {
-        const isGranted = await MapboxGL.requestAndroidLocationPermissions();
-        setPermissions({
-          isAndroidPermissionGranted: isGranted,
-          isFetchingAndroidPermission: false,
-        });
-      }
-    };
+    // const getPermissions = async () => {
+    //   if (IS_ANDROID) {
+    //     const isGranted = await MapboxGL.requestAndroidLocationPermissions();
+    //     setPermissions({
+    //       isAndroidPermissionGranted: isGranted,
+    //       isFetchingAndroidPermission: false,
+    //     });
+    //   }
+    // };
     fetch(mapQueryUrl)
     .then(res=>res.json())
     .then(data => {
@@ -69,6 +71,8 @@ const RoutesMapScreen = () => {
     )
     .catch(err=>console.log(err))
     getPermissions();
+    getRouteAddresses()
+    
     // getGeoJson()
   }, []);
 
@@ -90,7 +94,7 @@ const RoutesMapScreen = () => {
     if (!routeData ) {
       return null;
     }
-console.log('iamhere')
+
     return (
       <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
         <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
