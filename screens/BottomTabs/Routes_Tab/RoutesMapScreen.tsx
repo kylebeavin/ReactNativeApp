@@ -9,6 +9,7 @@ import {IS_ANDROID} from '../../../providers/PermissionContext';
 import {lineString as makeLineString, point, featureCollection,feature} from '@turf/helpers';
 import arrowIcon from '../../../assets/images/arrow2.png';
 import {PermissionContext} from '../../../providers/PermissionContext'
+import uuid from 'react-native-uuid';
 //const mapStyle = 'mapbox://styles/mapbox/streets-v11'
 MapboxGL.setAccessToken(
   'pk.eyJ1Ijoic3VyaTIwMTkiLCJhIjoiY2tqc3V4NDE1MGN4ajJ1bDU2ajBmcjdzMSJ9.2sZgl13QF0Ge2vI_frDhTg',
@@ -45,12 +46,17 @@ const mapQueryUrl = "https://api.mapbox.com/optimized-trips/v1/mapbox/driving/-8
 
 const RoutesMapScreen = () => {
   const {getPermissions,getRouteAddresses} = useContext(PermissionContext)
+  
+
+ 
+
   // const [permissions, setPermissions] = useState({
   //   isFetchingAndroidPermission: IS_ANDROID,
   //   isAndroidPermissionGranted: false,
   // });
-  const [coordinates, setCoordinates] = useState([-73.99155, 40.73581]);
-  const [routeData, setRouteData] = useState()
+  //const [coordinates, setCoordinates] = useState([-73.99155, 40.73581]);
+  const [coordinates, setCoordinates ] = useState([[-86.14662,39.959054],[-86.153842,39.961983],[-86.136427,39.960594]])
+  const [routeData, setRouteData] = useState<any>({})
 
   useEffect(() => {
     // const getPermissions = async () => {
@@ -62,46 +68,70 @@ const RoutesMapScreen = () => {
     //     });
     //   }
     // };
-    fetch(mapQueryUrl)
-    .then(res=>res.json())
-    .then(data => {
-      console.log(data.trips[0].geometry)
-     setRouteData(data.trips[0].geometry)
+  // MapboxGL.locationManager.start();
+    // fetch(mapQueryUrl)
+    // .then(res=>res.json())
+    // .then(data => {
+    //   console.log('I am here',data.trips[0].geometry)
+    //  setRouteData(data.trips[0].geometry)
+    // }
+    // )
+    // .catch(err=>console.log(err))
+    const getData = async ()=>{
+      try{
+      let data = await getRouteAddresses()
+      setRouteData(data)
+      }
+      catch(err){
+        console.log(err,'onerror')
+      }
     }
-    )
-    .catch(err=>console.log(err))
     getPermissions();
-    getRouteAddresses()
+    getData()
     
     // getGeoJson()
   }, []);
-
-  const renderRoute = () =>{
-    if (!routeData ) {
-      return null;
+  
+    const renderRoutePoints = ()=>{
+      if (!coordinates) {
+        console.log('i am here in points')
+        return null;
+      }
+     
+      return (
+        coordinates.map((point:any)=>{
+        console.log('here, here',point)
+        return  <MapboxGL.PointAnnotation id={String(Math.random()*10000)} key={Math.random()*10000} coordinate={point}/>
+      })
+      )
     }
-
-    return (
-      <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
-        <MapboxGL.LineLayer
-          id="routeFill"
-          style={layerStyles.route}
-        />
-      </MapboxGL.ShapeSource>
-    );
-  }
-  const renderArrows = ()=>{
-    if (!routeData ) {
-      return null;
+    const renderRoute = () =>{
+      if (!routeData) {
+        return null;
+      }
+      return (
+        <MapboxGL.ShapeSource id="routeSource" shape={routeData.routeTrips}>
+          <MapboxGL.LineLayer
+            id="routeFill"
+            style={layerStyles.route}
+          />
+        </MapboxGL.ShapeSource>
+      );
     }
+    const renderArrows = ()=>{
+      if (!routeData) {
+        return null;
+      }
+      
+          return (
+            <MapboxGL.ShapeSource id="routeSource" shape={routeData.routeTrips}>
+              <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
+            </MapboxGL.ShapeSource>
+          );
+        }
+  
 
-    return (
-      <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
-        <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
-      </MapboxGL.ShapeSource>
-    );
-  }
-
+  console.log('route data', routeData)
   return (
     <View>
       <AppTitle title="Routes" help search />
@@ -127,7 +157,7 @@ const RoutesMapScreen = () => {
        </AppNavBtnGrp> */}
        
       <View style={styles.container}>
-        <MapboxGL.MapView style={styles.map}>
+        <MapboxGL.MapView style={styles.map} styleURL={MapboxGL.StyleURL.Street}>
           <MapboxGL.UserLocation androidRenderMode="gps" visible={true}/>
             
           <MapboxGL.Camera zoomLevel={8} centerCoordinate={truckLocation} />
@@ -136,6 +166,7 @@ const RoutesMapScreen = () => {
           <MapboxGL.PointAnnotation id='warehouseLocation' coordinate={warehouseLocation}/>
           {renderRoute()}
           {renderArrows()}
+          {renderRoutePoints()}
         </MapboxGL.MapView>
       </View>
     </View>

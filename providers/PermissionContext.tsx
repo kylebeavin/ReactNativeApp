@@ -6,7 +6,7 @@ import React, {createContext, useState, ReactNode} from 'react'
 
 const routesUrl = 'https://smt-backend-dev.herokuapp.com/api/routesBy' 
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA2ZDAxNzIzMWNiMDNhMWFiMmFiNCIsImlhdCI6MTYxNDk2MTI4MiwiZXhwIjoxNjE1MDExNjgyfQ.gHdm_NS3otZrDditWiquTQYQTzgpflDn2QNkrg4e_9s"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA2ZDAxNzIzMWNiMDNhMWFiMmFiNCIsImlhdCI6MTYxNTIyMzE5OSwiZXhwIjoxNjE1MjczNTk5fQ.haADhc4EJolReZvMOat5Tb7K-LEML8Mdz4Fm95KBmWU"
 const mapboxToken = "pk.eyJ1Ijoic3VyaTIwMjEiLCJhIjoiY2tsd2l4bmxsMGpiYTJxbzB0NDQ5OW02MyJ9.ZLKmHBS2koQxLD754TEujA"
 const mapboxBaseUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
 export const  PermissionContext = createContext({permissions:{}, getPermissions:()=>{},getRouteAddresses:()=>{}})
@@ -26,7 +26,7 @@ const getPermissions = async () => {
       });
     }
   }
-const getRouteAddresses = async ()=>{
+const getRouteAddresses = async ():Promise<any>=>{
   let response = await fetch(routesUrl,{
     method:'POST',
     headers:{
@@ -37,25 +37,29 @@ const getRouteAddresses = async ()=>{
     
   })
   const data = await response.json()
- //console.log(data)
+ console.log(data)
+ const coordsStore:any = []
+ if(data){
   let {start_location, service_stop} = data.data[0]
   let addresses = [start_location, ...service_stop]
   console.log(addresses)
   let formattedAddressStrings = addresses.map(address=>{
     return address.split(' ').join("%20")
   })
+
   //let fetchUrls = addresses.map(address=>fetch(`mapboxBaseUrl${address}.json?access_token=${mapboxToken}`))
   // let urls = [`mapboxBaseUrl${start_location}.json?access_token=${mapboxToken}`]
   // let create urls
   console.log('here', formattedAddressStrings)
   console.log(`mapboxBaseUrl${formattedAddressStrings[0]}.json?access_token=${mapboxToken}`)
-  const coordsStore:any = []
-  fetch(`${mapboxBaseUrl}${formattedAddressStrings[0]}.json?access_token=${mapboxToken}`)
-  .then(res=>res.json())
-  .then(data=>console.log(data.features[0].center))
-  .catch(err=>console.log(err))
+
+  // fetch(`${mapboxBaseUrl}${formattedAddressStrings[0]}.json?access_token=${mapboxToken}`)
+  // .then(res=>res.json())
+  // .then(data=>console.log(data.features[0].center))
+  // .catch(err=>console.log(err))
   let requests = formattedAddressStrings.map(address=>fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`))
   //const getAllPromises = Promise.all(fetchUrls)
+  console.log(requests)
   Promise.all(requests)
   .then(responses => {
     return Promise.all(responses.map(function (response) {
@@ -70,8 +74,26 @@ const getRouteAddresses = async ()=>{
        coordsStore.push(curData.features[0].center)
       })
       console.log('hello',coordsStore)
-  })
-  return coordsStore
+      let CoordsStringArray = coordsStore.map((coords:any)=>coords.join(','))
+      let coordsString = CoordsStringArray.join(';')
+//let coordsString = "-86.14662,39.959054;-86.153842,39.961983;-86.136427,39.960594"
+      let mapQueryUrl = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordsString}?geometries=geojson&access_token=${mapboxToken}`
+      console.log(mapQueryUrl)
+      fetch(mapQueryUrl)
+      .then (routeResponse => routeResponse.json())
+      .then(routeData => {
+        console.log("i got data")
+        let data =  {routeTrips: routeData.trips[0].geometry}
+        console.log('data object', data)
+        return Promise.resolve(data)
+      })
+      .catch(err=>{
+        console.log(err)
+        Promise.reject({error:'something not right'})
+      })
+  
+}
+ 
 }
   return(
     <PermissionContext.Provider value={{permissions, getPermissions, getRouteAddresses}}>
