@@ -16,7 +16,7 @@ const AppList : React.FC<Props> = ({url, httpMethod, params, renderItem}) => {
     const {status, data, error} = useFetch(url, httpMethod, (params ? params : undefined));
     const [isLoading, setIsLoading] = useState(true);
     const [listData, setListData] = useState<{}[]>([]);
-    
+    console.log('hi')
     useEffect(() => {
         if (status === "fetched") {
             getData();

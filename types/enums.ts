@@ -106,3 +106,10 @@ export enum RouteStages {
     finalized = "Finalized",
     completed = "Completed"
 }
+
+export enum OrderStatus {
+    notStarted = "Not Started",
+    started = "Started",
+    completed = "Completed",
+    cancelled = "Cancelled",
+}

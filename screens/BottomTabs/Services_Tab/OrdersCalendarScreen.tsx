@@ -1,91 +1,154 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState, useRef} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
+import {Calendar} from 'react-native-calendars';
 
-import Configs from '../../../constants/Configs';
-import AppButton from '../../../components/Layout/AppButton';
+import {Services} from '../../../types/enums';
 import Colors from '../../../constants/Colors';
+import Configs from '../../../constants/Configs';
+import AppContext from '../../../providers/AppContext';
+import {ToastContext} from '../../../providers/ToastProvider';
+import AppButton from '../../../components/Layout/AppButton';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
-import {Services} from '../../../types/enums';
-import {Calendar} from 'react-native-calendars';
-import AppContext from '../../../providers/AppContext';
 import AppList from '../../../components/Layout/AppList';
-import { ToastContext } from '../../../providers/ToastProvider';
+import {Order} from '../../../types/service';
+import useDates from '../../../hooks/useDates';
 
-const ServicesScreen = () => {
+interface IMarkedDays {
+  [key: string]: {
+    selected: boolean;
+    selectedColor: string;
+  };
+}
+
+const OrdersCalendarScreen = () => {
   //#region Use State Variables
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  const [greaterThanDate, setGreaterThanDate] = useState(formatDate(new Date()));
-  const [lessThanDate, setLessThanDate] = useState(formatDate(new Date()));
+  const [date, setDate] = useState(new Date());
+  const {getSelectedDateRange} = useDates();
+  //let lessThan = new Date(date.setDate(date.getDate() + 1));
+  //let lessThan = new Date().setDate(new Date().getDate() + 1);
+  
+  let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  
+  // Refs
+  let selectedQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(new Date()), $lt: new Date(date.getDate() + 1)}}).current;
+  let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
+  // Calendar
+  const [selectedDates, setSelectedDates] = useState<any>({
+    [formatDate(new Date())]: {selected: true},
+  });
+  const [outstandingOrders, setOutstandingOrders] = useState<any>({});
+
+  // List
+  const [selectedOrders, setSelectedOrders] = useState<Order[]>([]);
+
+  // Picker
   const [sortItem, setSortItem] = useState('');
-  const [selectedDate, setSelectedDate] = useState<any>({[formatDate(new Date())]: {selected: true}});
   //#endregion
 
   useEffect(() => {
-    setTodaysDate();
-    setOutstandingOrders();
+    //console.log(getSelectedDateRange(new Date()))
+    console.log(new Date().toLocaleDateString())
+    getSelectedDates();
   }, []);
 
-  const setTodaysDate = () => {
-    let today = formatDate(new Date());
-    let lessThan = new Date();
-    lessThan.setDate(lessThan.getDate() + 1);
-
-    // Mark The Calendar with this state.
-    setSelectedDate({[today]: {selected: true}});
-
-    // Set our queries less than date.
-    setLessThanDate(formatDate(lessThan));
-
-    // Set todays date in state to make api call.
-    setGreaterThanDate(today);
-  };
-
-  const onDayPress = (day: any) => {
+  const onDayPress = async (day: any) => {
+    // DeSelect Day
     let lessThan = new Date(day.dateString);
-    lessThan.setDate(lessThan.getDate() + 1);
+    let newDays = selectedDates;
+    // Find and Remove the date object with only 1 key (currently selected date).
+    Object.keys(newDays).find(key => {
+      if (shallowEqual(newDays[key])) {
+        delete newDays[key];
+      }
+    });
 
-    // Mark The Calendar with this state.
-    setSelectedDate({[day.dateString]: {selected: true}});
-
-    // Set our queries less than date.
-    setLessThanDate(lessThan.setDate(lessThan.getDate() + 1).toString());
-
-    // Set todays date in state to make api call.
-    setGreaterThanDate(day.dateString);
+    // Select Day
+    newDays[day.dateString] = {selected: true};
+    //update queries
+    selectedQuery = {group_id: grpId, start_date: {$gte: day.dateString, $lt: lessThan.setDate(lessThan.getDate() + 1)}}
+    
+    // Fetch Orders
+    await getSelectedDates();
   };
 
-  const setOutstandingOrders = async () => {
-    var date = new Date();
-    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    
-    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId, start_date: {$gte: firstDay.setHours(0,0,0,0), $lt: date.setHours(0,0,0,0)}, order_status: {$ne: "completed"}}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then(res => res.json())
-      .then(json => {
-        let outstandingOrders: any = {};
+  const onMonthChange = (month: any) => {
+    // Get First and Last Day
+    // Fetch Outstanding Orders
+  };
+
+  const getSelectedDates = async () => {
+    await getSelectedOrders();
+    const oOrderDays: IMarkedDays[] = await getOutstandingOrders();
+
+    setSelectedDates({...oOrderDays, ...selectedDates});
+  };
+
+  const getOutstandingOrders = async (): Promise<IMarkedDays[]> => {
+    const orders: any = await fetch(
+      `${Configs.TCMC_URI}/api/ordersBy`,
+      {
+        method: 'POST',
+        body: JSON.stringify(outstandingQuery),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      },
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        let outstandingOrders: IMarkedDays = {};
         json.data.map((u: any, i: any) => {
           return (
-            outstandingOrders[formatDate(u.start_date)] = {selected: true, selectedColor: Colors.SMT_Primary_1_Light_1}
+            outstandingOrders[formatDate(u.start_date)] = {selected: true, selectedColor: Colors.SMT_Primary_1}
           )
         })
-
-        setSelectedDate({...selectedDate, ...outstandingOrders})
+        setOutstandingOrders({...outstandingOrders});
+        return outstandingOrders;
       })
-      .catch(err => show({message: "Error getting outstanding orders."}))
-    
+      .catch((err) => show({message: 'Error getting orders.'}));
+
+    return orders;
   };
 
-  const onMonthChange = () => {};
+  const getSelectedOrders = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
+      method: 'POST',
+      body: JSON.stringify(selectedQuery),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    })
+      .then((res) => res.json())
+      .then((json) => setSelectedOrders(json.data))
+      .catch((err) => show({message: 'Error getting orders.'}));
+  };
+
+  const shallowEqual = (object1: any) => {
+    // Not a complete shallow comparison 
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys({"selected": true});
+  
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+  
+    // for (let key of keys1) {
+    //   if (object1[key] !== object2[key]) {
+    //     return false;
+    //   }
+    // }
+  
+    return true;
+  }
 
   return (
     <View style={styles.screen}>
@@ -95,7 +158,7 @@ const ServicesScreen = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <AppNavBtnGrp>
-          <View style={{marginRight: 60, marginTop: 12}}>
+          <View style={{marginRight: 60, marginTop: 16}}>
             <AppButton
               title="Back"
               onPress={() => navigation.goBack()}
@@ -131,9 +194,9 @@ const ServicesScreen = () => {
 
         <View style={styles.calendarContainer}>
           <Calendar
-            markedDates={selectedDate}
+            markedDates={selectedDates}
             onDayPress={onDayPress}
-            onMonthChange={setOutstandingOrders}
+            onMonthChange={onMonthChange}
             theme={{
               'stylesheet.calendar.header': {
                 header: {
@@ -156,6 +219,7 @@ const ServicesScreen = () => {
                   height: 30,
                   width: 30,
                   borderRadius: 30 / 2,
+                  marginRight: 10,
                 },
                 dayHeader: {
                   color: 'black',
@@ -186,16 +250,9 @@ const ServicesScreen = () => {
           <AppTitle title="Service Events" />
         </View>
 
-        <AppList
-          url={`${Configs.TCMC_URI}/api/ordersBy`}
-          httpMethod="POST"
-          params={{
-            group_id: grpId,
-            start_date: {$gte: greaterThanDate, $lt: lessThanDate},
-          }}
-          renderItem={(u: any, i: number) => {
-            return (
-              <TouchableOpacity
+        {selectedOrders.map((u, i) => {
+          return (
+            <TouchableOpacity
               style={styles.card}
               key={i}
               onPress={() =>
@@ -207,7 +264,10 @@ const ServicesScreen = () => {
                   <Text>{u.account_id.account_name}</Text>
                 </View>
                 <View style={{flex: 1}}>
-                  <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.start_date).date}</Text>
+                  <Text
+                    style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
+                    {getDateStringsFromDate(u.start_date).date}
+                  </Text>
                   <Text
                     style={{
                       fontWeight: 'bold',
@@ -219,9 +279,8 @@ const ServicesScreen = () => {
                 </View>
               </View>
             </TouchableOpacity>
-            );
-          }}
-        />
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -297,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServicesScreen;
+export default OrdersCalendarScreen;
