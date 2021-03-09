@@ -8,6 +8,8 @@ import Navigation from './navigation';
 import AuthScreen from './screens/Authentication/AuthScreen';
 import ToastProvider from './providers/ToastProvider';
 import AppToast from './components/Layout/AppToast';
+import CameraProvider from './providers/CameraProvider';
+import AppCamera from './components/AppCamera';
 import AppContext from './providers/AppContext';
 
 export default function App() {
@@ -50,13 +52,16 @@ export default function App() {
       <SafeAreaProvider>
         <AppContext.Provider value={userSettings}>
           <ToastProvider>
+            <CameraProvider>
             <StatusBar translucent backgroundColor="transparent" />
+            <AppCamera />
             <AppToast />
             {!isAuth ?
               <AuthScreen />
               :
               <Navigation />
             }
+            </CameraProvider>
           </ToastProvider>
         </AppContext.Provider>
       </SafeAreaProvider>

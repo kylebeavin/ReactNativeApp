@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useRef, useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, View, Image, TouchableOpacity, Text} from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -9,7 +9,8 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
-import {RNCamera} from 'react-native-camera';
+import {CameraContext} from '../../../providers/CameraProvider';
+import AppTitle from '../../../components/Layout/AppTitle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
@@ -20,10 +21,16 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
   const navigation = useNavigation();
   const {token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
-  let camera = useRef<RNCamera>(null).current;
-  const [cameraToggle, setCameraToggle] = useState(false);
+  const {camera, pictures, showCamera, clearPics} = useContext(CameraContext);
+  const [truckImage, setTruckImage] = useState('');
+  const [containerImage, setContainerImage] = useState('');
+  const [valid, setValid] = useState(false);
 
   const updateStatus = async () => {
+    if (containerImage === "") {
+      setValid(false);
+      return;
+    }
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
       method: 'PUT',
       body: JSON.stringify({_id: order, order_status: 'started'}),
@@ -41,65 +48,67 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
       .catch((err) => show({message: err.message}));
   };
 
-  const takePicture = async () => {
-    if (camera) {
-      const options = {quality: 0.5, base64: true};
-      const data = await camera.takePictureAsync(options);
-      console.log(data.uri);
-    }
-  };
+  useEffect(() => {
+    if (containerImage !== "") setValid(true);
+    Object.keys(pictures).map((key) => {
+      if (key === 'Container') {
+        setContainerImage(pictures[key].uri);
+      }
+    });
+
+    return unmount;
+  }, [camera, containerImage]);
+
+  const unmount = () => {
+    clearPics({});
+  }
 
   return (
     <>
       <View style={styles.form}>
-        <View style={{flexDirection: 'row'}}>
-          <AppButton
-            title="Truck"
-            onPress={() => setCameraToggle(true)}
-            icon={{type: 'MaterialIcons', name: 'camera-alt'}}
-          />
+        <View style={{marginBottom: 10}}>
+          <AppTitle title="Start Order" help />
         </View>
-        <View style={{flexDirection: 'row'}}>
+        <View style={styles.formGroup}>
           <AppButton
             title="Container"
-            onPress={() => setCameraToggle(true)}
+            onPress={() => showCamera({key: 'Container'})}
             icon={{type: 'MaterialIcons', name: 'camera-alt'}}
           />
-        </View>
-      </View>
-      <ModalButtons navigation={navigation} save={() => updateStatus()} />
-      {cameraToggle ? (
-        <View>
-          <RNCamera
-            ref={(ref) => (camera = ref)}
-            captureAudio={false}
-            style={styles.preview}
-            type={RNCamera.Constants.Type.back}
-            //flashMode={RNCamera.Constants.FlashMode.on}
-            androidCameraPermissionOptions={{
-              title: 'Permission to use camera',
-              message: 'We need your permission to use your camera',
-              buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
-            }}
-            androidRecordAudioPermissionOptions={{
-              title: 'Permission to use audio recording',
-              message: 'We need your permission to use your audio',
-              buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
-            }}
-            onGoogleVisionBarcodesDetected={({barcodes}) => {
-              console.log(barcodes);
-            }}
-          />
-          <View style={{flex: 0, flexDirection: 'row', justifyContent: 'center'}}>
-            <TouchableOpacity onPress={takePicture}>
-              {/* <Text style={{fontSize: 14}}> SNAP </Text> */}
-              <MaterialIcons style={{opacity: .5}} name="camera-alt" size={50} color={Colors.SMT_Tertiary_1} />
-            </TouchableOpacity>
+          <View>
+            <Image
+              source={
+                containerImage === ''
+                  ? require('../../../assets/images/thumbnail_placeholder.jpg')
+                  : {uri: containerImage}
+              }
+              style={styles.thumbnail}
+            />
+            {containerImage === '' ? null : (
+              <TouchableOpacity
+                style={{position: 'absolute', top: 0, right: 0}}
+                onPress={() => {
+                  unmount();
+                  setContainerImage('');
+                  setValid(false);
+                }}>
+                <MaterialIcons
+                  style={{opacity: 0.5}}
+                  name="cancel"
+                  size={50}
+                  color={Colors.SMT_Tertiary_1}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
-      ) : null}
+        {valid ? null :
+          <View>
+          <Text style={{textAlign: 'center', color: Colors.SMT_Primary_1}}>You must provide an image of container before smashing!</Text>
+        </View>
+        }
+      </View>
+      <ModalButtons navigation={navigation} save={() => updateStatus()} />
     </>
   );
 };
@@ -108,19 +117,20 @@ const styles = StyleSheet.create({
   form: {
     maxHeight: Layout.window.height / 1.5,
     marginBottom: 20,
-    padding: 20,
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
   },
-  preview: {
-    position: 'absolute',
-    top: -200,
-    height: '100%',
-    width: '100%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+  formGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
-
+  thumbnail: {
+    height: 200,
+    width: 200,
+    borderRadius: 4,
+  },
 });
 
 export default StartOrderModal;
