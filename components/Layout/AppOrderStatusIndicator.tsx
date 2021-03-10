@@ -75,22 +75,8 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
     }
     if (status === 'started') {
         promoteStatus = 'completed';
+        navigation.navigate('Modal', {modal: "CompleteOrderModal", item: {_id: id}});
     }
-    
-    // await fetch(`${Configs.TCMC_URI}/api/orders`, {
-    //     method: 'PUT', 
-    //     body: JSON.stringify({_id: id, order_status: promoteStatus}), 
-    //     headers: {'Content-Type': 'application/json', 'x-access-token': token}
-    // })
-    // .then(res => res.json())
-    // .then(json => {
-    //     if (isSuccessStatusCode(json.status)) {
-    //         setStatus(promoteStatus);
-    //       } else {
-    //         show({message: json.message});
-    //       }
-    // })
-    // .catch(err => show({message: err.message}));
   };
 
   return (

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, Image, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View, Image, TouchableOpacity, Text, Platform} from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -14,7 +14,7 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
-  order: string;
+  order: {_id: string};
 }
 
 const StartOrderModal: React.FC<Props> = ({order}) => {
@@ -23,20 +23,41 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
   const {show} = useContext(ToastContext);
   const {camera, pictures, showCamera, clearPics} = useContext(CameraContext);
   const [truckImage, setTruckImage] = useState('');
-  const [containerImage, setContainerImage] = useState('');
-  const [valid, setValid] = useState(false);
+  const [containerImage, setContainerImage] = useState({base64: '', uri: ''});
+  const [valid, setValid] = useState(true);
+
+  const createFormData = (photo: any, body: any) => {
+    const data = new FormData();
+    data.append("photo", {
+      name: "order_started.jpeg",
+      type: "image/jpeg",
+      uri: Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")});
+  
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+    return data;
+  };
 
   const updateStatus = async () => {
-    if (containerImage === "") {
+    if (containerImage.uri === "") {
       setValid(false);
       return;
     }
-    await fetch(`${Configs.TCMC_URI}/api/orders`, {
-      method: 'PUT',
-      body: JSON.stringify({_id: order, order_status: 'started'}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+    
+    let requestBody = {_id: order._id, order_status: 'started'}
+
+    await fetch(`${Configs.TCMC_URI}/api/orderPics`, {
+      method: 'POST',
+      headers: {'x-access-token': token},
+      body: createFormData(containerImage, requestBody),
+      //body: JSON.stringify(requestBody)
     })
-      .then((res) => res.json())
+      .then((res) => {
+        
+        console.log(res)
+        return res.json()
+      })
       .then((json) => {
         if (isSuccessStatusCode(json.status)) {
           show({message: json.message});
@@ -49,10 +70,10 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
   };
 
   useEffect(() => {
-    if (containerImage !== "") setValid(true);
+    if (containerImage.uri !== "") setValid(true);
     Object.keys(pictures).map((key) => {
       if (key === 'Container') {
-        setContainerImage(pictures[key].uri);
+        setContainerImage({base64: pictures[key].base64, uri:pictures[key].uri});
       }
     });
 
@@ -78,18 +99,18 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
           <View>
             <Image
               source={
-                containerImage === ''
+                containerImage.uri === ''
                   ? require('../../../assets/images/thumbnail_placeholder.jpg')
-                  : {uri: containerImage}
+                  : {uri: containerImage.uri}
               }
               style={styles.thumbnail}
             />
-            {containerImage === '' ? null : (
+            {containerImage.uri === '' ? null : (
               <TouchableOpacity
                 style={{position: 'absolute', top: 0, right: 0}}
                 onPress={() => {
                   unmount();
-                  setContainerImage('');
+                  setContainerImage({base64: '', uri: ''});
                   setValid(false);
                 }}>
                 <MaterialIcons

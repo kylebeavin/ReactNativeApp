@@ -6,6 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
+  Image,
+  Linking,
 } from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import AppEditBtn from '../../../components/Layout/AppEditBtn';
@@ -33,7 +35,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
   //#endregion
 
   return (
-    <View>
+    <View style={{marginBottom: 50}}>
       <AppTitle title="Order Detail" help search />
 
       <ScrollView
@@ -87,15 +89,19 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
           <AppTitle title="Url" />
         </TouchableOpacity>
         {!urlToggle ? null : (
-          <View style={{paddingLeft: 10}}>
+          <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
             {order.url.map((item: string) => {
               return (
-                <View key={item}>
+                <View style={{marginBottom: 10}} key={item}>
                   <Text
                     style={styles.link}
-                    onPress={() => console.log(`You pressed ${item}`)}>
+                    onPress={() => Linking.openURL(item)}>
                     {item}
                   </Text>
+                  {/* <Image
+                    source={{uri: item}}
+                    style={styles.thumbnail}
+                  /> */}
                 </View>
               );
             })}
@@ -135,6 +141,11 @@ const styles = StyleSheet.create({
   },
   link: {
     color: Colors.SMT_Secondary_2_Light_1,
+  },
+  thumbnail: {
+    height: 200,
+    width: 200,
+    borderRadius: 4,
   },
 });
 

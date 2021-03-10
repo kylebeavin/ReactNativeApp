@@ -24,3 +24,10 @@ export const validate = (values: any) => {
     }
     return errors;
 }
+
+export const ifNeedHaul = (val: string) => {
+  let arr = val.split(',');
+  if (arr[0] === 'false') return '';
+
+  return arr[1] === undefined ? '' : 'How many Containers';
+};
