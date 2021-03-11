@@ -30,6 +30,8 @@ import RoutesCalendarScreen from "../screens/BottomTabs/Routes_Tab/RoutesCalenda
 import RouteDetailsScreen from "../screens/BottomTabs/Routes_Tab/RouteDetailsScreen";
 import TruckDetailsScreen from "../screens/BottomTabs/Routes_Tab/TruckDetailsScreen";
 import OrderDetailsScreen from "../screens/BottomTabs/Services_Tab/OrderDetailsScreen";
+import MeetingDetailsScreen from "../screens/BottomTabs/CRM_Tab/MeetingDetailsScreen";
+import AccountDetailsScreen from "../screens/BottomTabs/CRM_Tab/AccountDetailsScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -94,6 +96,8 @@ function CRM_Navigator() {
       <CRM_Stack.Screen name="AccountsScreen" component={AccountsScreen} />
       <CRM_Stack.Screen name="MeetingsScreen" component={MeetingsScreen} />
       <CRM_Stack.Screen name="MapScreen" component={MapScreen} />
+      <CRM_Stack.Screen name="AccountDetailsScreen" component={AccountDetailsScreen} />
+      <CRM_Stack.Screen name="MeetingDetailsScreen" component={MeetingDetailsScreen} />
     </CRM_Stack.Navigator>
   );
 }

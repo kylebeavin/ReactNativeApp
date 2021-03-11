@@ -22,6 +22,7 @@ export const formatDateString = (oldString: string) :string => {
 //#endregion
 export const getDateStringsFromDate = (date: any) : {date: string, time: string} => {
     let dateObject = {date: "", time: ""};
+    if (date === null) return {date: 'N/A', time: 'N/A'};
     let stringArr: string[] = date.toString().split("T")
     let dateStringArr: string[] = stringArr[0].split("-");
     let dateTimeArr: string[] = stringArr[1].split(".")[0].split(":");

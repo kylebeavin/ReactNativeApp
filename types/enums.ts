@@ -56,6 +56,21 @@ export enum Days {
     sat = "sat"
 }
 
+export enum Months {
+    jan = 'January',
+    feb = 'February',
+    mar = 'March',
+    apr = 'April',
+    may = 'May',
+    jun = 'June',
+    jul = 'July',
+    aug = 'August',
+    sep = 'September',
+    oct = 'October',
+    nov = 'November',
+    dec = 'December',
+}
+
 export enum SortOrdersList {
     distance = "By Distance",
     stops = "By Stops",

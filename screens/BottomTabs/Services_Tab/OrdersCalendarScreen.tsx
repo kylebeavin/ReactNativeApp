@@ -19,7 +19,6 @@ import AppButton from '../../../components/Layout/AppButton';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
-import AppList from '../../../components/Layout/AppList';
 import {Order} from '../../../types/service';
 import useDates from '../../../hooks/useDates';
 
@@ -37,8 +36,6 @@ const OrdersCalendarScreen = () => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const {getSelectedDateRange} = useDates();
-  //let lessThan = new Date(date.setDate(date.getDate() + 1));
-  //let lessThan = new Date().setDate(new Date().getDate() + 1);
   
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   
@@ -59,7 +56,6 @@ const OrdersCalendarScreen = () => {
   //#endregion
 
   useEffect(() => {
-    //console.log(getSelectedDateRange(new Date()))
     console.log(new Date().toLocaleDateString())
     getSelectedDates();
   }, []);
@@ -151,46 +147,47 @@ const OrdersCalendarScreen = () => {
   }
 
   return (
-    <View style={styles.screen}>
+    <>
       <AppTitle title="Calendar" help search />
 
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <View style={{marginRight: 60, marginTop: 16}}>
-            <AppButton
-              title="Back"
-              onPress={() => navigation.goBack()}
-              outlined={true}
-              icon={{type: 'MaterialIcons', name: 'arrow-back'}}
-            />
-          </View>
-          <View style={{marginRight: -10}}>
-            <View style={{flex: 1}}>
-              <Text style={{fontSize: 12}}>List View</Text>
-              <View style={styles.picker}>
-                <Picker
-                  style={{height: 30}}
-                  selectedValue={sortItem}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSortItem(itemValue.toString())
-                  }>
-                  {Object.values(Services).map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item.toString()}
-                        label={item.toString()}
-                        value={item.toString()}
-                      />
-                    );
-                  })}
-                </Picker>
+        style={styles.scrollView}>
+        <View style={{paddingHorizontal: 10}}>
+          <AppNavBtnGrp>
+            <View style={{marginRight: 60, marginTop: 16}}>
+              <AppButton
+                title="Back"
+                onPress={() => navigation.goBack()}
+                outlined={true}
+                icon={{type: 'MaterialIcons', name: 'arrow-back'}}
+              />
+            </View>
+            <View style={{marginRight: -10}}>
+              <View style={{flex: 1}}>
+                <Text style={{fontSize: 12}}>List View</Text>
+                <View style={styles.picker}>
+                  <Picker
+                    style={{height: 30}}
+                    selectedValue={sortItem}
+                    mode="dropdown"
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSortItem(itemValue.toString())
+                    }>
+                    {Object.values(Services).map((item, index) => {
+                      return (
+                        <Picker.Item
+                          key={item.toString()}
+                          label={item.toString()}
+                          value={item.toString()}
+                        />
+                      );
+                    })}
+                  </Picker>
+                </View>
               </View>
             </View>
-          </View>
-        </AppNavBtnGrp>
+          </AppNavBtnGrp>
+        </View>
 
         <View style={styles.calendarContainer}>
           <Calendar
@@ -246,59 +243,58 @@ const OrdersCalendarScreen = () => {
           />
         </View>
 
-        <View style={{marginBottom: 20}}>
+        <View style={{marginBottom: 10}}>
           <AppTitle title="Service Events" />
         </View>
 
-        {selectedOrders.map((u, i) => {
-          return (
-            <TouchableOpacity
-              style={styles.card}
-              key={i}
-              onPress={() =>
-                navigation.navigate('OrderDetailsScreen', {order: u})
-              }>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{flex: 1}}>
-                  <Text style={styles.titleText}>{u.order_id}</Text>
-                  <Text>{u.account_id.account_name}</Text>
+        <View style={{paddingHorizontal: 10}}>
+          {selectedOrders.map((u, i) => {
+            return (
+              <TouchableOpacity
+                style={styles.card}
+                key={i}
+                onPress={() =>
+                  navigation.navigate('OrderDetailsScreen', {order: u})
+                }>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.titleText}>{u.order_id}</Text>
+                    <Text>{u.account_id.account_name}</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text
+                      style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
+                      {getDateStringsFromDate(u.start_date).date}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        color: Colors.SMT_Secondary_2_Light_1,
+                        textAlign: 'right',
+                      }}>
+                      {u.order_status}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{flex: 1}}>
-                  <Text
-                    style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
-                    {getDateStringsFromDate(u.start_date).date}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      color: Colors.SMT_Secondary_2_Light_1,
-                      textAlign: 'right',
-                    }}>
-                    {u.order_status}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  calendar: {},
   calendarContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: -10,
+    paddingHorizontal: 10
   },
-  column1: {},
   container: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginBottom: 20,
-  },
-  contentContainer: {
-    // This is the scrollable part
   },
   column2: {
     flex: 1,
@@ -313,40 +309,22 @@ const styles = StyleSheet.create({
     height: 36,
     overflow: 'hidden',
   },
-  screen: {
-    marginBottom: 36,
-  },
   scrollView: {
     height: '100%',
     width: '100%',
-    paddingHorizontal: 10,
-  },
-  status: {},
-  statusValid: {
-    color: Colors.Success,
-  },
-  statusInvalid: {
-    color: Colors.Info,
   },
   content: {
     marginBottom: 10,
   },
-
   //=== Card ===//
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
+    marginBottom: 3,
     borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 3,
-    padding: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
   },
   title: {
     marginBottom: 10,

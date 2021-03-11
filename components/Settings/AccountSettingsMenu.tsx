@@ -42,49 +42,6 @@ const AccountSettingsMenu: React.FC<Props> = (props) => {
           </View>
           <View style={styles.accountSettingsInput}>
             <TextInput placeholder="Display Name" />
-            {/* <Ionicons style={styles.settingsItemIcon} name="md-person" /> */}
-          </View>
-        </View>
-
-        <View style={styles.settingsItem}>
-          <View style={styles.accountSettingsLabel}>
-            <Text style={styles.settingsItemText}>Header Style</Text>
-          </View>
-          <View
-            style={[
-              styles.accountSettingsInput,
-              {flexDirection: 'row', marginRight: 45},
-            ]}>
-            <TouchableOpacity style={[styles.headerStyle]}>
-              <Text
-                style={[
-                  styles.text,
-                  headerStyle === 1 ? styles.selected : null,
-                ]}
-                onPress={() => handleOnPress(1)}>
-                1
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.headerStyle]}>
-              <Text
-                style={[
-                  styles.text,
-                  headerStyle === 2 ? styles.selected : null,
-                ]}
-                onPress={() => handleOnPress(2)}>
-                2
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.headerStyle}>
-              <Text
-                style={[
-                  styles.text,
-                  headerStyle === 3 ? styles.selected : null,
-                ]}
-                onPress={() => handleOnPress(3)}>
-                3
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
 
@@ -149,6 +106,7 @@ const styles = StyleSheet.create({
   },
   accountSettingsInput: {
     flex: 1,
+    marginVertical: -15,
   },
   settingsItemIcon: {
     marginHorizontal: 50,

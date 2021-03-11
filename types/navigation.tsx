@@ -26,6 +26,8 @@ export type CRM_ParamList = {
   AccountsScreen: undefined;
   MeetingsScreen: undefined;
   MapScreen: undefined;
+  AccountDetailsScreen: undefined;
+  MeetingDetailsScreen: undefined;
 };
 
 export type ServicesParamList = {

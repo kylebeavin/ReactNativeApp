@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, ShadowPropTypesIOS} from 'react-native';
+import { StyleSheet, Text, View, FlatList} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
 
 import AppContext from '../../providers/AppContext';
 import Colors from '../../constants/Colors';
-import AppButton from '../Layout/AppButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Configs from '../../constants/Configs';
 import { ToastContext } from '../../providers/ToastProvider';
@@ -49,7 +47,7 @@ const CenterHeader: React.FC<Props> = (props) => {
         <View style={[styles.touchableBackground, !toggle ? null : {opacity: .6, borderBottomEndRadius: 0, borderBottomStartRadius: 0}]}>
           <TouchableOpacity
             style={[styles.picker, !toggle ? null : styles.open]}
-            onPress={() => setToggle(!toggle)}>
+            onPress={grpArr.length === 1 ? () => null : () => setToggle(!toggle)}>
             <Text style={styles.itemTextStyle}>{grpName}</Text>
           </TouchableOpacity>
         </View>

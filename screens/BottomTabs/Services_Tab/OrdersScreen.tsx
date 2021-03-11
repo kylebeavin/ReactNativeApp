@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.SMT_Tertiary_1,
     marginBottom: 3,
     borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 3,
     paddingVertical: 3,
     paddingHorizontal: 5,
