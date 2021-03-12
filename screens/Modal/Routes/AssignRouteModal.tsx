@@ -1,5 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -11,13 +17,17 @@ import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
-import {formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
+import {
+  formatDateString,
+  getDateStringsFromDate,
+  isSuccessStatusCode,
+} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
-import { TextInputMask } from 'react-native-masked-text';
+import {TextInputMask} from 'react-native-masked-text';
 import AppButton from '../../../components/Layout/AppButton';
-import { Calendar } from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 
 interface Props {
   route: Route;
@@ -36,7 +46,7 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
     time: getDateStringsFromDate(route.time).date,
     notes: route.notes,
   };
-  
+
   const formErrors = {
     truck_id: [],
     is_active: [],
@@ -93,10 +103,7 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
@@ -115,12 +122,9 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
+      .catch((err) => show({message: err.message}));
 
     return userList;
   };
@@ -130,8 +134,9 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       _id: route._id,
       group_id: route.group_id,
       truck_id: values.truck_id,
+      inspection_id: route.inspection_id,
       is_active: values.is_active,
-      route_stage: "assigned",
+      route_stage: 'assigned',
       start_location: values.start_location,
       driver: values.driver,
       truck_vin: route.truck_vin,
@@ -149,12 +154,8 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('RoutesScreen');
@@ -174,8 +175,8 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       <ScrollView style={styles.form}>
         {/* Start Location */}
         <AppTextInput
-          label="Start Location"
-          name="start_location"
+          label='Start Location'
+          name='start_location'
           value={values.start_location}
           onChange={(val) => handleChange('start_location', val)}
           validations={[isRequired]}
@@ -189,7 +190,9 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.truck_id}
-              onValueChange={(itemValue, itemIndex) => handleChange('truck_id', itemValue.toString())}>
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange('truck_id', itemValue.toString())
+              }>
               {trucksList.map((item, index) => {
                 return (
                   <Picker.Item
@@ -243,7 +246,7 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -254,8 +257,8 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
 
         {/* Notes */}
         <AppTextInput
-          label="Notes"
-          name="notes"
+          label='Notes'
+          name='notes'
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
           validations={[]}

@@ -12,7 +12,8 @@ export type Account = {
     address_state: string;
     address_zip: string;
     email: string;
-    created: string;
+    createdAt: string;
+    updatedAt: string;
     demo: string;
     conversion: Date;
     hauling_contract: boolean;
@@ -65,8 +66,9 @@ export type Account = {
     address_city: string;
     address_state: string;
     address_zip: string;
-    created: string;
+    createdAt: string;
+    updatedAt: string;
     meeting_time: Date;
     is_active: boolean;
-    notes: string;
+    notes: string[];
   }

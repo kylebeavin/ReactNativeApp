@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -21,7 +20,7 @@ import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/Layout/AppButton';
 import Layout from '../../../constants/Layout';
 import {Order} from '../../../types/service';
-import {Days, Services, ServicesPer} from '../../../types/enums';
+import {Days, Services} from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
@@ -34,37 +33,28 @@ const CreateOrderModal: React.FC<Props> = () => {
   //#region Form Initializers
   const formValues = {
     account: '',
-    serviceFrequency: '',
     monthlyRate: '',
     demandRate: '',
-    termDate: '',
-    startDate: '',
-    endDate: '',
+    serviceDate: '',
     fileUploadUrl: '',
     notes: '',
   };
 
   const formErrors = {
     account: [],
-    serviceFrequency: [],
     monthlyRate: [],
     demandRate: [],
-    termDate: [],
-    startDate: [],
-    endDate: [],
+    serviceDate: [],
     fileUploadUrl: [],
     notes: [],
   };
 
   const formValidations = {
     account: [isRequired],
-    serviceFrequency: [isRequired],
     monthlyRate: [isRequired],
     demandRate: [isRequired],
-    termDate: [isRequired],
-    startDate: [isRequired],
-    endDate: [isRequired],
-    fileUploadUrl: [isRequired],
+    serviceDate: [isRequired],
+    fileUploadUrl: [],
     notes: [],
   };
   //#endregion
@@ -87,17 +77,13 @@ const CreateOrderModal: React.FC<Props> = () => {
   // DropDowns
   const [accountList, setAccountList] = useState<Account[]>();
   const [services, setServices] = useState(Services.smash.toString());
-  const [servicePer, setServicePer] = useState(ServicesPer.day.toString());
   const [serviceDays, setServiceDays] = useState(Days.sun.toString());
 
   // Popups
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
-  const [showEndDateCalendar, setShowEndDateCalendar] = useState(false);
   //#endregion
 
   useEffect(() => {
-    // Set State
-
     // Fetch Accounts by group id
     getAccountsDropDown()
       .then((data) => {
@@ -114,10 +100,7 @@ const CreateOrderModal: React.FC<Props> = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (accountsList = json.data))
       .catch((err) => show({message: err.message}));
     return accountsList;
@@ -127,37 +110,37 @@ const CreateOrderModal: React.FC<Props> = () => {
     const order: Order = {
       _id: '',
       account_id: values.account,
-      group_id: grpId,
-      is_recurring: isRecurring,
-      services: services,
-      service_frequency: values.serviceFrequency,
-      service_per: servicePer,
-      service_days: serviceDays,
-      monthly_rate: values.monthlyRate,
+      agreement_id: '',
+      container_qty: 0,
       demand_rate: values.demandRate,
-      term_date: values.termDate,
-      start_date: values.startDate,
-      end_date: values.endDate,
-      created: '',
-      is_demo: isDemo,
+      group_id: grpId,
+      haul_status: false,
       is_active: true,
-      url: values.fileUploadUrl,
-      notes: values.notes,
+      is_demo: isDemo,
+      is_recurring: isRecurring,
+      monthly_rate: values.monthlyRate,
+      notes: [values.notes],
+      order_id: '',
+      order_status: 'not started',
+      services: services,
+      service_date: values.serviceDate,
+      service_days: serviceDays,
+      url: [values.fileUploadUrl],
+
+      account_name: '',
     };
     return order;
   };
 
   async function postNewOrder() {
     const order: Order = await getFormData();
+    
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
       method: 'POST',
       body: JSON.stringify(order),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -172,9 +155,6 @@ const CreateOrderModal: React.FC<Props> = () => {
   const openStartDateCalendar = (show: boolean) => {
     setShowStartDateCalendar(show);
   };
-  const openEndDateCalendar = (show: boolean) => {
-    setShowEndDateCalendar(show);
-  };
 
   return (
     <View>
@@ -185,10 +165,10 @@ const CreateOrderModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.account}
-              onValueChange={(itemValue, ItemIndex) => {
+              onValueChange={(itemValue) => {
                 handleChange('account', itemValue.toString());
               }}>
-              {accountList?.map((item, index) => {
+              {accountList?.map((item) => {
                 return (
                   <Picker.Item
                     key={item._id}
@@ -217,43 +197,10 @@ const CreateOrderModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={services}
-              onValueChange={(itemValue, ItemIndex) =>
+              onValueChange={(itemValue) =>
                 setServices(itemValue.toString())
               }>
-              {Object.values(Services).map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Service Frequency */}
-        <AppTextInput
-          label="Service Frequency"
-          name="serviceFrequency"
-          value={values.serviceFrequency}
-          onChange={(val) => handleChange('serviceFrequency', val)}
-          validations={[isRequired]}
-          errors={errors.serviceFrequency}
-          setErrors={setErrors}
-        />
-
-        {/* Services Per */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Per</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={servicePer}
-              onValueChange={(itemValue, ItemIndex) =>
-                setServicePer(itemValue.toString())
-              }>
-              {Object.values(ServicesPer).map((item, index) => {
+              {Object.values(Services).map((item) => {
                 return (
                   <Picker.Item
                     key={item.toString()}
@@ -272,10 +219,10 @@ const CreateOrderModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={serviceDays}
-              onValueChange={(itemValue, ItemIndex) =>
+              onValueChange={(itemValue) =>
                 setServiceDays(itemValue.toString())
               }>
-              {Object.values(Days).map((item, index) => {
+              {Object.values(Days).map((item) => {
                 return (
                   <Picker.Item
                     key={item.toString()}
@@ -290,8 +237,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Monthly Rate */}
         <AppTextInput
-          label="Monthly Rate"
-          name="monthlyRate"
+          label='Monthly Rate'
+          name='monthlyRate'
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
@@ -301,8 +248,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Demand Rate */}
         <AppTextInput
-          label="Demand Rate"
-          name="demandRate"
+          label='Demand Rate'
+          name='demandRate'
           value={values.demandRate}
           onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
@@ -310,64 +257,26 @@ const CreateOrderModal: React.FC<Props> = () => {
           setErrors={setErrors}
         />
 
-        {/* Term Date */}
-        <AppTextInput
-          label="Term Date"
-          name="termDate"
-          value={values.termDate}
-          onChange={(val) => handleChange('termDate', val)}
-          validations={[isRequired]}
-          errors={errors.termDate}
-          setErrors={setErrors}
-        />
-
-        {/* Start Date */}
+        {/* Service Date */}
         <View style={styles.fieldContainer}>
           <View style={styles.columnContainer}>
             <View style={styles.column}>
-              <Text style={styles.text}>Start Date</Text>
+              <Text style={styles.text}>Service Date</Text>
               <View style={styles.textInput}>
                 <TextInputMask
                   type={'datetime'}
                   options={{
                     format: 'MM/DD/YYYY',
                   }}
-                  value={values.startDate}
-                  onChangeText={(text) => handleChange('startDate', text)}
+                  value={values.serviceDate}
+                  onChangeText={(text) => handleChange('serviceDate', text)}
                 />
               </View>
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openStartDateCalendar(true)}
-                icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
-                backgroundColor={Colors.SMT_Secondary_2}
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* End Date */}
-        <View style={styles.fieldContainer}>
-          <View style={styles.columnContainer}>
-            <View style={styles.column}>
-              <Text style={styles.text}>End Date</Text>
-              <View style={styles.textInput}>
-                <TextInputMask
-                  type={'datetime'}
-                  options={{
-                    format: 'MM/DD/YYYY',
-                  }}
-                  value={values.endDate}
-                  onChangeText={(text) => handleChange('endDate', text)}
-                />
-              </View>
-            </View>
-            <View style={[styles.column, styles.calendarButton]}>
-              <AppButton
-                title="Calendar"
-                onPress={() => openEndDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
               />
@@ -381,17 +290,17 @@ const CreateOrderModal: React.FC<Props> = () => {
           <CheckBox
             disabled={false}
             value={isDemo}
-            onValueChange={(newValue) => setIsDemo(!isDemo)}
+            onValueChange={() => setIsDemo(!isDemo)}
           />
         </View>
 
         {/* File Upload URL */}
         <AppTextInput
-          label="File Upload URL"
-          name="fileUploadUrl"
+          label='File Upload URL'
+          name='fileUploadUrl'
           value={values.fileUploadUrl}
           onChange={(val) => handleChange('fileUploadUrl', val)}
-          validations={[isRequired]}
+          validations={[]}
           errors={errors.fileUploadUrl}
           setErrors={setErrors}
         />
@@ -399,8 +308,8 @@ const CreateOrderModal: React.FC<Props> = () => {
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}
@@ -419,26 +328,13 @@ const CreateOrderModal: React.FC<Props> = () => {
           <Calendar
             style={{borderRadius: 4}}
             onDayPress={(day) => {
-              handleChange('startDate', formatDateString(day.dateString));
+              handleChange('serviceDate', formatDateString(day.dateString));
               setShowStartDateCalendar(false);
             }}
           />
         </TouchableOpacity>
       ) : null}
 
-      {showEndDateCalendar ? (
-        <TouchableOpacity
-          style={styles.calendarPopup}
-          onPress={() => setShowEndDateCalendar(false)}>
-          <Calendar
-            style={{borderRadius: 4}}
-            onDayPress={(day) => {
-              handleChange('endDate', formatDateString(day.dateString));
-              setShowEndDateCalendar(false);
-            }}
-          />
-        </TouchableOpacity>
-      ) : null}
     </View>
   );
 };

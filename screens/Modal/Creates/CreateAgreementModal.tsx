@@ -18,6 +18,7 @@ import Layout from '../../../constants/Layout';
 import { Agreement } from '../../../types/service';
 import { Days, Services, ServicesPer } from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
+import { ToastContext } from '../../../providers/ToastProvider';
 
 interface Props {
 }
@@ -25,6 +26,7 @@ interface Props {
 const CreateAgreementModal: React.FC<Props> = () => {
     const navigation = useNavigation();
     const {grpId, token} = useContext(AppContext);
+    const {show} = useContext(ToastContext);
     //#region === Use State Variables ===//
     const [account, setAccount] = useState("");
     const [group, setGroup] = useState("");
@@ -52,7 +54,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
 
     //#region === Mutable Ref Variables ===//
     const nameRef = useRef<TextInput>(null);
-    const accountRef = useRef<Picker>(null); // ToDo: figure out how to auto focus Picker element
+    const accountRef = useRef<Picker>(null);
     const dateRef = useRef<TextInput>(null);
     const streetRef = useRef<TextInput>(null);
     const cityRef = useRef<TextInput>(null);
@@ -68,12 +70,11 @@ const CreateAgreementModal: React.FC<Props> = () => {
         .then((data) => {
           setAccountList(data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => show({message: err.message}));
         
     }, []);
 
     const getAccountsDropDown = async (): Promise<Account[]> => {
-      //let grpId = await useAsyncStorage().getUserAsync().then((user) => user.group_id);
       let accountsList: Account[] = [];
 
       await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
@@ -81,37 +82,13 @@ const CreateAgreementModal: React.FC<Props> = () => {
         body: JSON.stringify({group_id: grpId}),
         headers: {"Content-Type": "application/json","x-access-token": token},
       })
-        .then((res) => {
-          console.log(res.status)
-          return res.json()
-        })
+        .then((res) => res.json())
         .then((json) => (accountsList = json.data))
-        .catch((err) => console.log(err));
+        .catch((err) => show({message: err.message}));
       return accountsList;
     };
 
-    // const getSMT_User = async (): Promise<SMT_User> => {
-    //   return await useAsyncStorage().getUserAsync()
-    //     .then((user) => {
-    //       let smtUser: SMT_User = {
-    //         _id: user._id,
-    //         is_active: user.is_active,
-    //         first_name: user.first_name,
-    //         last_name: user.last_name,
-    //         created: user.created,
-    //         email: user.email,
-    //         group_id: user.group_id,
-    //         role: user.role,
-    //         password: user.password,
-    //         image: user.image,
-    //         token: user.token
-    //       }
-    //       return smtUser;
-    //     });
-    // };
-
     const getFormData = async () => {
-      //let user : SMT_User = await getSMT_User();
       const agreement: Agreement = {
         _id: "",
         account_id: account, 
@@ -142,16 +119,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
         body: JSON.stringify(agreement),
         headers: {"Content-Type": "application/json","x-access-token": token},
         })
-        .then((res) => {
-          console.log(res.status)
-          return res.json()
-        })
+        .then((res) => res.json())
         .then((data) => data)
-        .catch((err) => {
-          // ToDo: Come up with error handling strategy.
-          console.log(err);
-          err;
-        });
+        .catch((err) => show({message: err.message}));
     
       navigation.navigate("ServicesScreen");
     };

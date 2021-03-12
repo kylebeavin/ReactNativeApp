@@ -14,7 +14,7 @@ import {isRequired, isEmail} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 import useForm from '../../../hooks/useForm';
-import { isSuccessStatusCode } from '../../../utils/Helpers';
+import {isSuccessStatusCode} from '../../../utils/Helpers';
 
 interface Props {
   navigation: any;
@@ -109,12 +109,9 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
+      .catch((err) => show({message: err.message}));
 
     return userList;
   };
@@ -137,15 +134,15 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         }
       })
       .catch((err) => show({message: 'Error: ' + err.message}));
-  };
+  }
 
   return (
     <View>
       <ScrollView style={styles.form}>
         {/* First Name */}
         <AppTextInput
-          label="First Name"
-          name="first_name"
+          label='First Name'
+          name='first_name'
           value={values.first_name}
           onChange={(val) => handleChange('first_name', val)}
           validations={[isRequired]}
@@ -155,8 +152,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Last Name */}
         <AppTextInput
-          label="Last Name"
-          name="last_name"
+          label='Last Name'
+          name='last_name'
           value={values.last_name}
           onChange={(val) => handleChange('last_name', val)}
           validations={[isRequired]}
@@ -188,8 +185,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Phone */}
         <AppTextInput
-          label="Phone"
-          name="phone"
+          label='Phone'
+          name='phone'
           value={values.phone}
           onChange={(val) => handleChange('phone', val)}
           validations={[isRequired]}
@@ -199,8 +196,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -214,8 +211,9 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.owner}
-              onValueChange={(itemValue, ItemIndex) => handleChange("owner", itemValue.toString())}
-                >
+              onValueChange={(itemValue, ItemIndex) =>
+                handleChange('owner', itemValue.toString())
+              }>
               {ownerList?.map((item, index) => {
                 return (
                   <Picker.Item
@@ -235,8 +233,9 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.status}
-              onValueChange={(itemValue, itemIndex) => handleChange("status", itemValue.toString())}
-                >
+              onValueChange={(itemValue, itemIndex) =>
+                handleChange('status', itemValue.toString())
+              }>
               <Picker.Item
                 label={Status.active}
                 value={Status.active.toString()}
@@ -252,8 +251,8 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         {/* Notes */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

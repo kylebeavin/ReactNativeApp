@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Picker} from '@react-native-picker/picker';
-import {StyleSheet, View, Text, TextInput, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -64,8 +64,6 @@ const CreateLocationModal: React.FC<Props> = () => {
   //#endregion
 
   useEffect(() => {
-    // Set State
-
     // Fetch Accounts by group id
     getAccountsDropDown()
       .then((data) => {
@@ -82,10 +80,7 @@ const CreateLocationModal: React.FC<Props> = () => {
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
       body: JSON.stringify({group_id: grpId}),
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (accountsList = json.data))
       .catch((err) => show({message: err.message}));
     return accountsList;
@@ -115,10 +110,7 @@ const CreateLocationModal: React.FC<Props> = () => {
       body: JSON.stringify(location),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -135,8 +127,8 @@ const CreateLocationModal: React.FC<Props> = () => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -168,8 +160,8 @@ const CreateLocationModal: React.FC<Props> = () => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -179,8 +171,8 @@ const CreateLocationModal: React.FC<Props> = () => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -190,8 +182,8 @@ const CreateLocationModal: React.FC<Props> = () => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -201,8 +193,8 @@ const CreateLocationModal: React.FC<Props> = () => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
@@ -238,7 +230,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    //paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,

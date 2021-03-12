@@ -50,10 +50,7 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucks(data.data);
@@ -70,10 +67,7 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setRoutes(data.data);
@@ -90,12 +84,8 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           setDrivers(data.data);
         } else {
@@ -111,10 +101,7 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setInspections(data.data);
@@ -131,10 +118,7 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId, route_stage: 'unassigned'}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setUnassigned(data.data);
@@ -151,10 +135,7 @@ const RoutesScreen = () => {
       body: JSON.stringify({group_id: grpId, route_stage: 'assigned'}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setAssigned(data.data);
@@ -226,11 +207,11 @@ const RoutesScreen = () => {
                       }}>
                       <AppButton
                         title="Inspections"
-                        onPress={() => console.log('Truck Inspections')}
+                        onPress={() => null}
                       />
                       <AppButton
                         title="Service"
-                        onPress={() => console.log('Truck Service')}
+                        onPress={() => null}
                         backgroundColor={Colors.SMT_Secondary_2_Light_1}
                       />
                     </View>
@@ -306,11 +287,11 @@ const RoutesScreen = () => {
                       }}>
                       <AppButton
                         title="Logs"
-                        onPress={() => console.log('Logs')}
+                        onPress={() => null}
                       />
                       <AppButton
                         title="Contact"
-                        onPress={() => console.log('Contact')}
+                        onPress={() => null}
                         backgroundColor={Colors.SMT_Secondary_2_Light_1}
                       />
                     </View>
@@ -348,7 +329,7 @@ const RoutesScreen = () => {
                     <AppButton
                       outlined
                       title="Driver Profile"
-                      onPress={() => console.log('Driver Profile')}
+                      onPress={() => null}
                     />
                     <View
                       style={{
@@ -356,11 +337,11 @@ const RoutesScreen = () => {
                       }}>
                       <AppButton
                         title="Logs"
-                        onPress={() => console.log('Logs')}
+                        onPress={() => null}
                       />
                       <AppButton
                         title="Contact"
-                        onPress={() => console.log('Contact')}
+                        onPress={() => null}
                         backgroundColor={Colors.SMT_Secondary_2_Light_1}
                       />
                     </View>

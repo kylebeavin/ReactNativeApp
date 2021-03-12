@@ -1,69 +1,71 @@
-import { useEffect, useRef, useReducer, useContext } from 'react';
+import {useEffect, useRef, useReducer, useContext} from 'react';
 import AppContext from '../providers/AppContext';
-import { ToastContext } from '../providers/ToastProvider';
+import {ToastContext} from '../providers/ToastProvider';
 
-export const useFetch = (url:string, method: string, body?: {}) => {
-    const {token, grpId} = useContext(AppContext);
-	const {show} = useContext(ToastContext);
+export const useFetch = (url: string, method: string, body?: {}) => {
+  const {token, grpId} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
 
-    const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
-	let bodyObj = !body ? {group_id: grpId} : body; 
-	
-	const initialState = {
-		status: 'idle',
-		error: null,
-		data: [],
-	};
+  const cache = useRef<any>({}); // ToDo: Think about the types in this file instead of using any.
+  let bodyObj = !body ? {group_id: grpId} : body;
 
-	const [state, dispatch] = useReducer((state: any, action:any) => {
-		switch (action.type) {
-			case 'FETCHING':
-				return { ...initialState, status: 'fetching' };
-			case 'FETCHED':
-				return { ...initialState, status: 'fetched', data: action.payload };
-			case 'FETCH_ERROR':
-				return { ...initialState, status: 'error', error: action.payload };
-			default:
-				return state;
-		}
-	}, initialState);
+  const initialState = {
+    status: 'idle',
+    error: null,
+    data: [],
+  };
 
-	useEffect(() => {
-		let cancelRequest = false;
-		if (!url) return;
+  const [state, dispatch] = useReducer((state: any, action: any) => {
+    switch (action.type) {
+      case 'FETCHING':
+        return {...initialState, status: 'fetching'};
+      case 'FETCHED':
+        return {...initialState, status: 'fetched', data: action.payload};
+      case 'FETCH_ERROR':
+        return {...initialState, status: 'error', error: action.payload};
+      default:
+        return state;
+    }
+  }, initialState);
 
-		const fetchData = async () => {
-			dispatch({ type: 'FETCHING' });
-			
-			if (cache.current[url]) {
-				const data = cache.current[url + body];
-				dispatch({ type: 'FETCHED', payload: data });
-			} else {
-				try {
-					const response = await fetch(url, {
-                        headers: {"Content-Type": "application/json","x-access-token": token},
-                        method: method,
-                        body: JSON.stringify(bodyObj)
-                    });
-                    console.log('\n',"Response from: ", url,'\n', "Status Code: ", response.status,'\n', "Body Sent: ",bodyObj)
-					const data = await response.json();
-					cache.current[url + body] = data;
-					if (cancelRequest) return;
-					dispatch({ type: 'FETCHED', payload: data });
-				} catch (error) {
-					if (cancelRequest) return;
-					show({message: error.message});
-					dispatch({ type: 'FETCH_ERROR', payload: error.message });
-				}
-			}
-		};
+  useEffect(() => {
+    let cancelRequest = false;
+    if (!url) return;
 
-		fetchData();
+    const fetchData = async () => {
+      dispatch({type: 'FETCHING'});
 
-		return function cleanup() {
-			cancelRequest = true;
-		};
-	}, [url, body]);
+      if (cache.current[url]) {
+        const data = cache.current[url + body];
+        dispatch({type: 'FETCHED', payload: data});
+      } else {
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-access-token': token,
+            },
+            method: method,
+            body: JSON.stringify(bodyObj),
+          });
+          const data = await response.json();
+          cache.current[url + body] = data;
+          if (cancelRequest) return;
+          dispatch({type: 'FETCHED', payload: data});
+        } catch (error) {
+          if (cancelRequest) return;
+          show({message: error.message});
+          dispatch({type: 'FETCH_ERROR', payload: error.message});
+        }
+      }
+    };
 
-	return state;
+    fetchData();
+
+    return function cleanup() {
+      cancelRequest = true;
+    };
+  }, [url, body]);
+
+  return state;
 };

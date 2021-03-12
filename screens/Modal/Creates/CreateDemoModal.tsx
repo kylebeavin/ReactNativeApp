@@ -12,9 +12,11 @@ import Colors from '../../../constants/Colors';
 import { Picker } from '@react-native-picker/picker';
 import ModalButtons from '../ModalButtons';
 import AppContext from '../../../providers/AppContext';
+import { ToastContext } from '../../../providers/ToastProvider';
 
 const CreateDemoModal = () => {
     const {grpId, token} = useContext(AppContext);
+    const {show} = useContext(ToastContext);
     const navigation = useNavigation();
 
     //#region Use State Variables
@@ -29,7 +31,7 @@ const CreateDemoModal = () => {
           .then((data) => {
             setAccountList(data);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => show({message: err.message}));
 
     }, []);
 
@@ -41,12 +43,9 @@ const CreateDemoModal = () => {
             body: JSON.stringify({group_id: grpId}),
             headers: {"Content-Type": "application/json","x-access-token": token},
           })
-          .then((res) => {
-            console.log(res.status)
-            return res.json()
-          })
+          .then((res) => res.json())
           .then((json) => accounts = json.data)
-          .catch((err) => console.log(err))
+          .catch((err) => show({message: err.message}));
   
           return accounts;
       };
@@ -69,16 +68,9 @@ const CreateDemoModal = () => {
             body: JSON.stringify(demo),
             headers: {"Content-Type": "application/json","x-access-token": token},
             })
-            .then(res => {
-              console.log(res.status)
-              return res.json()
-            })
+            .then(res => res.json())
             .then(data => data)
-            .catch(err => {
-              // ToDo: Come up with error handling strategy.
-              console.log(err);
-              return err
-            });
+            .catch(err => show({message: err.message}));
 
         navigation.navigate("DemosScreen");
 

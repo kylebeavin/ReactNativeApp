@@ -13,7 +13,7 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import { TruckServiceStatus, VehicleType } from '../../../types/enums';
+import {TruckServiceStatus, VehicleType} from '../../../types/enums';
 
 const CreateTruckModal = () => {
   //#region Form Initializers
@@ -143,10 +143,7 @@ const CreateTruckModal = () => {
       body: JSON.stringify(truck),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -161,11 +158,10 @@ const CreateTruckModal = () => {
   return (
     <View>
       <ScrollView style={styles.form}>
-
         {/* Body Type */}
         <AppTextInput
-          label="Body Type"
-          name="body_type"
+          label='Body Type'
+          name='body_type'
           value={values.body_type}
           onChange={(val) => handleChange('body_type', val)}
           validations={[isRequired]}
@@ -175,8 +171,8 @@ const CreateTruckModal = () => {
 
         {/* Body Subtype */}
         <AppTextInput
-          label="Body Subtype"
-          name="body_subtype"
+          label='Body Subtype'
+          name='body_subtype'
           value={values.body_subtype}
           onChange={(val) => handleChange('body_subtype', val)}
           validations={[isRequired]}
@@ -186,8 +182,8 @@ const CreateTruckModal = () => {
 
         {/* Color */}
         <AppTextInput
-          label="Color"
-          name="color"
+          label='Color'
+          name='color'
           value={values.color}
           onChange={(val) => handleChange('color', val)}
           validations={[isRequired]}
@@ -197,8 +193,8 @@ const CreateTruckModal = () => {
 
         {/* Hours */}
         <AppTextInput
-          label="Hours"
-          name="hours"
+          label='Hours'
+          name='hours'
           value={values.hours}
           onChange={(val) => handleChange('hours', val)}
           validations={[isRequired]}
@@ -208,8 +204,8 @@ const CreateTruckModal = () => {
 
         {/* License Plate */}
         <AppTextInput
-          label="License Plate"
-          name="license_number"
+          label='License Plate'
+          name='license_number'
           value={values.license_number}
           onChange={(val) => handleChange('license_number', val)}
           validations={[isRequired]}
@@ -219,8 +215,8 @@ const CreateTruckModal = () => {
 
         {/* MSRP */}
         <AppTextInput
-          label="MSRP"
-          name="msrp"
+          label='MSRP'
+          name='msrp'
           value={values.msrp}
           onChange={(val) => handleChange('msrp', val)}
           validations={[isRequired]}
@@ -230,8 +226,8 @@ const CreateTruckModal = () => {
 
         {/* Display Name */}
         <AppTextInput
-          label="Display Name"
-          name="name"
+          label='Display Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -241,8 +237,8 @@ const CreateTruckModal = () => {
 
         {/* Odometer */}
         <AppTextInput
-          label="Odometer"
-          name="odo"
+          label='Odometer'
+          name='odo'
           value={values.odo}
           onChange={(val) => handleChange('odo', val)}
           validations={[isRequired]}
@@ -252,8 +248,8 @@ const CreateTruckModal = () => {
 
         {/* Ownership */}
         <AppTextInput
-          label="Ownership"
-          name="ownership"
+          label='Ownership'
+          name='ownership'
           value={values.ownership}
           onChange={(val) => handleChange('ownership', val)}
           validations={[isRequired]}
@@ -263,8 +259,8 @@ const CreateTruckModal = () => {
 
         {/* Trim */}
         <AppTextInput
-          label="Trim"
-          name="trim"
+          label='Trim'
+          name='trim'
           value={values.trim}
           onChange={(val) => handleChange('trim', val)}
           validations={[isRequired]}
@@ -274,8 +270,8 @@ const CreateTruckModal = () => {
 
         {/* Registration */}
         <AppTextInput
-          label="Registration"
-          name="registration"
+          label='Registration'
+          name='registration'
           value={values.registration}
           onChange={(val) => handleChange('registration', val)}
           validations={[isRequired]}
@@ -285,8 +281,8 @@ const CreateTruckModal = () => {
 
         {/* Make */}
         <AppTextInput
-          label="Make"
-          name="vehicle_make"
+          label='Make'
+          name='vehicle_make'
           value={values.vehicle_make}
           onChange={(val) => handleChange('vehicle_make', val)}
           validations={[isRequired]}
@@ -296,8 +292,8 @@ const CreateTruckModal = () => {
 
         {/* Model */}
         <AppTextInput
-          label="Model"
-          name="vehicle_model"
+          label='Model'
+          name='vehicle_model'
           value={values.vehicle_model}
           onChange={(val) => handleChange('vehicle_model', val)}
           validations={[isRequired]}
@@ -307,8 +303,8 @@ const CreateTruckModal = () => {
 
         {/* VIN */}
         <AppTextInput
-          label="VIN"
-          name="vin"
+          label='VIN'
+          name='vin'
           value={values.vin}
           onChange={(val) => handleChange('vin', val)}
           validations={[isRequired]}
@@ -319,8 +315,8 @@ const CreateTruckModal = () => {
         {/* Year */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Year"
-            name="year"
+            label='Year'
+            name='year'
             value={values.year}
             onChange={(val) => handleChange('year', val)}
             validations={[isRequired]}
@@ -328,11 +324,9 @@ const CreateTruckModal = () => {
             setErrors={setErrors}
           />
         </View>
-
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />
-
     </View>
   );
 };

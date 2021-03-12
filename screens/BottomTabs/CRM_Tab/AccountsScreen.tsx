@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { StyleSheet, View, ActivityIndicator, FlatList, ScrollView} from 'react-native';
+import { StyleSheet, View, ActivityIndicator, FlatList, ScrollView, TouchableOpacity, Text} from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -13,6 +13,7 @@ import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import AppButton from '../../../components/Layout/AppButton';
 import AppContext from '../../../providers/AppContext';
 import { ToastContext } from '../../../providers/ToastProvider';
+import { getDateStringsFromDate } from '../../../utils/Helpers';
 
 interface Props {
 }
@@ -38,11 +39,8 @@ const AccountScreen: React.FC<Props> = () => {
       headers: {"Content-Type": "application/json", "x-access-token": token},
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
-    }) // ToDo: get accounts by group id 
-      .then((res) => {
-        console.log(res.status)  
-        return res.json()
-      })
+    })
+      .then((res) => res.json())
       .then((json) => {
         if (json.data) {
           json.data.map((account: any) => {
@@ -79,12 +77,9 @@ const AccountScreen: React.FC<Props> = () => {
       body: JSON.stringify({account_id: account_id}),
       headers: {"Content-Type": "application/json", "x-access-token": token}
     })
-    .then((res) => {
-      console.log(res.status)
-      return res.json()
-    })
+    .then((res) => res.json())
     .then((json) => contacts = json.data)
-    .catch((err) => console.log(err))
+    .catch((err) => show({message: err.message}));
     return contacts;
   };
 
@@ -104,7 +99,7 @@ const AccountScreen: React.FC<Props> = () => {
               outlined={false}
             />
             <AppButton
-              title="MEETINGS"
+              title="CALENDAR"
               onPress={() => navigation.navigate("MeetingsScreen")}
               outlined={true}
             />
@@ -130,13 +125,33 @@ const AccountScreen: React.FC<Props> = () => {
           ) : (
             accounts.map((u, i) => {
               return (
-                <AppCard
-                  key={i}
-                  item={u}
-                  index={i}
-                  onToggleCardDrawer={onToggleCardDrawer}
-                  >
-                  </AppCard>
+                <TouchableOpacity
+                style={styles.card}
+                key={i}
+                onPress={() =>
+                  navigation.navigate('AccountDetailsScreen', {item: u})
+                }>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.titleText}>{u.account_name}</Text>
+                    <Text>{u.address_city}</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text
+                      style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
+                      {getDateStringsFromDate(u.createdAt).date}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        color: Colors.SMT_Secondary_2_Light_1,
+                        textAlign: 'right',
+                      }}>
+                      {getDateStringsFromDate(u.createdAt).time}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
               );})
           )}
         </View>
@@ -154,6 +169,21 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     paddingHorizontal: 10
+  },
+  card: {
+    backgroundColor: Colors.SMT_Tertiary_1,
+    marginBottom: 3,
+    borderWidth: 1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
+    borderRadius: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+  },
+  title: {
+    marginBottom: 10,
+  },
+  titleText: {
+    fontWeight: 'bold',
   },
 });
 

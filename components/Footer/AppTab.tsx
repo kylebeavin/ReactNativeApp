@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
+import Colors from '../../constants/Colors';
 
 import AppButton from '../Layout/AppButton';
 
@@ -8,7 +9,7 @@ const AppTab = (props: any) => {
     
     return (
       <View style={styles.container}>
-        <AppButton title={title} onPress={onPress} />
+        <AppButton title={title} onPress={onPress} backgroundColor={Colors.SMT_Primary_1_Dark_1} />
       </View>
     );
 }

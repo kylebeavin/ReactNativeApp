@@ -1,5 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
@@ -11,14 +17,15 @@ import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
-import {formatDate, formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
+import {
+  formatDateString,
+  isSuccessStatusCode,
+} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import {TruckServiceStatus, VehicleType} from '../../../types/enums';
-import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
-import { TextInputMask } from 'react-native-masked-text';
+import {TextInputMask} from 'react-native-masked-text';
 import AppButton from '../../../components/Layout/AppButton';
-import { Calendar } from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 
 const CreateRouteModal = () => {
   //#region Form Initializers
@@ -27,7 +34,6 @@ const CreateRouteModal = () => {
     time: formatDateString(new Date().toString()),
     notes: '',
   };
-  console.log(new Date())
   const formErrors = {
     start_location: [],
     time: [],
@@ -75,10 +81,7 @@ const CreateRouteModal = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
@@ -98,12 +101,9 @@ const CreateRouteModal = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
+      .catch((err) => show({message: err.message}));
 
     return userList;
   };
@@ -113,6 +113,7 @@ const CreateRouteModal = () => {
       _id: '',
       group_id: grpId,
       truck_id: '',
+      inspection_id: '',
       is_active: true,
       route_stage: 'unassigned',
       start_location: values.start_location,
@@ -132,12 +133,8 @@ const CreateRouteModal = () => {
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('RoutesScreen');
@@ -157,8 +154,8 @@ const CreateRouteModal = () => {
       <ScrollView style={styles.form}>
         {/* Start Location */}
         <AppTextInput
-          label="Start Location"
-          name="start_location"
+          label='Start Location'
+          name='start_location'
           value={values.start_location}
           onChange={(val) => handleChange('start_location', val)}
           validations={[isRequired]}
@@ -184,7 +181,7 @@ const CreateRouteModal = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -195,8 +192,8 @@ const CreateRouteModal = () => {
 
         {/* Notes */}
         <AppTextInput
-          label="Notes"
-          name="notes"
+          label='Notes'
+          name='notes'
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
           validations={[isRequired]}

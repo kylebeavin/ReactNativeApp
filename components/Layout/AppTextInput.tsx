@@ -16,12 +16,24 @@ interface Props {
   disabled?: boolean;
 }
 
-const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,errors,setErrors,multiline,keyboardType,containerStyle, disabled}) => {
+const AppTextInput: React.FC<Props> = ({
+  label,
+  name,
+  value,
+  onChange,
+  validations,
+  errors,
+  setErrors,
+  multiline,
+  keyboardType,
+  containerStyle,
+  disabled,
+}) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef(null);
-  
+
   const validate = (validations: any) => {
-    setErrors((prev:any) => ({
+    setErrors((prev: any) => ({
       ...prev,
       [name]: validations
         .map((errorsFor: any) => errorsFor(value))
@@ -30,12 +42,18 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
   };
 
   return (
-    <View style={[styles.fieldContainer, !containerStyle ? null : containerStyle]}>
-      <Text style={styles.text} onPress={() => ref.current!.focus()}>{label}</Text>
+    <View
+      style={[styles.fieldContainer, !containerStyle ? null : containerStyle]}>
+      <Text style={styles.text} onPress={() => ref.current!.focus()}>
+        {label}
+      </Text>
       <TextInput
-        autoCapitalize="none"
+        autoCapitalize='none'
         autoCorrect={false}
-        style={[styles.textInput, disabled ? {backgroundColor: Colors.SMT_Secondary_1_Light_1} : null]}
+        style={[
+          styles.textInput,
+          disabled ? {backgroundColor: Colors.SMT_Secondary_1_Light_1} : null,
+        ]}
         ref={ref}
         value={value}
         onChange={(e) => onChange(e.nativeEvent.text, name)}
@@ -45,13 +63,16 @@ const AppTextInput: React.FC<Props> = ({label,name,value,onChange,validations,er
           setFocused(false);
           validate(validations);
         }}
-
         multiline={!multiline ? false : true}
-        keyboardType={!keyboardType ? "default" : keyboardType}
+        keyboardType={!keyboardType ? 'default' : keyboardType}
         editable={disabled ? false : true}
       />
 
-      <View style={[focused ? styles.isFocused : null, multiline ? {borderBottomColor: 'transparent'}: null]}></View>
+      <View
+        style={[
+          focused ? styles.isFocused : null,
+          multiline ? {borderBottomColor: 'transparent'} : null,
+        ]}></View>
       <View style={errors.length > 0 ? styles.errorStyle : null}></View>
 
       <View style={errors.length > 0 ? {opacity: 1} : {opacity: 0}}>

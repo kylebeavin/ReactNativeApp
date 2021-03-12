@@ -1,9 +1,9 @@
-import React from "react";
-import { useNavigation } from "@react-navigation/native";
-import {StyleSheet,Text,TouchableOpacity,View} from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Colors from "../../constants/Colors";
+import Colors from '../../constants/Colors';
 
 interface Props {
   title: string;
@@ -13,14 +13,20 @@ interface Props {
 }
 
 const AppAddNew: React.FC<Props> = (props) => {
-  const {backgroundColor} = props
+  const {backgroundColor} = props;
   const navigation = useNavigation();
-  
+
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Modal", {modal: props.modal,item: props.item})}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Modal', {modal: props.modal, item: props.item})
+      }>
       <View style={{...styles.addNewButtonContainer, backgroundColor}}>
         <View style={styles.addNewIconContainer}>
-          <Ionicons style={[styles.addNewIcon, {color: backgroundColor}]} name="ios-add" />
+          <Ionicons
+            style={[styles.addNewIcon, {color: backgroundColor}]}
+            name='ios-add'
+          />
         </View>
         <View>
           <Text style={styles.addNewText}>NEW {props.title}</Text>
@@ -37,11 +43,11 @@ AppAddNew.defaultProps = {
 const styles = StyleSheet.create({
   addNewButtonContainer: {
     flex: 0,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginBottom: 20,
     padding: 5,
-    borderStyle: "dashed",
+    borderStyle: 'dashed',
     borderRadius: 1,
     borderWidth: 3,
     borderColor: Colors.SMT_Primary_2_Light_1,

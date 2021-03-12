@@ -22,6 +22,9 @@ import CreatePreTripInspectionModal from './Creates/CreatePreTripInspectionModal
 import CreateGroupModal from './Creates/CreateGroupModal';
 import UpdateRouteModal from './Updates/UpdateRouteModal';
 import AssignRouteModal from './Routes/AssignRouteModal';
+import UpdateOrderStatusModal from './Services/UpdateOrderStatusModal';
+import StartOrderModal from './Services/StartOrderModal';
+import CompleteOrderModal from './Services/CompleteOrderModal';
 
 interface Props {
     navigation: any;
@@ -77,7 +80,15 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
 
       //=== Route Modals ===//
       case "AssignRouteModal":
-        return <AssignRouteModal route={item} />
+        return <AssignRouteModal route={item} />;
+
+      //=== Service Modals ===//
+      case "StartOrderModal":
+        return <StartOrderModal order={item} />;
+      case "CompleteOrderModal":
+        return <CompleteOrderModal order={item} />;
+      case "UpdateOrderStatusModal":
+        return <UpdateOrderStatusModal order={item} />;
 
       default:
         return null;

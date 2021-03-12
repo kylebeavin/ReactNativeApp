@@ -11,16 +11,22 @@ export const isEmail = (val: string) => {
 };
 
 export const validate = (values: any) => {
-    let errors = {email: "", password: ""};
-    if (!values.email) {
+  let errors = {email: '', password: ''};
+  if (!values.email) {
+  } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+    errors.email = 'Email address is invalid';
+  }
+  if (!values.password) {
+    errors.password = 'Password is required';
+  } else if (values.password.length < 10) {
+    errors.password = 'Password needs to be more than 10 characters';
+  }
+  return errors;
+};
 
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-        errors.email = "Email address is invalid";
-    }
-    if (!values.password) {
-        errors.password = "Password is required";
-    } else if (values.password.length < 10) {
-        errors.password = "Password needs to be more than 10 characters";
-    }
-    return errors;
-}
+export const ifNeedHaul = (val: string) => {
+  let arr = val.split(',');
+  if (arr[0] === 'false') return '';
+
+  return arr[1] === undefined ? '' : 'How many Containers';
+};

@@ -16,7 +16,7 @@ import {Order} from '../../../types/service';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
 import {useIsFocused} from '@react-navigation/native';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {getRequestHeadersAsync} from '../../../utils/Helpers';
+import {getDateStringsFromDate, getRequestHeadersAsync} from '../../../utils/Helpers';
 import {Picker} from '@react-native-picker/picker';
 import {SortOrdersList} from '../../../types/enums';
 
@@ -47,16 +47,13 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
     //   method: 'POST',
     //   body: JSON.stringify({group_id: grpId}),
     // })
-    //   .then((res) => {
-    //     console.log(res.status)
-    //     return res.json()
-    //   })
+    //   .then((res) => res.json())
     //   .then((json) => {
     //     if (json.data) {
     //       setOrders(json.data);
     //     }
     //   })
-    //   .catch((err) => console.log(err))
+    //   .catch((err) => show({message: err.message})
     //   .finally(() => setLoading(false));
     setIsLoading(false);
   };
@@ -152,7 +149,7 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
                     <View style={styles.column1}>
                       <Text style={{fontWeight: 'bold'}}>{u._id}</Text>
                       <Text>{u.account_id}</Text>
-                      <Text>{u.created}</Text>
+                      <Text>{getDateStringsFromDate(u.service_date).date}</Text>
                     </View>
 
                     <View style={styles.column2}>

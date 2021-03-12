@@ -2,7 +2,7 @@
 /// Primary 1
 const SMT_Primary_1 = '#BB1E10';
 const SMT_Primary_1_Light_1 = '#f5573b';
-const SMT_Primary_1_Dark_1 = '#FF938A';
+const SMT_Primary_1_Dark_1 = '#830000';
 
 /// Primary 2
 const SMT_Primary_2 = '#101820';
@@ -47,7 +47,7 @@ export default {
   /// Primary 1
   SMT_Primary_1: SMT_Primary_1,
   SMT_Primary_1_Light_1: SMT_Primary_1_Light_1,
-  SMT_Primary_1_Light_2: SMT_Primary_1_Dark_1,
+  SMT_Primary_1_Dark_1: SMT_Primary_1_Dark_1,
   
   /// Primary 2
   SMT_Primary_2: SMT_Primary_2,

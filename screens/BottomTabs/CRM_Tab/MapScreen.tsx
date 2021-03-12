@@ -50,7 +50,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
             outlined={true}
           />
           <AppButton
-            title="MEETINGS"
+            title="CALENDAR"
             onPress={() => navigation.navigate('MeetingsScreen')}
             outlined={true}
           />

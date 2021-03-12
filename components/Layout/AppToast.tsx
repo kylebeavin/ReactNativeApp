@@ -1,7 +1,11 @@
-
 import React, {useContext, useEffect, useRef} from 'react';
-import {Text,Animated,Easing,TouchableOpacity,StyleSheet, ActivityIndicator,} from 'react-native';
-import { Image } from 'react-native-elements';
+import {
+  Text,
+  Animated,
+  Easing,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import Colors from '../../constants/Colors';
 
 import {ToastContext} from '../../providers/ToastProvider';
@@ -35,7 +39,6 @@ export const Toast = () => {
         {transform: [{translateY: translateYRef.current}]},
       ]}>
       <TouchableOpacity onPress={hide} style={styles.content}>
-        <Image style={{height: 70, width: 60, marginHorizontal: 20}} source={require("../../assets/images/wilson.png")}/>
         <Text style={styles.toastMessage}>{toast.message}</Text>
       </TouchableOpacity>
     </Animated.View>
