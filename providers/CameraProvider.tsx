@@ -30,7 +30,7 @@ export const CameraContext = createContext({
 const CameraProvider: React.FC<Props> = ({children}) => {
   const [camera, setCamera] = useState(initialCamera);
   const [pictures, setPictures] = useState({});
-  const [cacheKey, setCacheKey] = useState("")
+  const [cacheKey, setCacheKey] = useState('');
   let ref = useRef<any>().current;
   const timeout = useRef<any>(null);
 
@@ -44,7 +44,7 @@ const CameraProvider: React.FC<Props> = ({children}) => {
 
   const hide = useCallback(() => {
     setCamera({...camera, visible: false});
-    setCacheKey("");
+    setCacheKey('');
   }, [camera]);
 
   const setRef = useCallback(
@@ -54,10 +54,13 @@ const CameraProvider: React.FC<Props> = ({children}) => {
     [camera],
   );
 
-  const takePic = useCallback((pic) => {
-    let picObject = {[cacheKey]: pic};
-    setPictures({...pictures, ...{[cacheKey]: pic}});
-  }, [camera])
+  const takePic = useCallback(
+    (pic) => {
+      let picObject = {[cacheKey]: pic};
+      setPictures({...pictures, ...{[cacheKey]: pic}});
+    },
+    [camera],
+  );
 
   const clearPics = useCallback(() => {
     setPictures({});
@@ -72,7 +75,7 @@ const CameraProvider: React.FC<Props> = ({children}) => {
         takePic,
         clearPics,
         camera,
-        pictures
+        pictures,
       }}>
       {children}
     </CameraContext.Provider>

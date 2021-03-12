@@ -114,10 +114,7 @@ const CreateOrderModal: React.FC<Props> = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (accountsList = json.data))
       .catch((err) => show({message: err.message}));
     return accountsList;
@@ -142,9 +139,9 @@ const CreateOrderModal: React.FC<Props> = () => {
       created: '',
       is_demo: isDemo,
       is_active: true,
-      url: values.fileUploadUrl,
-      order_status: "not started",
-      notes: values.notes,
+      url: [values.fileUploadUrl],
+      order_status: 'not started',
+      notes: [values.notes],
     };
     return order;
   };
@@ -156,24 +153,16 @@ const CreateOrderModal: React.FC<Props> = () => {
       body: JSON.stringify(order),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('OrdersScreen');
         } else {
-          console.log(data)
           show({message: data.message});
         }
       })
-      .catch((err) => {
-        console.log(err)
-        show({message: err.message})
-      });
+      .catch((err) => show({message: err.message}));
   }
 
   const openStartDateCalendar = (show: boolean) => {
@@ -242,8 +231,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Service Frequency */}
         <AppTextInput
-          label="Service Frequency"
-          name="serviceFrequency"
+          label='Service Frequency'
+          name='serviceFrequency'
           value={values.serviceFrequency}
           onChange={(val) => handleChange('serviceFrequency', val)}
           validations={[isRequired]}
@@ -297,8 +286,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Monthly Rate */}
         <AppTextInput
-          label="Monthly Rate"
-          name="monthlyRate"
+          label='Monthly Rate'
+          name='monthlyRate'
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
@@ -308,8 +297,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Demand Rate */}
         <AppTextInput
-          label="Demand Rate"
-          name="demandRate"
+          label='Demand Rate'
+          name='demandRate'
           value={values.demandRate}
           onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
@@ -319,8 +308,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Term Date */}
         <AppTextInput
-          label="Term Date"
-          name="termDate"
+          label='Term Date'
+          name='termDate'
           value={values.termDate}
           onChange={(val) => handleChange('termDate', val)}
           validations={[isRequired]}
@@ -346,7 +335,7 @@ const CreateOrderModal: React.FC<Props> = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openStartDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -373,7 +362,7 @@ const CreateOrderModal: React.FC<Props> = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openEndDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -394,8 +383,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* File Upload URL */}
         <AppTextInput
-          label="File Upload URL"
-          name="fileUploadUrl"
+          label='File Upload URL'
+          name='fileUploadUrl'
           value={values.fileUploadUrl}
           onChange={(val) => handleChange('fileUploadUrl', val)}
           validations={[isRequired]}
@@ -406,8 +395,8 @@ const CreateOrderModal: React.FC<Props> = () => {
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

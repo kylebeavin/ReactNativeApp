@@ -148,26 +148,26 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
       <ScrollView style={styles.form}>
         <View>
           <View style={{marginBottom: 10}}>
-            <AppTitle title="Complete Order" help />
+            <AppTitle title='Complete Order' help />
           </View>
 
           {/* Containers Serviced */}
           <View style={{paddingHorizontal: 10}}>
             <AppTextInput
-              label="Containers Serviced"
-              name="containers_serviced"
+              label='Containers Serviced'
+              name='containers_serviced'
               value={values.containers_serviced}
               onChange={(val) => handleChange('containers_serviced', val)}
               validations={[isRequired]}
               errors={errors.containers_serviced}
               setErrors={setErrors}
-              keyboardType="number-pad"
+              keyboardType='number-pad'
             />
           </View>
 
           <View style={styles.formGroup}>
             <AppButton
-              title="Container"
+              title='Container'
               onPress={() => showCamera({key: 'Container'})}
               icon={{type: 'MaterialIcons', name: 'camera-alt'}}
             />
@@ -190,7 +190,7 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
                   }}>
                   <MaterialIcons
                     style={{opacity: 0.5}}
-                    name="cancel"
+                    name='cancel'
                     size={50}
                     color={Colors.SMT_Tertiary_1}
                   />
@@ -206,43 +206,43 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
             </View>
           )}
         </View>
-        
+
         <View style={styles.formGroup}>
-            {/* Haul */}
+          {/* Haul */}
+          <View style={{paddingHorizontal: 10}}>
+            <AppCheckBox
+              label='Haul'
+              name='haul'
+              value={values.haul}
+              onChange={(name, val) => handleChange(name, val)}
+              validations={[]}
+              errors={errors.haul}
+              setErrors={setErrors}
+            />
+          </View>
+
+          {!values.haul ? null : (
             <View style={{paddingHorizontal: 10}}>
-              <AppCheckBox
-                label="Haul"
-                name="haul"
-                value={values.haul}
-                onChange={(name, val) => handleChange(name, val)}
+              {/* Need Hauled */}
+              <AppTextInput
+                label='Needing Hauled'
+                name='needing_hauled'
+                value={values.needing_hauled}
+                onChange={(val) => handleChange('needing_hauled', val)}
                 validations={[]}
-                errors={errors.haul}
+                errors={errors.needing_hauled}
                 setErrors={setErrors}
+                keyboardType='number-pad'
               />
             </View>
-
-            {!values.haul ? null : (
-              <View style={{paddingHorizontal: 10}}>
-                {/* Need Hauled */}
-                <AppTextInput
-                  label="Needing Hauled"
-                  name="needing_hauled"
-                  value={values.needing_hauled}
-                  onChange={(val) => handleChange('needing_hauled', val)}
-                  validations={[]}
-                  errors={errors.needing_hauled}
-                  setErrors={setErrors}
-                  keyboardType="number-pad"
-                />
-              </View>
-            )}
-          </View>
+          )}
+        </View>
 
         {/* Notes */}
         <View style={{paddingHorizontal: 10}}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

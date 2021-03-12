@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -92,8 +91,6 @@ const CreateMeetingModal: React.FC<Props> = () => {
   //#endregion
 
   useEffect(() => {
-    // Set State
-
     // Fetch Accounts by group id
     getAccountsDropDown()
       .then((data) => {
@@ -110,10 +107,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (accountsList = json.data))
       .catch((err) => show({message: err.message}));
     return accountsList;
@@ -125,10 +119,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
       body: JSON.stringify({account_id: accountId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => setContactList(json.data))
       .catch((err) => show({message: err.message}));
   };
@@ -163,10 +154,11 @@ const CreateMeetingModal: React.FC<Props> = () => {
       address_city: values.city,
       address_state: values.state,
       address_zip: values.zip,
-      created: '',
+      createdAt: '',
+      updatedAt: '',
       meeting_time: getMeetingTime(),
       is_active: true,
-      notes: values.notes,
+      notes: [values.notes],
     };
     return meeting;
   };
@@ -179,10 +171,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
       body: JSON.stringify(meeting),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -203,8 +192,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -278,7 +267,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -336,8 +325,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -347,8 +336,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -358,8 +347,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -369,8 +358,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
@@ -381,8 +370,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
         {/* Notes */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

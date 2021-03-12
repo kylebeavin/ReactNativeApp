@@ -39,8 +39,8 @@ export type Order = {
   created: string;
   is_demo: boolean;
   is_active: boolean;
-  notes: string;
-  url: string;
+  notes: string[];
+  url: string[];
   order_status: string;
 };
 

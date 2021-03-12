@@ -1,5 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import useForm from '../../../hooks/useForm';
@@ -14,8 +20,8 @@ import ModalButtons from '../ModalButtons';
 import {isRequired, isEmail} from '../../../utils/Validators';
 import {Group} from '../../../types';
 import AppButton from '../../../components/Layout/AppButton';
-import { TextInputMask } from 'react-native-masked-text';
-import { Calendar } from 'react-native-calendars';
+import {TextInputMask} from 'react-native-masked-text';
+import {Calendar} from 'react-native-calendars';
 
 const CreateGroupModal = () => {
   //#region Form Initializers
@@ -95,37 +101,37 @@ const CreateGroupModal = () => {
     postNewGroup,
   );
 
-    // State
-    const [showSigningDateCalendar, setShowSigningDateCalendar] = useState(false);
-    const [showLaunchDateCalendar, setShowLaunchDateCalendar] = useState(false);
+  // State
+  const [showSigningDateCalendar, setShowSigningDateCalendar] = useState(false);
+  const [showLaunchDateCalendar, setShowLaunchDateCalendar] = useState(false);
   // ToDo: Figure out how to useRefs to set focus onSubmit of TextInput.
   //#endregion
 
   const getFormData = async () => {
     const group: Group = {
-        _id: '',
-        address: {
-            address_city: values.address_city,
-            address_state: values.address_state,
-            address_street: values.address_street,
-            address_zip: values.address_zip,
-        },
-        dba: values.dba,
-        ein: values.ein,
-        email: values.email,
-        is_active: values.is_active,
-        launch_date: values.launch_date,
-        legal_company: values.legal_company,
-        name: values.name,
-        phone: values.phone,
-        region: values.region,
-        signing_date: values.signing_date,
-        tax_rate: values.tax_rate,
-        territory_zips: values.territory_zips,
-        time_zone: values.time_zone,
-        webpage: values.webpage,
+      _id: '',
+      address: {
+        address_city: values.address_city,
+        address_state: values.address_state,
+        address_street: values.address_street,
+        address_zip: values.address_zip,
+      },
+      dba: values.dba,
+      ein: values.ein,
+      email: values.email,
+      is_active: values.is_active,
+      launch_date: values.launch_date,
+      legal_company: values.legal_company,
+      name: values.name,
+      phone: values.phone,
+      region: values.region,
+      signing_date: values.signing_date,
+      tax_rate: values.tax_rate,
+      territory_zips: values.territory_zips,
+      time_zone: values.time_zone,
+      webpage: values.webpage,
     };
-    
+
     return group;
   };
 
@@ -161,8 +167,8 @@ const CreateGroupModal = () => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -172,8 +178,8 @@ const CreateGroupModal = () => {
 
         {/* DBA */}
         <AppTextInput
-          label="DBA"
-          name="dba"
+          label='DBA'
+          name='dba'
           value={values.dba}
           onChange={(val) => handleChange('dba', val)}
           validations={[isRequired]}
@@ -183,8 +189,8 @@ const CreateGroupModal = () => {
 
         {/* Legal Company */}
         <AppTextInput
-          label="Legal Company"
-          name="legal_company"
+          label='Legal Company'
+          name='legal_company'
           value={values.legal_company}
           onChange={(val) => handleChange('legal_company', val)}
           validations={[isRequired]}
@@ -194,8 +200,8 @@ const CreateGroupModal = () => {
 
         {/* EIN */}
         <AppTextInput
-          label="EIN"
-          name="ein"
+          label='EIN'
+          name='ein'
           value={values.ein}
           onChange={(val) => handleChange('ein', val)}
           validations={[isRequired]}
@@ -205,8 +211,8 @@ const CreateGroupModal = () => {
 
         {/* Address City */}
         <AppTextInput
-          label="City"
-          name="address_city"
+          label='City'
+          name='address_city'
           value={values.address_city}
           onChange={(val) => handleChange('address_city', val)}
           validations={[isRequired]}
@@ -216,8 +222,8 @@ const CreateGroupModal = () => {
 
         {/* Address State */}
         <AppTextInput
-          label="State"
-          name="address_state"
+          label='State'
+          name='address_state'
           value={values.address_state}
           onChange={(val) => handleChange('address_state', val)}
           validations={[isRequired]}
@@ -227,8 +233,8 @@ const CreateGroupModal = () => {
 
         {/* Address Street */}
         <AppTextInput
-          label="Street"
-          name="address_street"
+          label='Street'
+          name='address_street'
           value={values.address_street}
           onChange={(val) => handleChange('address_street', val)}
           validations={[isRequired]}
@@ -238,8 +244,8 @@ const CreateGroupModal = () => {
 
         {/* Address Zip */}
         <AppTextInput
-          label="Zip"
-          name="address_zip"
+          label='Zip'
+          name='address_zip'
           value={values.address_zip}
           onChange={(val) => handleChange('address_zip', val)}
           validations={[isRequired]}
@@ -249,20 +255,20 @@ const CreateGroupModal = () => {
 
         {/* Phone */}
         <AppTextInput
-          label="Phone"
-          name="phone"
+          label='Phone'
+          name='phone'
           value={values.phone}
           onChange={(val) => handleChange('phone', val)}
           validations={[isRequired]}
           errors={errors.phone}
           setErrors={setErrors}
-          keyboardType="number-pad"
+          keyboardType='number-pad'
         />
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -272,8 +278,8 @@ const CreateGroupModal = () => {
 
         {/* Region */}
         <AppTextInput
-          label="Region"
-          name="region"
+          label='Region'
+          name='region'
           value={values.region}
           onChange={(val) => handleChange('region', val)}
           validations={[isRequired]}
@@ -283,8 +289,8 @@ const CreateGroupModal = () => {
 
         {/* Tax Rate */}
         <AppTextInput
-          label="Tax Rate"
-          name="tax_rate"
+          label='Tax Rate'
+          name='tax_rate'
           value={values.tax_rate}
           onChange={(val) => handleChange('tax_rate', val)}
           validations={[isRequired]}
@@ -294,8 +300,8 @@ const CreateGroupModal = () => {
 
         {/* Time Zone */}
         <AppTextInput
-          label="Time Zone"
-          name="time_zone"
+          label='Time Zone'
+          name='time_zone'
           value={values.time_zone}
           onChange={(val) => handleChange('time_zone', val)}
           validations={[isRequired]}
@@ -305,8 +311,8 @@ const CreateGroupModal = () => {
 
         {/* Territory Zips */}
         <AppTextInput
-          label="Territory Zips"
-          name="territory_zips"
+          label='Territory Zips'
+          name='territory_zips'
           value={values.territory_zips}
           onChange={(val) => handleChange('territory_zips', val)}
           validations={[isRequired]}
@@ -332,7 +338,7 @@ const CreateGroupModal = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openSigningDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -359,7 +365,7 @@ const CreateGroupModal = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openLaunchDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -371,8 +377,8 @@ const CreateGroupModal = () => {
         {/* Webpage */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Webpage"
-            name="webpage"
+            label='Webpage'
+            name='webpage'
             value={values.webpage}
             onChange={(val) => handleChange('webpage', val)}
             validations={[]}

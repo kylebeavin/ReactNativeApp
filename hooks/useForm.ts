@@ -53,15 +53,10 @@ const useForm = <T, Z, Y>(
       });
     });
 
-    // ToDo: Fix spread operator right now it is injecting the entire errorObject into the errors object instead of replacing the values.
     setErrors((prev: any) => ({
       ...prev,
       ...errorObject,
     }));
-
-    // Debug Validation Errors by uncommenting log.
-    // console.log(errorObject)
-    // console.log(errors)
 
     setIsSubmitting(true);
   };

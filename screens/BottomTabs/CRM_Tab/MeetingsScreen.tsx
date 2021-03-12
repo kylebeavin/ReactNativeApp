@@ -20,7 +20,7 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 import useDates from '../../../hooks/useDates';
-import { Meeting } from '../../../types/crm';
+import {Meeting} from '../../../types/crm';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 
 interface IMarkedDays {
@@ -37,11 +37,17 @@ const MeetingsScreen = () => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const {getSelectedDateRange} = useDates();
-  
+
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  
+
   // Refs
-  let selectedQuery = useRef({group_id: grpId, meeting_time: {$gte: formatDate(new Date()), $lt: new Date(date.getDate() + 1)}}).current;
+  let selectedQuery = useRef({
+    group_id: grpId,
+    meeting_time: {
+      $gte: formatDate(new Date()),
+      $lt: new Date(date.getDate() + 1),
+    },
+  }).current;
   //let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
@@ -57,7 +63,6 @@ const MeetingsScreen = () => {
   //#endregion
 
   useEffect(() => {
-    //console.log(new Date().toLocaleDateString())
     getSelectedDates();
   }, []);
 
@@ -66,7 +71,7 @@ const MeetingsScreen = () => {
     let lessThan = new Date(day.dateString);
     let newDays = selectedDates;
     // Find and Remove the date object with only 1 key (currently selected date).
-    Object.keys(newDays).find(key => {
+    Object.keys(newDays).find((key) => {
       if (shallowEqual(newDays[key])) {
         delete newDays[key];
       }
@@ -75,8 +80,14 @@ const MeetingsScreen = () => {
     // Select Day
     newDays[day.dateString] = {selected: true};
     //update queries
-    selectedQuery = {group_id: grpId, meeting_time: {$gte: day.dateString, $lt: lessThan.setDate(lessThan.getDate() + 1)}}
-    
+    selectedQuery = {
+      group_id: grpId,
+      meeting_time: {
+        $gte: day.dateString,
+        $lt: lessThan.setDate(lessThan.getDate() + 1),
+      },
+    };
+
     // Fetch Orders
     await getSelectedDates();
   };
@@ -131,22 +142,22 @@ const MeetingsScreen = () => {
   };
 
   const shallowEqual = (object1: any) => {
-    // Not a complete shallow comparison 
+    // Not a complete shallow comparison
     const keys1 = Object.keys(object1);
-    const keys2 = Object.keys({"selected": true});
-  
+    const keys2 = Object.keys({selected: true});
+
     if (keys1.length !== keys2.length) {
       return false;
     }
-  
+
     // for (let key of keys1) {
     //   if (object1[key] !== object2[key]) {
     //     return false;
     //   }
     // }
-  
+
     return true;
-  }
+  };
 
   return (
     <>
@@ -155,10 +166,9 @@ const MeetingsScreen = () => {
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
-            <View 
+            <View
               //style={{marginRight: 60, marginTop: 16}}
-              style={{width: '50%', marginTop: 8}}
-            >
+              style={{width: '50%', marginTop: 8}}>
               <AppButton
                 title="Back"
                 onPress={() => navigation.goBack()}
@@ -166,7 +176,7 @@ const MeetingsScreen = () => {
                 icon={{type: 'MaterialIcons', name: 'arrow-back'}}
               />
             </View>
-            <View style={{width: '150%', marginLeft:-85, marginBottom: -15}}>
+            <View style={{width: '150%', marginLeft: -85, marginBottom: -15}}>
               <AppAddNew title="MEETING" modal="CreateMeetingModal" />
             </View>
             {/* <View style={{marginRight: -10}}>
@@ -296,7 +306,7 @@ const styles = StyleSheet.create({
   calendarContainer: {
     marginBottom: 10,
     marginTop: -10,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   container: {
     flexDirection: 'row',

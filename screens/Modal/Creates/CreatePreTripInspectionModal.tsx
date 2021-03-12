@@ -16,7 +16,7 @@ import AppTextInput from '../../../components/Layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/Layout/AppCheckBox';
-import { RouteStages } from '../../../types/enums';
+import {RouteStages} from '../../../types/enums';
 
 const CreatePreTripInspectionModal = () => {
   //#region Form Initializers
@@ -179,10 +179,7 @@ const CreatePreTripInspectionModal = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
@@ -200,13 +197,10 @@ const CreatePreTripInspectionModal = () => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
-          data.data.unshift({_id: "-- No Route Selected --"})
+          data.data.unshift({_id: '-- No Route Selected --'});
           setRoutesList(data.data);
         } else {
           show({message: data.message});
@@ -268,13 +262,10 @@ const CreatePreTripInspectionModal = () => {
       body: JSON.stringify(preTripInspection),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then(async (data) => {
         if (isSuccessStatusCode(data.status)) {
-          if (preTripInspection.route_id !== "-- No Route Selected --") {
+          if (preTripInspection.route_id !== '-- No Route Selected --') {
             await updateRouteStage(preTripInspection);
           }
           show({message: data.message});
@@ -289,13 +280,14 @@ const CreatePreTripInspectionModal = () => {
   const updateRouteStage = async (inspection: any) => {
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
       method: 'PUT',
-      body: JSON.stringify({_id: inspection.route_id, inspection_id: inspection._id, route_stage: RouteStages.inspected}),
+      body: JSON.stringify({
+        _id: inspection.route_id,
+        inspection_id: inspection._id,
+        route_stage: RouteStages.inspected,
+      }),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -335,8 +327,8 @@ const CreatePreTripInspectionModal = () => {
 
           {/* Type */}
           <AppTextInput
-            label="Type"
-            name="type"
+            label='Type'
+            name='type'
             value={type.toString()}
             onChange={(val) => setType(val)}
             validations={[]}
@@ -350,27 +342,27 @@ const CreatePreTripInspectionModal = () => {
           <View style={{flex: 1, marginRight: 15}}>
             {/* Odometer */}
             <AppTextInput
-              label="Odometer"
-              name="odometer_reading"
+              label='Odometer'
+              name='odometer_reading'
               value={values.odometer_reading}
               onChange={(val) => handleChange('odometer_reading', val)}
               validations={[isRequired]}
               errors={errors.odometer_reading}
               setErrors={setErrors}
-              keyboardType="number-pad"
+              keyboardType='number-pad'
             />
           </View>
           <View style={{flex: 1}}>
             {/* Fuel Level */}
             <AppTextInput
-              label="Fuel Level"
-              name="fuel_level"
+              label='Fuel Level'
+              name='fuel_level'
               value={values.fuel_level}
               onChange={(val) => handleChange('fuel_level', val)}
               validations={[isRequired]}
               errors={errors.fuel_level}
               setErrors={setErrors}
-              keyboardType="number-pad"
+              keyboardType='number-pad'
             />
           </View>
         </View>
@@ -379,14 +371,14 @@ const CreatePreTripInspectionModal = () => {
           <View style={{flex: 1, marginRight: 15}}>
             {/* Machine Hours */}
             <AppTextInput
-              label="Machine Hours"
-              name="machine_hours"
+              label='Machine Hours'
+              name='machine_hours'
               value={values.machine_hours}
               onChange={(val) => handleChange('machine_hours', val)}
               validations={[isRequired]}
               errors={errors.machine_hours}
               setErrors={setErrors}
-              keyboardType="number-pad"
+              keyboardType='number-pad'
             />
           </View>
           <View style={{flex: 1}}>
@@ -396,7 +388,9 @@ const CreatePreTripInspectionModal = () => {
               <View style={[styles.picker, {height: 42}]}>
                 <Picker
                   selectedValue={values.route_id}
-                  onValueChange={(itemValue, itemIndex) => handleChange('route_id', itemValue.toString())}>
+                  onValueChange={(itemValue, itemIndex) =>
+                    handleChange('route_id', itemValue.toString())
+                  }>
                   {routesList.map((item, index) => {
                     return (
                       <Picker.Item
@@ -418,8 +412,8 @@ const CreatePreTripInspectionModal = () => {
             {/* seat_belts */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="seat_belts"
-              name="seat_belts"
+              label='seat_belts'
+              name='seat_belts'
               value={values.seat_belts}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -430,8 +424,8 @@ const CreatePreTripInspectionModal = () => {
             {/* pto_switch */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="pto_switch"
-              name="pto_switch"
+              label='pto_switch'
+              name='pto_switch'
               value={values.pto_switch}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -441,8 +435,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* engine_fluids */}
             <AppCheckBox
-              label="engine_fluids"
-              name="engine_fluids"
+              label='engine_fluids'
+              name='engine_fluids'
               value={values.engine_fluids}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -453,8 +447,8 @@ const CreatePreTripInspectionModal = () => {
             {/* transmission */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="transmission"
-              name="transmission"
+              label='transmission'
+              name='transmission'
               value={values.transmission}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -465,8 +459,8 @@ const CreatePreTripInspectionModal = () => {
             {/* steering_mechanism */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="steering_mechanism"
-              name="steering_mechanism"
+              label='steering_mechanism'
+              name='steering_mechanism'
               value={values.steering_mechanism}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -477,8 +471,8 @@ const CreatePreTripInspectionModal = () => {
             {/* horn */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="horn"
-              name="horn"
+              label='horn'
+              name='horn'
               value={values.horn}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -489,8 +483,8 @@ const CreatePreTripInspectionModal = () => {
             {/* windshield_wipers */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="windshield_wipers"
-              name="windshield_wipers"
+              label='windshield_wipers'
+              name='windshield_wipers'
               value={values.windshield_wipers}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -500,8 +494,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* mirrors */}
             <AppCheckBox
-              label="mirrors"
-              name="mirrors"
+              label='mirrors'
+              name='mirrors'
               value={values.mirrors}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -512,8 +506,8 @@ const CreatePreTripInspectionModal = () => {
             {/* truck_lights */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="truck_lights"
-              name="truck_lights"
+              label='truck_lights'
+              name='truck_lights'
               value={values.truck_lights}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -524,8 +518,8 @@ const CreatePreTripInspectionModal = () => {
             {/* parking_brake */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="parking_brake"
-              name="parking_brake"
+              label='parking_brake'
+              name='parking_brake'
               value={values.parking_brake}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -536,8 +530,8 @@ const CreatePreTripInspectionModal = () => {
             {/* service_brake */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label="service_brake"
-              name="service_brake"
+              label='service_brake'
+              name='service_brake'
               value={values.service_brake}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -549,8 +543,8 @@ const CreatePreTripInspectionModal = () => {
           <View style={{flex: 1}}>
             {/* tires */}
             <AppCheckBox
-              label="tires"
-              name="tires"
+              label='tires'
+              name='tires'
               value={values.tires}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -560,8 +554,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* rims */}
             <AppCheckBox
-              label="rims"
-              name="rims"
+              label='rims'
+              name='rims'
               value={values.rims}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -571,8 +565,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* emergency_equipment */}
             <AppCheckBox
-              label="emergency_equipment"
-              name="emergency_equipment"
+              label='emergency_equipment'
+              name='emergency_equipment'
               value={values.emergency_equipment}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -582,8 +576,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* tools_gear */}
             <AppCheckBox
-              label="tools_gear"
-              name="tools_gear"
+              label='tools_gear'
+              name='tools_gear'
               value={values.tools_gear}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -593,8 +587,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* chocks_chains */}
             <AppCheckBox
-              label="chocks_chains"
-              name="chocks_chains"
+              label='chocks_chains'
+              name='chocks_chains'
               value={values.chocks_chains}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -604,8 +598,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* drum_cap */}
             <AppCheckBox
-              label="drum_cap"
-              name="drum_cap"
+              label='drum_cap'
+              name='drum_cap'
               value={values.drum_cap}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -615,8 +609,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* grease_distribution */}
             <AppCheckBox
-              label="grease_distribution"
-              name="grease_distribution"
+              label='grease_distribution'
+              name='grease_distribution'
               value={values.grease_distribution}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -626,8 +620,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* chain_tension */}
             <AppCheckBox
-              label="chain_tension"
-              name="chain_tension"
+              label='chain_tension'
+              name='chain_tension'
               value={values.chain_tension}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -637,8 +631,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* machine_lights */}
             <AppCheckBox
-              label="machine_lights"
-              name="machine_lights"
+              label='machine_lights'
+              name='machine_lights'
               value={values.machine_lights}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -648,8 +642,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* vehicle_condition */}
             <AppCheckBox
-              label="vehicle_condition"
-              name="vehicle_condition"
+              label='vehicle_condition'
+              name='vehicle_condition'
               value={values.vehicle_condition}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -659,8 +653,8 @@ const CreatePreTripInspectionModal = () => {
 
             {/* engine_warning */}
             <AppCheckBox
-              label="engine_warning"
-              name="engine_warning"
+              label='engine_warning'
+              name='engine_warning'
               value={values.engine_warning}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -673,8 +667,8 @@ const CreatePreTripInspectionModal = () => {
         {/* Drivers Signature */}
         <AppTextInput
           containerStyle={{marginBottom: 40}}
-          label="Drivers Signature"
-          name="drivers_signature"
+          label='Drivers Signature'
+          name='drivers_signature'
           value={values.drivers_signature}
           onChange={(val) => handleChange('drivers_signature', val)}
           validations={[isRequired]}
@@ -705,7 +699,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    //paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,

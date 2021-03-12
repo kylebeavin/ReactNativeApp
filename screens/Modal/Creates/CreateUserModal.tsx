@@ -19,15 +19,15 @@ import {SMT_User} from '../../../types';
 const CreateUserModal = () => {
   //#region Form Initializers
   const formValues = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    token: "",
-    image: "",
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    token: '',
+    image: '',
     role: SMT_Roles.corporate.toString(),
-    group_id: "",
-    created: "",
+    group_id: '',
+    created: '',
     is_active: true,
   };
   const formErrors = {
@@ -70,17 +70,17 @@ const CreateUserModal = () => {
 
   const getFormData = async () => {
     const user: SMT_User = {
-        _id: "",
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        password: values.password,
-        token: "",
-        image: values.image,
-        role: values.role,
-        group_id: grpId,
-        created: values.created,
-        is_active: values.is_active,
+      _id: '',
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      password: values.password,
+      token: '',
+      image: values.image,
+      role: values.role,
+      group_id: grpId,
+      created: values.created,
+      is_active: values.is_active,
     };
     return user;
   };
@@ -92,10 +92,7 @@ const CreateUserModal = () => {
       body: JSON.stringify(driver),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -112,8 +109,8 @@ const CreateUserModal = () => {
       <ScrollView style={styles.form}>
         {/* First Name */}
         <AppTextInput
-          label="First Name"
-          name="first_name"
+          label='First Name'
+          name='first_name'
           value={values.first_name}
           onChange={(val) => handleChange('first_name', val)}
           validations={[isRequired]}
@@ -123,8 +120,8 @@ const CreateUserModal = () => {
 
         {/* Last Name */}
         <AppTextInput
-          label="Last Name"
-          name="last_name"
+          label='Last Name'
+          name='last_name'
           value={values.last_name}
           onChange={(val) => handleChange('last_name', val)}
           validations={[isRequired]}
@@ -134,8 +131,8 @@ const CreateUserModal = () => {
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -145,8 +142,8 @@ const CreateUserModal = () => {
 
         {/* Password */}
         <AppTextInput
-          label="Password"
-          name="password"
+          label='Password'
+          name='password'
           value={values.password}
           onChange={(val) => handleChange('password', val)}
           validations={[isRequired]}
@@ -156,8 +153,8 @@ const CreateUserModal = () => {
 
         {/* Image URL */}
         <AppTextInput
-          label="Image URL"
-          name="image"
+          label='Image URL'
+          name='image'
           value={values.image}
           onChange={(val) => handleChange('image', val)}
           validations={[isRequired]}
@@ -186,7 +183,6 @@ const CreateUserModal = () => {
             </Picker>
           </View>
         </View>
-
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />
@@ -211,7 +207,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    //paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,

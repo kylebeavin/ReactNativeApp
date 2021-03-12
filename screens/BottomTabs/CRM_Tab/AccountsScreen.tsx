@@ -39,11 +39,8 @@ const AccountScreen: React.FC<Props> = () => {
       headers: {"Content-Type": "application/json", "x-access-token": token},
       method: "POST",
       body: JSON.stringify({group_id: grpId}),
-    }) // ToDo: get accounts by group id 
-      .then((res) => {
-        console.log(res.status)  
-        return res.json()
-      })
+    })
+      .then((res) => res.json())
       .then((json) => {
         if (json.data) {
           json.data.map((account: any) => {
@@ -80,12 +77,9 @@ const AccountScreen: React.FC<Props> = () => {
       body: JSON.stringify({account_id: account_id}),
       headers: {"Content-Type": "application/json", "x-access-token": token}
     })
-    .then((res) => {
-      console.log(res.status)
-      return res.json()
-    })
+    .then((res) => res.json())
     .then((json) => contacts = json.data)
-    .catch((err) => console.log(err))
+    .catch((err) => show({message: err.message}));
     return contacts;
   };
 

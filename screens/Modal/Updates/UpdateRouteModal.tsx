@@ -88,10 +88,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
@@ -111,12 +108,9 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
+      .catch((err) => null);
 
     return userList;
   };
@@ -146,10 +140,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});

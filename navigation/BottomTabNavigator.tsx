@@ -1,8 +1,8 @@
-import * as React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import * as React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import AppTabBar from "../components/Footer/AppTabBar";
+import AppTabBar from '../components/Footer/AppTabBar';
 import {
   BottomTabParamList,
   DashboardParamList,
@@ -12,26 +12,26 @@ import {
   CRM_ParamList,
   SettingsParamList,
   ServicesParamList,
-} from "../types/navigation";
-import Colors from "../constants/Colors";
-import DashboardScreen from "../screens/Header/DashboardScreen";
-import SettingsScreen from "../screens/Header/SettingsScreen";
-import AccountsScreen from "../screens/BottomTabs/CRM_Tab/AccountsScreen";
-import OrdersCalendarScreen from "../screens/BottomTabs/Services_Tab/OrdersCalendarScreen";
-import RoutesScreen from "../screens/BottomTabs/Routes_Tab/RoutesScreen";
-import InvoiceScreen from "../screens/BottomTabs/Invoices_Tab/InvoicesScreen";
-import ReportScreen from "../screens/BottomTabs/Reports_Tab/ReportsScreen";
-import MeetingsScreen from "../screens/BottomTabs/CRM_Tab/MeetingsScreen";
-import MapScreen from "../screens/BottomTabs/CRM_Tab/MapScreen";
-import OrdersScreen from "../screens/BottomTabs/Services_Tab/OrdersScreen";
-import OrdersMapScreen from "../screens/BottomTabs/Services_Tab/OrdersMapScreen";
-import RoutesMapScreen from "../screens/BottomTabs/Routes_Tab/RoutesMapScreen";
-import RoutesCalendarScreen from "../screens/BottomTabs/Routes_Tab/RoutesCalendarScreen";
-import RouteDetailsScreen from "../screens/BottomTabs/Routes_Tab/RouteDetailsScreen";
-import TruckDetailsScreen from "../screens/BottomTabs/Routes_Tab/TruckDetailsScreen";
-import OrderDetailsScreen from "../screens/BottomTabs/Services_Tab/OrderDetailsScreen";
-import MeetingDetailsScreen from "../screens/BottomTabs/CRM_Tab/MeetingDetailsScreen";
-import AccountDetailsScreen from "../screens/BottomTabs/CRM_Tab/AccountDetailsScreen";
+} from '../types/navigation';
+import Colors from '../constants/Colors';
+import DashboardScreen from '../screens/Header/DashboardScreen';
+import SettingsScreen from '../screens/Header/SettingsScreen';
+import AccountsScreen from '../screens/BottomTabs/CRM_Tab/AccountsScreen';
+import OrdersCalendarScreen from '../screens/BottomTabs/Services_Tab/OrdersCalendarScreen';
+import RoutesScreen from '../screens/BottomTabs/Routes_Tab/RoutesScreen';
+import InvoiceScreen from '../screens/BottomTabs/Invoices_Tab/InvoicesScreen';
+import ReportScreen from '../screens/BottomTabs/Reports_Tab/ReportsScreen';
+import MeetingsScreen from '../screens/BottomTabs/CRM_Tab/MeetingsScreen';
+import MapScreen from '../screens/BottomTabs/CRM_Tab/MapScreen';
+import OrdersScreen from '../screens/BottomTabs/Services_Tab/OrdersScreen';
+import OrdersMapScreen from '../screens/BottomTabs/Services_Tab/OrdersMapScreen';
+import RoutesMapScreen from '../screens/BottomTabs/Routes_Tab/RoutesMapScreen';
+import RoutesCalendarScreen from '../screens/BottomTabs/Routes_Tab/RoutesCalendarScreen';
+import RouteDetailsScreen from '../screens/BottomTabs/Routes_Tab/RouteDetailsScreen';
+import TruckDetailsScreen from '../screens/BottomTabs/Routes_Tab/TruckDetailsScreen';
+import OrderDetailsScreen from '../screens/BottomTabs/Services_Tab/OrderDetailsScreen';
+import MeetingDetailsScreen from '../screens/BottomTabs/CRM_Tab/MeetingDetailsScreen';
+import AccountDetailsScreen from '../screens/BottomTabs/CRM_Tab/AccountDetailsScreen';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -45,13 +45,13 @@ const ServicesStack = createStackNavigator<ServicesParamList>();
 export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator tabBar={props => <AppTabBar {...props} />} >
-      <BottomTab.Screen name="Dashboard" component={DashboardNavigator} />
-      <BottomTab.Screen name="Settings" component={SettingsNavigator} />
-      <BottomTab.Screen name="CRM" component={CRM_Navigator} />
-      <BottomTab.Screen name="Services" component={ServicesNavigator} />
-      <BottomTab.Screen name="Routes" component={RoutesNavigator} />
-      <BottomTab.Screen name="Invoices" component={InvoicesNavigator} />
-      <BottomTab.Screen name="Reports" component={ReportsNavigator} />
+      <BottomTab.Screen name='Dashboard' component={DashboardNavigator} />
+      <BottomTab.Screen name='Settings' component={SettingsNavigator} />
+      <BottomTab.Screen name='CRM' component={CRM_Navigator} />
+      <BottomTab.Screen name='Services' component={ServicesNavigator} />
+      <BottomTab.Screen name='Routes' component={RoutesNavigator} />
+      <BottomTab.Screen name='Invoices' component={InvoicesNavigator} />
+      <BottomTab.Screen name='Reports' component={ReportsNavigator} />
     </BottomTab.Navigator>
   );
 }
@@ -65,7 +65,7 @@ function DashboardNavigator() {
       }}
     >
       <DashboardStack.Screen
-        name="DashboardScreen"
+        name='DashboardScreen'
         component={DashboardScreen}
       />
     </DashboardStack.Navigator>
@@ -80,7 +80,7 @@ function SettingsNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <SettingsStack.Screen name='SettingsScreen' component={SettingsScreen} />
     </SettingsStack.Navigator>
   );
 }
@@ -93,11 +93,11 @@ function CRM_Navigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <CRM_Stack.Screen name="AccountsScreen" component={AccountsScreen} />
-      <CRM_Stack.Screen name="MeetingsScreen" component={MeetingsScreen} />
-      <CRM_Stack.Screen name="MapScreen" component={MapScreen} />
-      <CRM_Stack.Screen name="AccountDetailsScreen" component={AccountDetailsScreen} />
-      <CRM_Stack.Screen name="MeetingDetailsScreen" component={MeetingDetailsScreen} />
+      <CRM_Stack.Screen name='AccountsScreen' component={AccountsScreen} />
+      <CRM_Stack.Screen name='MeetingsScreen' component={MeetingsScreen} />
+      <CRM_Stack.Screen name='MapScreen' component={MapScreen} />
+      <CRM_Stack.Screen name='AccountDetailsScreen' component={AccountDetailsScreen} />
+      <CRM_Stack.Screen name='MeetingDetailsScreen' component={MeetingDetailsScreen} />
     </CRM_Stack.Navigator>
   );
 }
@@ -110,10 +110,10 @@ function ServicesNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <ServicesStack.Screen name="OrdersScreen" component={OrdersScreen} />
-      <ServicesStack.Screen name="OrdersCalendarScreen" component={OrdersCalendarScreen} />
-      <ServicesStack.Screen name="OrdersMapScreen" component={OrdersMapScreen} />
-      <ServicesStack.Screen name="OrderDetailsScreen" component={OrderDetailsScreen} />
+      <ServicesStack.Screen name='OrdersScreen' component={OrdersScreen} />
+      <ServicesStack.Screen name='OrdersCalendarScreen' component={OrdersCalendarScreen} />
+      <ServicesStack.Screen name='OrdersMapScreen' component={OrdersMapScreen} />
+      <ServicesStack.Screen name='OrderDetailsScreen' component={OrderDetailsScreen} />
     </ServicesStack.Navigator>
   );
 }
@@ -126,11 +126,11 @@ function RoutesNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <RoutesStack.Screen name="RoutesScreen" component={RoutesScreen} />
-      <RoutesStack.Screen name="RoutesCalendarScreen" component={RoutesCalendarScreen} />
-      <RoutesStack.Screen name="RoutesMapScreen" component={RoutesMapScreen} />
-      <RoutesStack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
-      <RoutesStack.Screen name="TruckDetailsScreen" component={TruckDetailsScreen}/>
+      <RoutesStack.Screen name='RoutesScreen' component={RoutesScreen} />
+      <RoutesStack.Screen name='RoutesCalendarScreen' component={RoutesCalendarScreen} />
+      <RoutesStack.Screen name='RoutesMapScreen' component={RoutesMapScreen} />
+      <RoutesStack.Screen name='RouteDetailsScreen' component={RouteDetailsScreen} />
+      <RoutesStack.Screen name='TruckDetailsScreen' component={TruckDetailsScreen}/>
     </RoutesStack.Navigator>
   );
 }
@@ -143,7 +143,7 @@ function InvoicesNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <InvoicesStack.Screen name="InvoicesScreen" component={InvoiceScreen} />
+      <InvoicesStack.Screen name='InvoicesScreen' component={InvoiceScreen} />
     </InvoicesStack.Navigator>
   );
 }
@@ -156,7 +156,7 @@ function ReportsNavigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <ReportsStack.Screen name="ReportsScreen" component={ReportScreen} />
+      <ReportsStack.Screen name='ReportsScreen' component={ReportScreen} />
     </ReportsStack.Navigator>
   );
 }

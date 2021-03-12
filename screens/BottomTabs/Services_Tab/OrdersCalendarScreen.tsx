@@ -56,7 +56,6 @@ const OrdersCalendarScreen = () => {
   //#endregion
 
   useEffect(() => {
-    console.log(new Date().toLocaleDateString())
     getSelectedDates();
   }, []);
 

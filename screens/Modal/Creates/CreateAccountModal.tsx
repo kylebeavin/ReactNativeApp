@@ -14,7 +14,6 @@ import AppTextInput from '../../../components/Layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
 import {isRequired, isEmail} from '../../../utils/Validators';
 
-
 const CreateAccountModal = () => {
   //#region Form Initializers
   const formValues = {
@@ -24,9 +23,9 @@ const CreateAccountModal = () => {
     city: '',
     state: '',
     zip: '',
-    notes: ''
-  }
-  
+    notes: '',
+  };
+
   const formErrors = {
     name: [],
     email: [],
@@ -34,9 +33,9 @@ const CreateAccountModal = () => {
     city: [],
     state: [],
     zip: [],
-    notes: []
-  }
-  
+    notes: [],
+  };
+
   const formValidations = {
     name: [isRequired],
     email: [isRequired, isEmail],
@@ -44,8 +43,8 @@ const CreateAccountModal = () => {
     city: [isRequired],
     state: [isRequired],
     zip: [isRequired],
-    notes: []
-  }
+    notes: [],
+  };
   //#endregion
 
   //#region State Variables
@@ -53,7 +52,12 @@ const CreateAccountModal = () => {
 
   const {grpId, token, id, displayName} = useContext(AppContext);
   const {show} = useContext(ToastContext);
-  const {handleChange,handleSubmit,values,errors,setErrors}= useForm(formValues, formErrors, formValidations, postNewAccount);
+  const {handleChange, handleSubmit, values, errors, setErrors} = useForm(
+    formValues,
+    formErrors,
+    formValidations,
+    postNewAccount,
+  );
   // ToDo: Figure out how to useRefs to set focus onSubmit of TextInput.
   //#endregion
 
@@ -90,7 +94,7 @@ const CreateAccountModal = () => {
 
   async function postNewAccount() {
     const account = await getFormData();
-    
+
     await fetch(`${Configs.TCMC_URI}/api/accounts`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
@@ -106,18 +110,17 @@ const CreateAccountModal = () => {
         }
       })
       .catch((err) => show({message: 'Error: ' + err.message}));
-  };
+  }
 
   return (
     <View>
       <ScrollView style={styles.form}>
-
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
-          onChange={(val) => handleChange("name", val)}
+          onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
           errors={errors.name}
           setErrors={setErrors}
@@ -125,8 +128,8 @@ const CreateAccountModal = () => {
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -136,8 +139,8 @@ const CreateAccountModal = () => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -147,8 +150,8 @@ const CreateAccountModal = () => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -158,8 +161,8 @@ const CreateAccountModal = () => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -169,8 +172,8 @@ const CreateAccountModal = () => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
@@ -180,18 +183,17 @@ const CreateAccountModal = () => {
 
         {/* Notes */}
         <View style={{marginBottom: 40}}>
-        <AppTextInput
-          label="Notes"
-          name="notes"
-          value={values.notes}
-          onChange={(val) => handleChange('notes', val)}
-          validations={[]}
-          errors={errors.notes}
-          setErrors={setErrors}
-          multiline
-        />
+          <AppTextInput
+            label='Notes'
+            name='notes'
+            value={values.notes}
+            onChange={(val) => handleChange('notes', val)}
+            validations={[]}
+            errors={errors.notes}
+            setErrors={setErrors}
+            multiline
+          />
         </View>
-
       </ScrollView>
 
       {/* Buttons */}
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
-  }
+  },
 });
 
 export default CreateAccountModal;

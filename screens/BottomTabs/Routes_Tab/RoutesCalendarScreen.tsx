@@ -64,7 +64,7 @@ const RoutesCalendarScreen = () => {
 
   return (
     <View>
-      <AppTitle title="Calendar" help search />
+      <AppTitle title='Calendar' help search />
 
       <ScrollView
         style={styles.scrollView}
@@ -72,7 +72,7 @@ const RoutesCalendarScreen = () => {
         <AppNavBtnGrp>
           <View style={{marginRight: 60, marginTop: 12}}>
             <AppButton
-              title="Back"
+              title='Back'
               onPress={() => navigation.goBack()}
               outlined={true}
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
@@ -85,7 +85,7 @@ const RoutesCalendarScreen = () => {
                 <Picker
                   style={{height: 30}}
                   selectedValue={sortItem}
-                  mode="dropdown"
+                  mode='dropdown'
                   onValueChange={(itemValue, itemIndex) =>
                     setSortItem(itemValue.toString())
                   }>
@@ -157,12 +157,12 @@ const RoutesCalendarScreen = () => {
         </View>
 
         <View style={{marginBottom: 20}}>
-          <AppTitle title="Route Events" />
+          <AppTitle title='Route Events' />
         </View>
 
         <AppList
           url={`${Configs.TCMC_URI}/api/routesBy`}
-          httpMethod="POST"
+          httpMethod='POST'
           params={{
             group_id: grpId,
             time: {$gte: greaterThanDate, $lt: lessThanDate},
@@ -187,8 +187,10 @@ const RoutesCalendarScreen = () => {
 
                 <View style={styles.btnContainer}>
                   <AppButton
-                    title="Details"
-                    onPress={() => navigation.navigate("RouteDetailsScreen", {route: u})}
+                    title='Details'
+                    onPress={() =>
+                      navigation.navigate('RouteDetailsScreen', {route: u})
+                    }
                   />
                 </View>
               </View>

@@ -1,6 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, Image, TouchableOpacity, Text, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  Platform,
+} from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -28,36 +35,35 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
 
   const createFormData = (photo: any, body: any) => {
     const data = new FormData();
-    data.append("photo", {
-      name: "order_started.jpeg",
-      type: "image/jpeg",
-      uri: Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")});
-  
-    Object.keys(body).forEach(key => {
+    data.append('photo', {
+      name: 'order_started.jpeg',
+      type: 'image/jpeg',
+      uri:
+        Platform.OS === 'android'
+          ? photo.uri
+          : photo.uri.replace('file://', ''),
+    });
+
+    Object.keys(body).forEach((key) => {
       data.append(key, body[key]);
     });
     return data;
   };
 
   const updateStatus = async () => {
-    if (containerImage.uri === "") {
+    if (containerImage.uri === '') {
       setValid(false);
       return;
     }
-    
-    let requestBody = {_id: order._id, order_status: 'started'}
+
+    let requestBody = {_id: order._id, order_status: 'started'};
 
     await fetch(`${Configs.TCMC_URI}/api/orderPics`, {
       method: 'POST',
       headers: {'x-access-token': token},
       body: createFormData(containerImage, requestBody),
-      //body: JSON.stringify(requestBody)
     })
-      .then((res) => {
-        
-        console.log(res)
-        return res.json()
-      })
+      .then((res) => res.json())
       .then((json) => {
         if (isSuccessStatusCode(json.status)) {
           show({message: json.message});
@@ -70,10 +76,13 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
   };
 
   useEffect(() => {
-    if (containerImage.uri !== "") setValid(true);
+    if (containerImage.uri !== '') setValid(true);
     Object.keys(pictures).map((key) => {
       if (key === 'Container') {
-        setContainerImage({base64: pictures[key].base64, uri:pictures[key].uri});
+        setContainerImage({
+          base64: pictures[key].base64,
+          uri: pictures[key].uri,
+        });
       }
     });
 
@@ -82,17 +91,17 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
 
   const unmount = () => {
     clearPics({});
-  }
+  };
 
   return (
     <>
       <View style={styles.form}>
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Start Order" help />
+          <AppTitle title='Start Order' help />
         </View>
         <View style={styles.formGroup}>
           <AppButton
-            title="Container"
+            title='Container'
             onPress={() => showCamera({key: 'Container'})}
             icon={{type: 'MaterialIcons', name: 'camera-alt'}}
           />
@@ -115,7 +124,7 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
                 }}>
                 <MaterialIcons
                   style={{opacity: 0.5}}
-                  name="cancel"
+                  name='cancel'
                   size={50}
                   color={Colors.SMT_Tertiary_1}
                 />
@@ -123,11 +132,13 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
             )}
           </View>
         </View>
-        {valid ? null :
+        {valid ? null : (
           <View>
-          <Text style={{textAlign: 'center', color: Colors.SMT_Primary_1}}>You must provide an image of container before smashing!</Text>
-        </View>
-        }
+            <Text style={{textAlign: 'center', color: Colors.SMT_Primary_1}}>
+              You must provide an image of container before smashing!
+            </Text>
+          </View>
+        )}
       </View>
       <ModalButtons navigation={navigation} save={() => updateStatus()} />
     </>

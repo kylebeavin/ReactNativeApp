@@ -31,10 +31,7 @@ const CenterHeader: React.FC<Props> = (props) => {
         body: JSON.stringify({_id: grpArr}),
         headers: {'Content-Type': 'application/json', 'x-access-token': token}
       })
-        .then((res) => {
-          console.log(res.status);
-          return res.json();
-        })
+        .then((res) => res.json())
           .then((data) => {
             setGrpName(data.data.filter((group: Group) => group._id === grpId)[0].name)
             setGroupsList(data.data);

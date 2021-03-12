@@ -47,16 +47,13 @@ const ServicesScreen: React.FC<Props> = ({navigation}) => {
     //   method: 'POST',
     //   body: JSON.stringify({group_id: grpId}),
     // })
-    //   .then((res) => {
-    //     console.log(res.status)
-    //     return res.json()
-    //   })
+    //   .then((res) => res.json())
     //   .then((json) => {
     //     if (json.data) {
     //       setOrders(json.data);
     //     }
     //   })
-    //   .catch((err) => console.log(err))
+    //   .catch((err) => show({message: err.message})
     //   .finally(() => setLoading(false));
     setIsLoading(false);
   };

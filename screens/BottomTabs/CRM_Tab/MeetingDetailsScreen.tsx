@@ -93,7 +93,7 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
                 <View key={item}>
                   <Text
                     style={styles.link}
-                    onPress={() => console.log(`You pressed ${item}`)}>
+                    onPress={() => null}>
                     {item}
                   </Text>
                 </View>

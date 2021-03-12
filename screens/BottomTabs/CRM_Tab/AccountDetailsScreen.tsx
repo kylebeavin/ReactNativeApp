@@ -49,10 +49,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
       body: JSON.stringify({account_id: item._id}),
       headers: {"Content-Type": "application/json", "x-access-token": token}
     })
-    .then((res) => {
-      console.log(res.status)
-      return res.json()
-    })
+    .then((res) => res.json())
     .then((json) => setContactsList(json.data))
     .catch((err) => show({message: err.message}));
   };
@@ -140,7 +137,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
                 <View key={item}>
                   <Text
                     style={styles.link}
-                    onPress={() => console.log(`You pressed ${item}`)}>
+                    onPress={() => null}>
                     {item}
                   </Text>
                 </View>

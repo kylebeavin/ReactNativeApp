@@ -115,10 +115,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (accountsList = json.data))
       .catch((err) => show({message: err.message}));
     return accountsList;
@@ -157,10 +154,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
       body: JSON.stringify(order),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});

@@ -82,7 +82,7 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
       .then((data) => {
         setOwnerList(data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => show({message: err.message}));
   }, []);
 
   const getFormData = async () => {
@@ -110,29 +110,21 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
       body: JSON.stringify({group_id: grpId}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((json) => (userList = json.data))
-      .catch((err) => console.log(err));
+      .catch((err) => null);
 
     return userList;
   };
 
   async function updateContact() {
     const updatedContact = await getFormData();
-    console.log(contact)
-    console.log(updatedContact)
     await fetch(`${Configs.TCMC_URI}/api/contacts`, {
       method: 'PUT',
       body: JSON.stringify(updatedContact),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-      .then((res) => {
-        console.log(res.status)
-        return res.json()
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
@@ -149,8 +141,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="First Name"
-          name="first_name"
+          label='First Name'
+          name='first_name'
           value={values.first_name}
           onChange={(val) => handleChange('first_name', val)}
           validations={[isRequired]}
@@ -160,8 +152,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
 
         {/* Last Name */}
         <AppTextInput
-          label="Last Name"
-          name="last_name"
+          label='Last Name'
+          name='last_name'
           value={values.last_name}
           onChange={(val) => handleChange('last_name', val)}
           validations={[isRequired]}
@@ -193,8 +185,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
 
         {/* Phone */}
         <AppTextInput
-          label="Phone"
-          name="phone"
+          label='Phone'
+          name='phone'
           value={values.phone}
           onChange={(val) => handleChange('phone', val)}
           validations={[isRequired]}
@@ -204,8 +196,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -238,8 +230,8 @@ const UpdateContactModal: React.FC<Props> = ({navigation, contact}) => {
         {/* Notes */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

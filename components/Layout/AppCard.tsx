@@ -64,12 +64,12 @@ const AppCard: React.FC<Props> = ({item, index, onToggleCardDrawer}) => {
           <View style={styles.cardButton}>
             <AppButton
               title='Service'
-              onPress={() => console.log('Expand')}
+              onPress={() => null}
               outlined
             />
           </View>
           <View style={styles.cardButton}>
-            <AppButton title='Demo' onPress={() => console.log('Demo')} />
+            <AppButton title='Demo' onPress={() => null} />
           </View>
           <View
             style={{...styles.cardButton, ...{marginLeft: 10, marginRight: 0}}}>

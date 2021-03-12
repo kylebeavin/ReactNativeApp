@@ -13,9 +13,6 @@ export default () => {
 
   const getSelectedDateRange = (date: Date) : {gte: Date, lt: Date} => {
     let dateRangeObject = {gte: date, lt: date};
-
-    console.log(dateRangeObject);
-    
     return dateRangeObject;
   }
 
