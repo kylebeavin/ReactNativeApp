@@ -101,10 +101,10 @@ const ServicesScreen = () => {
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
                         <Text style={styles.titleText}>{u.order_id}</Text>
-                        <Text>{u.account_id.account_name}</Text>
+                        <Text>{u.account_name}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.start_date).date}</Text>
+                        <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.service_date).date}</Text>
                         <Text
                           style={{
                             fontWeight: 'bold',

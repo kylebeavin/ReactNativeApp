@@ -64,16 +64,12 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
           <Text>Active: {order.is_active ? 'Yes' : 'No'}</Text>
           <Text>Demo: {order.is_demo ? 'Yes' : 'No'}</Text>
           <Text>Services: {order.services.toString()}</Text>
-          <Text>Frequency: {order.service_frequency}</Text>
-          <Text>Per: {order.service_per}</Text>
           <Text>Days: {order.service_days}</Text>
           <Text>Monthly Rate: {order.monthly_rate}</Text>
           <Text>Demand Rate: {order.demand_rate}</Text>
-          <Text>Term Date: {order.term_date}</Text>
           <Text>
-            Start Date: {getDateStringsFromDate(order.start_date).date}
+            Start Date: {getDateStringsFromDate(order.service_date).date}
           </Text>
-          <Text>End Date: {getDateStringsFromDate(order.end_date).date}</Text>
         </View>
 
         <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>

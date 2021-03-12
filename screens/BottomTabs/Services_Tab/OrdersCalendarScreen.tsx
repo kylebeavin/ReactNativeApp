@@ -263,7 +263,7 @@ const OrdersCalendarScreen = () => {
                   <View style={{flex: 1}}>
                     <Text
                       style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
-                      {getDateStringsFromDate(u.start_date).date}
+                      {getDateStringsFromDate(u.service_date).date}
                     </Text>
                     <Text
                       style={{

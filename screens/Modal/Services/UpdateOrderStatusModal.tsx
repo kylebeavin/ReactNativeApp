@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
   form: {
     maxHeight: Layout.window.height / 1.5,
     marginBottom: 20,
-    //padding: 20,
     borderRadius: 4,
     backgroundColor: Colors.SMT_Tertiary_1,
   },
