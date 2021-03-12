@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -18,7 +17,6 @@ import {Calendar} from 'react-native-calendars';
 import {
   formatDateString,
   getDateStringsFromDate,
-  getRequestHeadersAsync,
   isSuccessStatusCode,
 } from '../../../utils/Helpers';
 import {TextInputMask} from 'react-native-masked-text';
@@ -165,7 +163,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
       address_city: values.city,
       address_state: values.state,
       address_zip: values.zip,
-      created: '',
+      createdAt: '',
+      updatedAt: '',
       meeting_time: getMeetingTime(),
       is_active: true,
       notes: values.notes,
@@ -204,8 +203,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -279,7 +278,7 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -337,8 +336,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -348,8 +347,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -359,8 +358,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -370,8 +369,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
@@ -382,8 +381,8 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
         {/* Notes */}
         <View style={{marginBottom: 40}}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

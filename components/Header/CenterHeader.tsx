@@ -16,7 +16,7 @@ interface Props {
 const CenterHeader: React.FC<Props> = (props) => {
     const {grpArr, setGrpId, grpId, token} = useContext(AppContext);
     const {show} = useContext(ToastContext);
-    const [grpName, setGrpName] = useState("");
+    const [grpName, setGrpName] = useState('');
     const [groupsList, setGroupsList] = useState<Group[]>([]);
     const [toggle, setToggle] = useState(false);
     const navigation = useNavigation();
@@ -64,7 +64,7 @@ const CenterHeader: React.FC<Props> = (props) => {
                             setToggle(!toggle);
                             setGrpId(item.item._id);
                             setGrpName(item.item.name);
-                            navigation.navigate("DashboardScreen");
+                            navigation.navigate('DashboardScreen');
                         }}
                         style={styles.itemWrapper}
                       >
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
       opacity: .9,
       borderBottomEndRadius: 0,
       borderBottomStartRadius: 0,
-      borderBottomColor: "rgba(255, 132, 118, 0.5)",
+      borderBottomColor: 'rgba(255, 132, 118, 0.5)',
   },
   touchableBackground: {
     backgroundColor: Colors.SMT_Primary_1_Dark_1,

@@ -1,13 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useContext, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Colors from '../../constants/Colors';
 import Configs from '../../constants/Configs';
 import AppContext from '../../providers/AppContext';
-import { ToastContext } from '../../providers/ToastProvider';
-import {OrderStatus} from '../../types/enums';
-import { isSuccessStatusCode } from '../../utils/Helpers';
-import AppButton from './AppButton';
+import {ToastContext} from '../../providers/ToastProvider';
+import {isSuccessStatusCode} from '../../utils/Helpers';
 
 interface Props {
   currentStatus: string;
@@ -44,38 +42,45 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
   const demote = async () => {
     let demoteStatus = status;
 
-    if (status === 'not started') return show({message: "Can't demote further."});
-    if (status === 'cancelled') return show({message: "Can't demote cancelled orders."});
+    if (status === 'not started')
+      return show({message: 'Can not demote further.'});
+    if (status === 'cancelled')
+      return show({message: 'Can not demote cancelled orders.'});
     if (status === 'started') demoteStatus = 'not started';
     if (status === 'completed') demoteStatus = 'started';
-    
+
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
-        method: 'PUT', 
-        body: JSON.stringify({_id: id, order_status: demoteStatus}), 
-        headers: {'Content-Type': 'application/json', 'x-access-token': token}
+      method: 'PUT',
+      body: JSON.stringify({_id: id, order_status: demoteStatus}),
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
-    .then(res => res.json())
-    .then(json => {
+      .then((res) => res.json())
+      .then((json) => {
         if (isSuccessStatusCode(json.status)) {
-            setStatus(demoteStatus);
-          } else {
-            show({message: json.message});
-          }
-    })
+          setStatus(demoteStatus);
+        } else {
+          show({message: json.message});
+        }
+      });
   };
 
   const promote = async () => {
     let promoteStatus = status;
 
-    if (status === 'completed') return show({message: "Can't promote further."});
-    if (status === 'cancelled') return show({message: "Can't promote cancelled orders."});
+    if (status === 'completed')
+      return show({message: 'Can not promote further.'});
+    if (status === 'cancelled')
+      return show({message: 'Can not promote cancelled orders.'});
     if (status === 'not started') {
-        promoteStatus = 'started';
-        navigation.navigate('Modal', {modal: "StartOrderModal",item: {_id: id}});
+      promoteStatus = 'started';
+      navigation.navigate('Modal', {modal: 'StartOrderModal', item: {_id: id}});
     }
     if (status === 'started') {
-        promoteStatus = 'completed';
-        navigation.navigate('Modal', {modal: "CompleteOrderModal", item: {_id: id}});
+      promoteStatus = 'completed';
+      navigation.navigate('Modal', {
+        modal: 'CompleteOrderModal',
+        item: {_id: id},
+      });
     }
   };
 
@@ -88,7 +93,8 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <TouchableOpacity onPress={demote}
+      <TouchableOpacity
+        onPress={demote}
         style={{
           backgroundColor: Colors.SMT_Secondary_2,
           marginRight: 5,
@@ -96,9 +102,10 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
           borderRadius: 3,
           paddingHorizontal: 3,
         }}>
-        <Text style={{color: Colors.SMT_Tertiary_1, fontWeight: 'bold'}}>Demote</Text>
+        <Text style={{color: Colors.SMT_Tertiary_1, fontWeight: 'bold'}}>
+          Demote
+        </Text>
       </TouchableOpacity>
-      {/* <AppButton title="Demote" onPress={() => console.log('demote')} /> */}
 
       {currentStatus === 'cancelled' ? (
         <View style={{borderWidth: 1, borderColor: 'black'}}>
@@ -112,11 +119,13 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
             borderWidth: 1,
             borderColor: Colors.SMT_Secondary_1_Light_1,
             marginRight: 5,
-            borderRadius: 3, 
+            borderRadius: 3,
             backgroundColor: Colors.SMT_Secondary_1_Light_1,
           }}>
           <View style={{marginRight: 5}}>
-            <Text style={{color: getNotStartedColor(), fontSize: 12}}>Not Started</Text>
+            <Text style={{color: getNotStartedColor(), fontSize: 12}}>
+              Not Started
+            </Text>
           </View>
 
           <View style={{marginRight: 5}}>
@@ -124,27 +133,36 @@ const AppOrderStatusIndicator: React.FC<Props> = ({id, currentStatus}) => {
           </View>
 
           <View style={{marginRight: 5}}>
-            <Text style={{color: getStartedColor(), fontSize: 12}}>Started</Text>
+            <Text style={{color: getStartedColor(), fontSize: 12}}>
+              Started
+            </Text>
           </View>
 
           <View style={{marginRight: 5}}>
-            <Text style={{color: getCompletedColor(), fontSize: 12}}>={'>'}</Text>
+            <Text style={{color: getCompletedColor(), fontSize: 12}}>
+              ={'>'}
+            </Text>
           </View>
 
           <View style={{}}>
-            <Text style={{color: getCompletedColor(), fontSize: 12}}>Completed</Text>
+            <Text style={{color: getCompletedColor(), fontSize: 12}}>
+              Completed
+            </Text>
           </View>
         </View>
       )}
 
-      <TouchableOpacity onPress={promote}
+      <TouchableOpacity
+        onPress={promote}
         style={{
           backgroundColor: Colors.SMT_Secondary_2,
           justifyContent: 'center',
           borderRadius: 3,
           paddingHorizontal: 3,
         }}>
-        <Text style={{color: Colors.SMT_Tertiary_1, fontWeight: 'bold'}}>Promote</Text>
+        <Text style={{color: Colors.SMT_Tertiary_1, fontWeight: 'bold'}}>
+          Promote
+        </Text>
       </TouchableOpacity>
     </View>
   );

@@ -28,7 +28,7 @@ import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/Layout/AppTextInput';
 
 interface Props {
-    order: Order;
+  order: Order;
 }
 
 const UpdateOrderModal: React.FC<Props> = ({order}) => {
@@ -187,11 +187,11 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <Text style={styles.text}>Account</Text>
           <View style={styles.picker}>
             <Picker
-              selectedValue={values.account}
-              onValueChange={(itemValue, ItemIndex) => {
+              selectedValue={values.account.account_name}
+              onValueChange={(itemValue) => {
                 handleChange('account', itemValue.toString());
               }}>
-              {accountList?.map((item, index) => {
+              {accountList?.map((item) => {
                 return (
                   <Picker.Item
                     key={item._id}
@@ -210,7 +210,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <CheckBox
             disabled={false}
             value={isRecurring}
-            onValueChange={(newValue) => setIsRecurring(!isRecurring)}
+            onValueChange={() => setIsRecurring(!isRecurring)}
           />
         </View>
 
@@ -220,10 +220,10 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={services}
-              onValueChange={(itemValue, ItemIndex) =>
+              onValueChange={(itemValue) =>
                 setServices(itemValue.toString())
               }>
-              {Object.values(Services).map((item, index) => {
+              {Object.values(Services).map((item) => {
                 return (
                   <Picker.Item
                     key={item.toString()}
@@ -237,9 +237,9 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
         </View>
 
         {/* Service Frequency */}
-        <AppTextInput 
-          label="Service Frequency"
-          name="serviceFrequency"
+        <AppTextInput
+          label='Service Frequency'
+          name='serviceFrequency'
           value={values.serviceFrequency}
           onChange={(val) => handleChange('serviceFrequency', val)}
           validations={[isRequired]}
@@ -292,9 +292,9 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
         </View>
 
         {/* Monthly Rate */}
-        <AppTextInput 
-          label="Monthly Rate"
-          name="monthlyRate"
+        <AppTextInput
+          label='Monthly Rate'
+          name='monthlyRate'
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
@@ -303,22 +303,22 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
         />
 
         {/* Demand Rate */}
-        <AppTextInput 
-          label="Demand Rate"
-          name="demandRate"
+        <AppTextInput
+          label='Demand Rate'
+          name='demandRate'
           value={values.demandRate}
-          onChange={(val) => handleChange("demandRate", val)}
+          onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
           errors={errors.demandRate}
           setErrors={setErrors}
         />
 
         {/* Term Date */}
-        <AppTextInput 
-          label="Term Date"
-          name="termDate"
+        <AppTextInput
+          label='Term Date'
+          name='termDate'
           value={values.termDate}
-          onChange={(val) => handleChange("termDate", val)}
+          onChange={(val) => handleChange('termDate', val)}
           validations={[isRequired]}
           errors={errors.termDate}
           setErrors={setErrors}
@@ -336,13 +336,13 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
                     format: 'MM/DD/YYYY',
                   }}
                   value={values.startDate}
-                  onChangeText={(text) => handleChange("startDate", text)}
+                  onChangeText={(text) => handleChange('startDate', text)}
                 />
               </View>
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openStartDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -363,13 +363,13 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
                     format: 'MM/DD/YYYY',
                   }}
                   value={values.endDate}
-                  onChangeText={(text) => handleChange("endDate", text)}
+                  onChangeText={(text) => handleChange('endDate', text)}
                 />
               </View>
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openEndDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -389,11 +389,11 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
         </View>
 
         {/* File Upload URL */}
-        <AppTextInput 
-          label="File Upload URL"
-          name="fileUploadUrl"
+        <AppTextInput
+          label='File Upload URL'
+          name='fileUploadUrl'
           value={values.fileUploadUrl}
-          onChange={(val) => handleChange("fileUploadUrl", val)}
+          onChange={(val) => handleChange('fileUploadUrl', val)}
           validations={[isRequired]}
           errors={errors.fileUploadUrl}
           setErrors={setErrors}
@@ -401,15 +401,15 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
 
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
-        <AppTextInput 
-         label="Notes"
-         name="notes"
-         value={values.notes}
-         onChange={(val) => handleChange("notes", val)}
-         validations={[]}
-         errors={errors.notes}
-         setErrors={setErrors}
-        />
+          <AppTextInput
+            label='Notes'
+            name='notes'
+            value={values.notes}
+            onChange={(val) => handleChange('notes', val)}
+            validations={[]}
+            errors={errors.notes}
+            setErrors={setErrors}
+          />
         </View>
       </ScrollView>
 
@@ -422,7 +422,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <Calendar
             style={{borderRadius: 4}}
             onDayPress={(day) => {
-              handleChange("startDate", formatDateString(day.dateString));
+              handleChange('startDate', formatDateString(day.dateString));
               setShowStartDateCalendar(false);
             }}
           />
@@ -436,7 +436,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <Calendar
             style={{borderRadius: 4}}
             onDayPress={(day) => {
-              handleChange("endDate", formatDateString(day.dateString));
+              handleChange('endDate', formatDateString(day.dateString));
               setShowEndDateCalendar(false);
             }}
           />

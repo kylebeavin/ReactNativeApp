@@ -20,7 +20,7 @@ interface Props {
   route: Route;
 }
 
-const UpdateRouteModal: React.FC<Props> = () => {
+const UpdateRouteModal: React.FC<Props> = ({route}) => {
   //#region Form Initializers
   const formValues = {
     truck_id: '',
@@ -56,7 +56,7 @@ const UpdateRouteModal: React.FC<Props> = () => {
 
   //#region Use State Variables
   const navigation = useNavigation();
-  const {id, grpId, token} = useContext(AppContext);
+  const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const {handleChange, handleSubmit, values, errors, setErrors} = useForm(
     formValues,
@@ -96,7 +96,6 @@ const UpdateRouteModal: React.FC<Props> = () => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
           setTruckVin(data.data[0].vin);
-          //handleChange("truck_vin", data.data[0].vin);
         } else {
           show({message: data.message});
         }
@@ -123,20 +122,21 @@ const UpdateRouteModal: React.FC<Props> = () => {
   };
 
   const getFormData = async () => {
-    const route: Route = {
+    const updatedRoute: Route = {
       _id: '',
       group_id: grpId,
       truck_id: values.truck_id,
+      inspection_id: route.inspection_id,
       is_active: values.is_active,
       route_stage: 'unassigned',
       start_location: values.start_location,
       driver: values.driver,
       truck_vin: truckVin,
       service_stop: values.service_stop,
-      time: values.time,
+      time: new Date(values.time),
       notes: values.notes,
     };
-    return route;
+    return updatedRoute;
   };
 
   async function postNewRoute() {
@@ -151,7 +151,6 @@ const UpdateRouteModal: React.FC<Props> = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('RoutesScreen');
@@ -162,17 +161,13 @@ const UpdateRouteModal: React.FC<Props> = () => {
       .catch((err) => show({message: err.message}));
   }
 
-  const changeVin = (itemIndex: number) => {
-    //handleChange('truck_vin', trucksList[itemIndex].vin)
-  };
-
   return (
     <View>
       <ScrollView style={styles.form}>
         {/* Start Location */}
         <AppTextInput
-          label="Start Location"
-          name="start_location"
+          label='Start Location'
+          name='start_location'
           value={values.start_location}
           onChange={(val) => handleChange('start_location', val)}
           validations={[isRequired]}
@@ -189,8 +184,6 @@ const UpdateRouteModal: React.FC<Props> = () => {
               onValueChange={(itemValue, itemIndex) => {
                 handleChange('truck_id', itemValue.toString());
                 setTruckVin(trucksList[itemIndex].vin);
-                //changeVin(itemIndex)
-                //handleChange('truck_vin', trucksList[itemIndex].vin)
               }}>
               {trucksList.map((item, index) => {
                 return (
@@ -207,8 +200,8 @@ const UpdateRouteModal: React.FC<Props> = () => {
 
         {/* Truck VIN */}
         <AppTextInput
-          label="Truck VIN"
-          name="truck_vin"
+          label='Truck VIN'
+          name='truck_vin'
           value={truckVin}
           onChange={(val) => setTruckVin(val)}
           validations={[isRequired]}
@@ -222,10 +215,10 @@ const UpdateRouteModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.driver}
-              onValueChange={(itemValue, itemIndex) =>
+              onValueChange={(itemValue) =>
                 handleChange('driver', itemValue.toString())
               }>
-              {ownersList.map((item, index) => {
+              {ownersList.map((item) => {
                 return (
                   <Picker.Item
                     key={item._id}
@@ -240,8 +233,8 @@ const UpdateRouteModal: React.FC<Props> = () => {
 
         {/* Time */}
         <AppTextInput
-          label="Time"
-          name="time"
+          label='Time'
+          name='time'
           value={values.time}
           onChange={(val) => handleChange('time', val)}
           validations={[isRequired]}
@@ -251,8 +244,8 @@ const UpdateRouteModal: React.FC<Props> = () => {
 
         {/* Notes */}
         <AppTextInput
-          label="Notes"
-          name="notes"
+          label='Notes'
+          name='notes'
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
           validations={[isRequired]}
@@ -283,7 +276,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    //paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,

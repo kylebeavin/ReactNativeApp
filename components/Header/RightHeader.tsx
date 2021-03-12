@@ -35,7 +35,7 @@ const RightHeader: React.FC<Props> = (props) => {
         ) : (
           <Ionicons
             style={styles.icon}
-            name="ios-images"
+            name='ios-images'
             size={44}
             color={Colors.SMT_Primary_1_Light_1}
           />

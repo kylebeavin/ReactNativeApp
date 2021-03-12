@@ -15,15 +15,17 @@ import AppContext from './providers/AppContext';
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const [isAuth, setIsAuth] = useState(false);
-  const [token, setToken] = useState("");
-  const [grpId, setGrpId] = useState("");
-  const [id, setId] = useState("");
-  const [role, setRole] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [image, setImage] = useState("");
-  const [headerStyle, setHeaderStyle] = useState(Math.floor(Math.random() * 3) + 1);
+  const [token, setToken] = useState('');
+  const [grpId, setGrpId] = useState('');
+  const [id, setId] = useState('');
+  const [role, setRole] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [image, setImage] = useState('');
+  const [headerStyle, setHeaderStyle] = useState(
+    Math.floor(Math.random() * 3) + 1,
+  );
   const [grpArr, setGrpArr] = useState([]);
-  
+
   const userSettings = {
     isAuth,
     token,
@@ -53,14 +55,10 @@ export default function App() {
         <AppContext.Provider value={userSettings}>
           <ToastProvider>
             <CameraProvider>
-            <StatusBar translucent backgroundColor="transparent" />
-            <AppCamera />
-            <AppToast />
-            {!isAuth ?
-              <AuthScreen />
-              :
-              <Navigation />
-            }
+              <StatusBar translucent backgroundColor='transparent' />
+              <AppCamera />
+              <AppToast />
+              {!isAuth ? <AuthScreen /> : <Navigation />}
             </CameraProvider>
           </ToastProvider>
         </AppContext.Provider>

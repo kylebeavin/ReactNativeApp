@@ -131,8 +131,8 @@ const UpdateLocationModal: React.FC<Props> = ({location}) => {
       <ScrollView style={styles.form}>
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
           onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
@@ -164,8 +164,8 @@ const UpdateLocationModal: React.FC<Props> = ({location}) => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -175,8 +175,8 @@ const UpdateLocationModal: React.FC<Props> = ({location}) => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -186,8 +186,8 @@ const UpdateLocationModal: React.FC<Props> = ({location}) => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -197,8 +197,8 @@ const UpdateLocationModal: React.FC<Props> = ({location}) => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
