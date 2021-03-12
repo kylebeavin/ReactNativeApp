@@ -134,6 +134,7 @@ const CreateOrderModal: React.FC<Props> = () => {
 
   async function postNewOrder() {
     const order: Order = await getFormData();
+    
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
       method: 'POST',
       body: JSON.stringify(order),
@@ -327,7 +328,7 @@ const CreateOrderModal: React.FC<Props> = () => {
           <Calendar
             style={{borderRadius: 4}}
             onDayPress={(day) => {
-              handleChange('startDate', formatDateString(day.dateString));
+              handleChange('serviceDate', formatDateString(day.dateString));
               setShowStartDateCalendar(false);
             }}
           />

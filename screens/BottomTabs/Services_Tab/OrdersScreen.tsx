@@ -14,7 +14,6 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {Order} from '../../../types/service';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppContext from '../../../providers/AppContext';
 import {useContext} from 'react';
@@ -30,8 +29,6 @@ const ServicesScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const isFocused = useIsFocused();
-
-  const [sortItem, setSortItem] = useState('');
   //#endregion
 
   useEffect(() => {

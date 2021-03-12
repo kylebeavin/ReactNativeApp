@@ -6,13 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
-  Image,
-  Linking,
 } from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppOrderStatusIndicator from '../../../components/Layout/AppOrderStatusIndicator';
 import AppTitle from '../../../components/Layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import { Meeting } from '../../../types/crm';
@@ -27,11 +24,6 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
 
   //#region Use State Variables
   const navigation = useNavigation();
-
-  // Toggles
-  const [statusToggle, setStatusToggle] = useState(false);
-  const [urlToggle, setUrlToggle] = useState(false);
-  const [notesToggle, setNotesToggle] = useState(false);
   //#endregion
 
   return (
@@ -73,34 +65,6 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
           <Text>Created On: {getDateStringsFromDate(meeting.createdAt).date} {getDateStringsFromDate(meeting.createdAt).time}</Text>
           <Text>Updated On: {getDateStringsFromDate(meeting.updatedAt).date} {getDateStringsFromDate(meeting.updatedAt).time}</Text>
         </View>
-
-        <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
-          <AppTitle title="Status" />
-        </TouchableOpacity>
-        {!statusToggle ? null : (
-          <View style={{paddingLeft: 10}}>
-            <AppOrderStatusIndicator id={meeting._id} currentStatus={meeting._id}/>
-          </View>
-        )}
-
-        <TouchableOpacity onPress={() => setNotesToggle(!notesToggle)}>
-          <AppTitle title="Notes" />
-        </TouchableOpacity>
-        {!notesToggle ? null : (
-          <View style={{paddingLeft: 10}}>
-            {meeting.notes ? meeting.notes.map((item: string) => {
-              return (
-                <View key={item}>
-                  <Text
-                    style={styles.link}
-                    onPress={() => null}>
-                    {item}
-                  </Text>
-                </View>
-              );
-            }) : null}
-          </View>
-        )}
       </ScrollView>
     </View>
   );
