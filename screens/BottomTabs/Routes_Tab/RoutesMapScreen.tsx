@@ -5,9 +5,7 @@ import AppButton from '../../../components/Layout/AppButton';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import {IS_ANDROID} from '../../../providers/PermissionContext';
-import {lineString as makeLineString, point, featureCollection,feature} from '@turf/helpers';
-import arrowIcon from '../../../assets/images/arrow2.png';
+
 import {PermissionContext} from '../../../providers/PermissionContext'
 import Geolocation from '@react-native-community/geolocation';
 import RoutesDisplay from '../../../components/map/mapRouteDisplay';
@@ -45,49 +43,8 @@ const RoutesMapScreen = () => {
      getUserLocation()
   }, []);
   
-  //   const renderRoutePoints = ()=>{
-  //     if (mycoordinates.coords.length ===0) {
-  //       console.log('i am here in points')
-  //       return null;
-  //     }
-     
-      
-  //       if(coordinates.hasOwnProperty('coords'))
-  //       return(
-  //         mycoordinates.coords.map((point:any)=>{
-  //       console.log('here, here',point)
-  //       return  <MapboxGL.PointAnnotation id={String(Math.random()*10000)} key={Math.random()*10000} coordinate={point}/>
-  //     })
-  //       )
-      
-  //   }
-  //   const renderRoute = () =>{
-  //     if (!routeData) {
-  //       return null;
-  //     }
-  //     return (
-  //       <MapboxGL.ShapeSource id="routeSource" shape={routeData.routeTrips}>
-  //         <MapboxGL.LineLayer
-  //           id="routeFill"
-  //           style={layerStyles.route}
-  //         />
-  //       </MapboxGL.ShapeSource>
-  //     );
-  //   }
-  //   const renderArrows = ()=>{
-  //     if (!routeData) {
-  //       return null;
-  //     }
-      
-  //         return (
-  //           <MapboxGL.ShapeSource id="routeSource" shape={routeData.routeTrips}>
-  //             <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
-  //           </MapboxGL.ShapeSource>
-  //         );
-  //       }
-  
 
-  // console.log('route data', routeData)
+
   return (
     <View>
       <AppTitle title="Routes" help search />

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState, useContext} from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   lineString as makeLineString,
   point,
@@ -13,7 +14,7 @@ const mapboxToken =
   'pk.eyJ1Ijoic3VyaTIwMjEiLCJhIjoiY2tsd2l4bmxsMGpiYTJxbzB0NDQ5OW02MyJ9.ZLKmHBS2koQxLD754TEujA';
 const routesUrl = 'https://smt-backend-dev.herokuapp.com/api/routesBy';
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA2ZDAxNzIzMWNiMDNhMWFiMmFiNCIsImlhdCI6MTYxNTMxMTMxMiwiZXhwIjoxNjE1MzYxNzEyfQ.rmsKjbDPXrgXYB6AZFd1o2XpQday-TGuNUA67KycM9M';
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA2ZDAxNzIzMWNiMDNhMWFiMmFiNCIsImlhdCI6MTYxNTU2NTk4OSwiZXhwIjoxNjE1NjE2Mzg5fQ.mcjd2-JB_l-vKCDSlyMgUuqB8hrFh1WJesPOE9s4yZg"
 const mapboxBaseUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 const layerStyles = {
   route: {
@@ -29,7 +30,11 @@ const layerStyles = {
     symbolPlacement: 'line',
   },
 };
-
+const pinColors = {
+    startPoint : '#FF0000',
+    servicePoints: '#FFA500',
+    completedPoint: '#008000'
+}
 const RoutesDisplay = () => {
   const [coordinates, setCoordinates] = useState<any>([]);
   const [routeData, setRouteData] = useState<any>(null)
@@ -119,14 +124,22 @@ const RoutesDisplay = () => {
       return null;
     }
 
-    return coordinates.map((point: any) => {
-    
+    return coordinates.map((point: any, index:number) => {
+        let iconColor = ''
+      if(index === 0 ){
+          iconColor=pinColors.startPoint
+      }
+      else{
+          iconColor=pinColors.servicePoints
+      }
       return (
         <MapboxGL.PointAnnotation
           id={String(Math.random() * 10000)}
           key={Math.random() * 10000}
           coordinate={point}
-        />
+        >
+            <Icon name="map-marker" size={30} color={iconColor}/>
+            </MapboxGL.PointAnnotation>
       );
     });
   };
