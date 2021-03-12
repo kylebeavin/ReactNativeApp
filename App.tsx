@@ -11,7 +11,6 @@ import AppToast from './components/Layout/AppToast';
 import CameraProvider from './providers/CameraProvider';
 import AppCamera from './components/AppCamera';
 import AppContext from './providers/AppContext';
-import {Permission} from './providers/PermissionContext'
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -55,14 +54,12 @@ export default function App() {
       <SafeAreaProvider>
         <AppContext.Provider value={userSettings}>
           <ToastProvider>
-            <Permission>
             <CameraProvider>
               <StatusBar translucent backgroundColor='transparent' />
               <AppCamera />
               <AppToast />
               {!isAuth ? <AuthScreen /> : <Navigation />}
             </CameraProvider>
-            </Permission>
           </ToastProvider>
         </AppContext.Provider>
       </SafeAreaProvider>
