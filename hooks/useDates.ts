@@ -17,18 +17,34 @@ export default () => {
 
     let dateRangeObject = {gte: new Date(), lt: lessThan};
     return dateRangeObject;
-  }
+  };
 
   const addDays = (date: Date, days: number) : Date => {
     // Add number of days to date and return new Date.
     let nextDate: Date = new Date(date);
     nextDate.setDate(nextDate.getDate() + days);
     return nextDate;
-  }
+  };
+
+  const firstDay = (date: Date) : Date => {
+    // Return the first day of month passed in.
+    let nextDate: Date = new Date(date);
+    nextDate = new Date(nextDate.getFullYear(), nextDate.getMonth(), 1);
+    return nextDate;
+  };
+
+  const lastDay = (date: Date) : Date => {
+    // Return the last day of month passed in.
+    let nextDate: Date = new Date(date);
+    nextDate = new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0);
+    return nextDate;
+  };
 
   return {
     formatDate,
     getSelectedDateRange,
-    addDays
+    addDays,
+    firstDay,
+    lastDay
   };
 };
