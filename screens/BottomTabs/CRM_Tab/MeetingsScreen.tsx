@@ -161,13 +161,12 @@ const MeetingsScreen = () => {
 
   return (
     <>
-      <AppTitle title="Calendar" help search />
+      <AppTitle title="Calendar" />
 
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <View
-              //style={{marginRight: 60, marginTop: 16}}
               style={{width: '50%', marginTop: 8}}>
               <AppButton
                 title="Back"
@@ -179,30 +178,6 @@ const MeetingsScreen = () => {
             <View style={{width: '150%', marginLeft: -85, marginBottom: -15}}>
               <AppAddNew title="MEETING" modal="CreateMeetingModal" />
             </View>
-            {/* <View style={{marginRight: -10}}>
-              <View style={{flex: 1}}>
-                <Text style={{fontSize: 12}}>List View</Text>
-                <View style={styles.picker}>
-                  <Picker
-                    style={{height: 30}}
-                    selectedValue={sortItem}
-                    mode="dropdown"
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSortItem(itemValue.toString())
-                    }>
-                    {Object.values(Services).map((item, index) => {
-                      return (
-                        <Picker.Item
-                          key={item.toString()}
-                          label={item.toString()}
-                          value={item.toString()}
-                        />
-                      );
-                    })}
-                  </Picker>
-                </View>
-              </View>
-            </View> */}
           </AppNavBtnGrp>
         </View>
 
@@ -271,7 +246,7 @@ const MeetingsScreen = () => {
                 style={styles.card}
                 key={i}
                 onPress={() =>
-                  navigation.navigate('MeetingDetailsScreen', {meeting: u})
+                  navigation.navigate('MeetingDetailsScreen', {model: u})
                 }>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{flex: 1}}>

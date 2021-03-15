@@ -22,7 +22,7 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/Layout/AppTextInput';
-import {ifNeedHaul, isRequired} from '../../../utils/Validators';
+import {isRequired} from '../../../utils/Validators';
 import Geolocation from '@react-native-community/geolocation';
 import AppCheckBox from '../../../components/Layout/AppCheckBox';
 
@@ -103,9 +103,9 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
       order_status: 'completed',
       containers_serviced: values.containers_serviced,
       haul: values.haul,
-      needing_haul: !values.haul ? 0 : values.needing_hauled,
+      container_qty: !values.haul ? 0 : values.needing_hauled,
       completed_geo_location: location,
-      completed_time: new Date().toISOString(),
+      completed_time: new Date(),
     };
 
     await fetch(`${Configs.TCMC_URI}/api/orderPics`, {
@@ -148,7 +148,7 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
       <ScrollView style={styles.form}>
         <View>
           <View style={{marginBottom: 10}}>
-            <AppTitle title='Complete Order' help />
+            <AppTitle title='Complete Order' />
           </View>
 
           {/* Containers Serviced */}

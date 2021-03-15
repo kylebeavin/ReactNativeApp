@@ -111,6 +111,7 @@ const CreateOrderModal: React.FC<Props> = () => {
       _id: '',
       account_id: values.account,
       agreement_id: '',
+      containers_serviced: 0,
       container_qty: 0,
       demand_rate: values.demandRate,
       group_id: grpId,

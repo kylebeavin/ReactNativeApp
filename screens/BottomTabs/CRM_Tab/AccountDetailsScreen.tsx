@@ -24,7 +24,7 @@ interface Props {
 }
 
 const AccountDetailsScreen: React.FC<Props> = ({route}) => {
-  const item: Account = route.params.item;
+  const model: Account = route.params.model;
 
   //#region Use State Variables
   const navigation = useNavigation();
@@ -46,7 +46,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
 
     await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
       method: "POST",
-      body: JSON.stringify({account_id: item._id}),
+      body: JSON.stringify({account_id: model._id}),
       headers: {"Content-Type": "application/json", "x-access-token": token}
     })
     .then((res) => res.json())
@@ -56,7 +56,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Account Detail" help search />
+      <AppTitle title="Account Detail" />
 
       <ScrollView
         style={styles.scrollView}
@@ -71,32 +71,32 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={item} modal="UpdateAccountModal" />
+            <AppEditBtn item={model} modal="UpdateAccountModal" />
           </View>
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text style={{fontWeight: 'bold'}}>{item.account_name}</Text>
-          <Text>Group: {item.group_id}</Text>
-          <Text>Coords: {item.geo_location}</Text>
-          <Text>Email: {item.email}</Text>
-          <Text>Stage: {item.stage.toString()}</Text>
-          <Text>Owner: {item.owner_name}</Text>
-          <Text>Owner Id: {item.owner_id}</Text>
-          <Text>Active: {item.is_active ? 'Yes' : 'No'}</Text>
-          <Text>Demo: {item.demo ? 'Yes' : 'No'}</Text>
-          <Text>National: {item.national ? 'Yes' : 'No'}</Text>
-          <Text>Referral: {item.referral ? 'Yes' : 'No'}</Text>
-          <Text>Referral Group Id: {item.referral_group_id}</Text>
-          <Text>Hauling: {item.hauling_contract ? 'Yes' : 'No'}</Text>
-          <Text>Hauling Expiry: {item.hauling_expiration}</Text>
-          <Text>Address: {item.address_street}</Text>
-          <Text>City: {item.address_city}</Text>
-          <Text>State: {item.address_state}</Text>
-          <Text>Zip: {item.address_zip}</Text>
-          <Text>Conversion: {getDateStringsFromDate(item.conversion).date}</Text>
-          <Text>Created On: {getDateStringsFromDate(item.createdAt).date} {getDateStringsFromDate(item.createdAt).time}</Text>
-          <Text>Updated On: {getDateStringsFromDate(item.updatedAt).date} {getDateStringsFromDate(item.updatedAt).time}</Text>
+          <Text style={{fontWeight: 'bold'}}>{model.account_name}</Text>
+          <Text>Group: {model.group_id}</Text>
+          <Text>Coords: {model.geo_location}</Text>
+          <Text>Email: {model.email}</Text>
+          <Text>Stage: {model.stage.toString()}</Text>
+          <Text>Owner: {model.owner_name}</Text>
+          <Text>Owner Id: {model.owner_id}</Text>
+          <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
+          <Text>Demo: {model.demo ? 'Yes' : 'No'}</Text>
+          <Text>National: {model.national ? 'Yes' : 'No'}</Text>
+          <Text>Referral: {model.referral ? 'Yes' : 'No'}</Text>
+          <Text>Referral Group Id: {model.referral_group_id}</Text>
+          <Text>Hauling: {model.hauling_contract ? 'Yes' : 'No'}</Text>
+          <Text>Hauling Expiry: {model.hauling_expiration}</Text>
+          <Text>Address: {model.address_street}</Text>
+          <Text>City: {model.address_city}</Text>
+          <Text>State: {model.address_state}</Text>
+          <Text>Zip: {model.address_zip}</Text>
+          <Text>Conversion: {getDateStringsFromDate(model.conversion).date}</Text>
+          <Text>Created On: {getDateStringsFromDate(model.createdAt).date} {getDateStringsFromDate(model.createdAt).time}</Text>
+          <Text>Updated On: {getDateStringsFromDate(model.updatedAt).date} {getDateStringsFromDate(model.updatedAt).time}</Text>
         </View>
 
         <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
@@ -132,7 +132,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         </TouchableOpacity>
         {!notesToggle ? null : (
           <View style={{paddingLeft: 10}}>
-            {item.notes ? item.notes.map((item: string) => {
+            {model.notes ? model.notes.map((item: string) => {
               return (
                 <View key={item}>
                   <Text

@@ -97,7 +97,7 @@ const StartOrderModal: React.FC<Props> = ({order}) => {
     <>
       <View style={styles.form}>
         <View style={{marginBottom: 10}}>
-          <AppTitle title='Start Order' help />
+          <AppTitle title='Start Order' />
         </View>
         <View style={styles.formGroup}>
           <AppButton

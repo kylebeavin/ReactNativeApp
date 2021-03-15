@@ -24,6 +24,9 @@ export type Order = {
   _id: string;
   account_id: string;
   agreement_id?: string;
+  containers_serviced: number;
+  completed_geo_location?: string;
+  completed_time?: Date;
   container_qty: Number;
   demand_rate: string;
   group_id: string;

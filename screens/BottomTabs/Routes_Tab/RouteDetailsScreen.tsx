@@ -17,6 +17,8 @@ interface Props {
 }
 
 const RouteDetailsScreen: React.FC<Props> = ({route}) => {
+  const model: Route = route.params.model;
+
   //#region Use State Variables
   const navigation = useNavigation();
 
@@ -27,7 +29,7 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View>
-      <AppTitle title='Route Detail' help search />
+      <AppTitle title='Route Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -45,17 +47,17 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text>_id: {route.params.route._id}</Text>
-          <Text>driver: {route.params.route.driver}</Text>
-          <Text>group_id: {route.params.route.group_id}</Text>
-          <Text>is_active: {route.params.route.is_active}</Text>
-          <Text>route_stage: {route.params.route.route_stage}</Text>
-          <Text>notes: {route.params.route.notes}</Text>
-          <Text>service_stop: {route.params.route.service_stop}</Text>
-          <Text>start_location: {route.params.route.start_location}</Text>
-          <Text>time: {route.params.route.time}</Text>
-          <Text>truck_id: {route.params.route.truck_id}</Text>
-          <Text>truck_vin: {route.params.route.truck_vin}</Text>
+          <Text>_id: {model._id}</Text>
+          <Text>driver: {model.driver}</Text>
+          <Text>group_id: {model.group_id}</Text>
+          <Text>is_active: {model.is_active}</Text>
+          <Text>route_stage: {model.route_stage}</Text>
+          <Text>notes: {model.notes}</Text>
+          <Text>service_stop: {model.service_stop}</Text>
+          <Text>start_location: {model.start_location}</Text>
+          <Text>time: {model.time}</Text>
+          <Text>truck_id: {model.truck_id}</Text>
+          <Text>truck_vin: {model.truck_vin}</Text>
         </View>
 
         <TouchableOpacity

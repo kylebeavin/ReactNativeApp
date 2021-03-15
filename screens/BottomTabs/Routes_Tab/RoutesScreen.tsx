@@ -148,7 +148,7 @@ const RoutesScreen = () => {
 
   return (
     <View>
-      <AppTitle title="Routes" help search />
+      <AppTitle title="Routes" />
 
       <ScrollView
         style={styles.scrollView}
@@ -199,7 +199,7 @@ const RoutesScreen = () => {
                     <AppButton
                       outlined
                       title="Details"
-                      onPress={() => navigation.navigate("TruckDetailsScreen", {truck: u})}
+                      onPress={() => navigation.navigate("TruckDetailsScreen", {model: u})}
                     />
                     <View
                       style={{
@@ -238,7 +238,7 @@ const RoutesScreen = () => {
                   style={styles.card}
                   key={u._id}
                   onPress={() =>
-                    navigation.navigate('RouteDetailsScreen', {route: u})
+                    navigation.navigate('RouteDetailsScreen', {model: u})
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
@@ -279,7 +279,7 @@ const RoutesScreen = () => {
                     <AppButton
                       outlined
                       title="Details"
-                      onPress={() => navigation.navigate("UserDetailsScreen", {user: u})}
+                      onPress={() => navigation.navigate("UserDetailsScreen", {model: u})}
                     />
                     <View
                       style={{
@@ -375,7 +375,7 @@ const RoutesScreen = () => {
                     <AppButton
                       outlined
                       title="Details"
-                      onPress={() => navigation.navigate("RouteDetailsScreen", {route: u})}
+                      onPress={() => navigation.navigate("RouteDetailsScreen", {model: u})}
                     />
                     <View
                       style={{
@@ -429,7 +429,7 @@ const RoutesScreen = () => {
                       outlined
                       title="Details"
                       onPress={() =>
-                        navigation.navigate('RouteDetailsScreen', {route: u})
+                        navigation.navigate('RouteDetailsScreen', {model: u})
                       }
                     />
                     <View

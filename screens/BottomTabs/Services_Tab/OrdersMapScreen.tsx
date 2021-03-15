@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
-  View,
   Text,
-  ActivityIndicator,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import Configs from '../../../constants/Configs';
@@ -13,214 +13,210 @@ import Colors from '../../../constants/Colors';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {Order} from '../../../types/service';
-import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import {useIsFocused} from '@react-navigation/native';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {getDateStringsFromDate, getRequestHeadersAsync} from '../../../utils/Helpers';
-import {Picker} from '@react-native-picker/picker';
-import {SortOrdersList} from '../../../types/enums';
+import {useNavigation} from '@react-navigation/native';
+import {getDateStringsFromDate} from '../../../utils/Helpers';
+import AppContext from '../../../providers/AppContext';
+import { ToastContext } from '../../../providers/ToastProvider';
+import MapboxGL from '@react-native-mapbox-gl/maps';
+import { PermissionContext } from '../../../providers/PermissionContext';
+import Geolocation from '@react-native-community/geolocation';
+import useDates from '../../../hooks/useDates';
 
 interface Props {
   navigation: any;
 }
 
-const ServicesScreen: React.FC<Props> = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const isFocused = useIsFocused();
-
+const ServicesScreen: React.FC<Props> = () => {
   //#region
-  const [sortItem, setSortItem] = useState('');
+  const {grpId, token} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
+  const {getPermissions} = useContext(PermissionContext);
+  const [userLocation, setUserLocation] = useState<any>();
+  const navigation = useNavigation();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const {getSelectedDateRange} = useDates();
   //#endregion
 
   useEffect(() => {
+    getUserLocation();
     getOrders();
-  }, [isFocused]);
+  }, []);
+
+  const getUserLocation = async () => {
+    await getPermissions();
+    Geolocation.getCurrentPosition((info) => setUserLocation([info.coords.longitude, info.coords.latitude]));
+  };
 
   const getOrders = async () => {
-    // let grpId = await useAsyncStorage()
-    //   .getUserAsync()
-    //   .then((user) => user.group_id);
-
-    // await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
-    //   headers: await getRequestHeadersAsync().then((header) => header),
-    //   method: 'POST',
-    //   body: JSON.stringify({group_id: grpId}),
-    // })
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     if (json.data) {
-    //       setOrders(json.data);
-    //     }
-    //   })
-    //   .catch((err) => show({message: err.message})
-    //   .finally(() => setLoading(false));
-    setIsLoading(false);
+    let {gte, lt} = getSelectedDateRange();
+    await fetch(`${Configs.TCMC_URI}/api/ordersBy`, {
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId, service_date: {$gte: gte, $lt: lt}}),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data) {
+          setOrders(json.data);
+        }
+      })
+      .catch((err) => show({message: err.message}));
   };
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Service" help search />
+      <AppTitle title="Service" />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <AppButton
-            title="ORDERS"
-            onPress={() => navigation.navigate('OrdersScreen')}
-            outlined={true}
-          />
-          <AppButton
-            title="CALENDAR"
-            onPress={() => navigation.navigate('OrdersCalendarScreen')}
-            outlined={true}
-          />
-          <View style={{marginRight: -10}}>
+        <View style={{paddingHorizontal: 10}}>
+          <AppNavBtnGrp>
             <AppButton
-              title="MAP"
-              onPress={() => navigation.navigate('OrdersMapScreen')}
-              outlined={false}
+              title="ORDERS"
+              onPress={() => navigation.navigate('OrdersScreen')}
+              outlined={true}
             />
-          </View>
-        </AppNavBtnGrp>
-
-        {orders.length === 0 ? null : (
-          <View style={{flex: 1, flexDirection: 'row', marginBottom: 15}}>
-            <View style={{flex: 1, marginRight: 15}}>
-              <Text style={{fontSize: 12}}>Sort List</Text>
-              <View style={styles.picker}>
-                <Picker
-                  style={{height: 30}}
-                  selectedValue={sortItem}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSortItem(itemValue.toString())
-                  }>
-                  {Object.values(SortOrdersList).map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item.toString()}
-                        label={item.toString()}
-                        value={item.toString()}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
+            <AppButton
+              title="CALENDAR"
+              onPress={() => navigation.navigate('OrdersCalendarScreen')}
+              outlined={true}
+            />
+            <View style={{marginRight: -10}}>
+              <AppButton
+                title="MAP"
+                onPress={() => navigation.navigate('OrdersMapScreen')}
+                outlined={false}
+              />
             </View>
-            <View style={{flex: 1}}>
-              <Text style={{fontSize: 12}}>List View</Text>
-              <View style={styles.picker}>
-                <Picker
-                  style={{height: 30}}
-                  selectedValue={sortItem}
-                  mode="dropdown"
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSortItem(itemValue.toString())
-                  }>
-                  {Object.values(SortOrdersList).map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item.toString()}
-                        label={item.toString()}
-                        value={item.toString()}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
+          </AppNavBtnGrp>
+
+          <View
+            style={{
+              borderColor: Colors.SMT_Secondary_1,
+              marginBottom: 10,
+              borderRadius: 3,
+              backgroundColor: Colors.SMT_Secondary_1_Light_1,
+              borderWidth: 2,
+              height: 300,
+              justifyContent: 'center',
+            }}>
+            <View style={styles.mapContainer}>
+              <MapboxGL.MapView
+                style={styles.map}
+                styleURL={MapboxGL.StyleURL.Street}>
+                <MapboxGL.UserLocation androidRenderMode="gps" visible={true} />
+
+                <MapboxGL.Camera
+                  zoomLevel={8}
+                  centerCoordinate={userLocation}
+                />
+              </MapboxGL.MapView>
             </View>
           </View>
-        )}
-
-        {isLoading ? (
-          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-        ) : (
-          <View>
-            {/* Agreements List */}
-            {orders.length === 0 ? (
-              // <AppEmptyCard entity="orders" modal="CreateOrderModal" />
-              <View><Text>Under Development</Text></View>
-            ) : (
-              orders.map((u, i) => {
-                return (
-                  <View style={styles.card} key={i}>
-                    <View style={styles.column1}>
-                      <Text style={{fontWeight: 'bold'}}>{u._id}</Text>
-                      <Text>{u.account_id}</Text>
-                      <Text>{getDateStringsFromDate(u.service_date).date}</Text>
-                    </View>
-
-                    <View style={styles.column2}>
-                      <AppButton
-                        title="Details"
-                        backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() =>
-                          navigation.navigate('Modal', {
-                            modal: 'UpdateOrderModal',
-                            item: u,
-                          })
-                        }
-                      />
-                    </View>
-                  </View>
-                );
-              })
-            )}
-          </View>
-        )}
+        </View>
+        
+        <View style={{marginBottom: 10}}>
+        <AppTitle title={`Orders: ${new Date().toLocaleDateString()}`} />
+        </View>
+          
+        <View style={{paddingHorizontal: 10}}>
+          {orders.map((u: Order, i: number) => {
+            return (
+              <TouchableOpacity
+              style={styles.card}
+              key={i}
+              onPress={() =>
+                navigation.navigate('OrderDetailsScreen', {model: u})
+              }>
+              <View style={{flexDirection: 'row', flex: 1}}>
+                <View>
+                  <Text style={styles.titleText}>{u.account_id.account_name}</Text>
+                  <Text>Demo: {u.is_demo ? 'Yes' : 'No'}</Text>
+                </View>
+                <View style={{flex: 1}}>
+                  <Text
+                    style={{
+                      color: Colors.SMT_Primary_1,
+                      textAlign: 'right',
+                    }}>
+                    {getDateStringsFromDate(u.service_date).date}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      color: Colors.SMT_Secondary_2_Light_1,
+                      textAlign: 'right',
+                    }}>
+                    {getDateStringsFromDate(u.service_date).time}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            )
+          })}
+        </View>
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mapContainer: {
+    height: '100%',
+    width: '100%',
+  },
+  map: {
+    flex: 1,
+  },
   card: {
-    flexDirection: 'row',
     backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
+    marginBottom: 3,
     borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 3,
-    padding: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
   },
-  column1: {},
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 20,
-  },
+  // column1: {},
+  // container: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-evenly',
+  //   marginBottom: 20,
+  // },
   contentContainer: {
     // This is the scrollable part
   },
-  column2: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  picker: {
-    flex: 1,
-    paddingLeft: 15,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
-    borderRadius: 3,
-    height: 36,
-    overflow: 'hidden',
-  },
+  // column2: {
+  //   flex: 1,
+  //   alignItems: 'flex-end',
+  // },
+  // picker: {
+  //   flex: 1,
+  //   paddingLeft: 15,
+  //   borderColor: Colors.SMT_Secondary_1_Light_1,
+  //   borderWidth: 2,
+  //   borderRadius: 3,
+  //   height: 36,
+  //   overflow: 'hidden',
+  // },
   screen: {
     marginBottom: 36,
   },
   scrollView: {
     height: '100%',
     width: '100%',
-    paddingHorizontal: 10,
   },
-  status: {},
-  statusValid: {
-    color: Colors.Success,
-  },
-  statusInvalid: {
-    color: Colors.Info,
+  // status: {},
+  // statusValid: {
+  //   color: Colors.Success,
+  // },
+  // statusInvalid: {
+  //   color: Colors.Info,
+  // },
+  titleText: {
+    fontWeight: 'bold',
+    color: 'black'
   },
 });
 

@@ -1,179 +1,176 @@
-import React, {useEffect, useRef, useState, useContext} from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {View} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  lineString as makeLineString,
-  point,
-  featureCollection,
-  feature,
-} from '@turf/helpers';
-import arrowIcon from '../../assets/images/arrow2.png';
 
-const mapboxToken =
-  'pk.eyJ1Ijoic3VyaTIwMjEiLCJhIjoiY2tsd2l4bmxsMGpiYTJxbzB0NDQ5OW02MyJ9.ZLKmHBS2koQxLD754TEujA';
-const routesUrl = 'https://smt-backend-dev.herokuapp.com/api/routesBy';
-const token =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA2ZDAxNzIzMWNiMDNhMWFiMmFiNCIsImlhdCI6MTYxNTU2NTk4OSwiZXhwIjoxNjE1NjE2Mzg5fQ.mcjd2-JB_l-vKCDSlyMgUuqB8hrFh1WJesPOE9s4yZg"
+import AppContext from '../../providers/AppContext';
+import Configs from '../../constants/Configs';
+import { ToastContext } from '../../providers/ToastProvider';
+import { Route } from '../../types/routes';
+
+//#region Local Vars
+const mapboxToken = Configs.MAPBOX_ACCESS_TOKEN;
 const mapboxBaseUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 const layerStyles = {
   route: {
     lineColor: 'blue',
-
     lineWidth: 3,
     lineOpacity: 0.84,
   },
-
   arrows: {
-    iconImage: arrowIcon,
+    iconImage: require('../../assets/images/arrow2.png'),
     iconAllowOverlap: true,
     symbolPlacement: 'line',
   },
 };
 const pinColors = {
-    startPoint : '#FF0000',
-    servicePoints: '#FFA500',
-    completedPoint: '#008000'
+  startPoint: '#FF0000',
+  servicePoints: '#FFA500',
+  completedPoint: '#008000',
+};
+//#endregion
+
+interface Props {
+  route: Route
 }
-const RoutesDisplay = () => {
+
+const RoutesDisplay: React.FC<Props> = ({route}) => {
+  //#region Use State Variables
+  const {grpId, token} = useContext(AppContext);
+  const {show} = useContext(ToastContext);
   const [coordinates, setCoordinates] = useState<any>([]);
-  const [routeData, setRouteData] = useState<any>(null)
+  const [routeData, setRouteData] = useState<any>(null);
+  //#endregion
+
   useEffect(() => {
-    const getRouteLocationsFromApi = async () => {
-      let response = await fetch(routesUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token,
-        },
-        body: JSON.stringify({driver: '6011c4f4f556150022792a54'}),
-      });
-      const data = await response.json();
-      
-      const coordsStore: any = [];
-      if (data) {
-        let {start_location, service_stop} = data.data[0];
-        let addresses = [start_location, ...service_stop];
-     
-        let formattedAddressStrings = addresses.map((address) => {
-          return address.split(' ').join('%20');
-        });
-
-        let requests = formattedAddressStrings.map((address) =>
-          fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`),
-        );
-        //const getAllPromises = Promise.all(fetchUrls)
-        console.log(requests);
-        Promise.all(requests)
-          .then((responses) => {
-            return Promise.all(
-              responses.map(function (response) {
-                return response.json();
-              }),
-            );
-          })
-          .then((data) => {
-            data.forEach((curData) => {
-              
-              coordsStore.push(curData.features[0].center);
-            });
-          
-            setCoordinates(coordsStore);
-            return new Promise(resolve =>{
-                resolve(coordsStore)
-            })
-          })
-          .then(data=>{
-              getOptimizedRoute(data)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    };
-    getRouteLocationsFromApi();
-  }, []);
-  const constructMapQueryUrl = (coordsStore:any)=>{
-      if(coordsStore.length>0){
-    let CoordsStringArray = coordsStore.map((coords:any)=>coords.join(','))
-    let coordsString = CoordsStringArray.join(';')
-    let mapQueryUrl = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordsString}?geometries=geojson&access_token=${mapboxToken}`
-    return mapQueryUrl
+    if (route) {
+      getRouteLocationsFromApi();
     }
-    return ""
-  }
 
-   const getOptimizedRoute = (coordinates:any)=>{
-       if(coordinates.length>0){
-           let url = constructMapQueryUrl(coordinates)
-           fetch(url)
-          .then (routeResponse => routeResponse.json())
-          .then(routeData => {
-            console.log("i got data")
-            let myData =  routeData.trips[0].geometry
-            setRouteData({...myData})
+  }, [route]);
 
-            
-          })
-       }
-   }
+  const getRouteLocationsFromApi = async () => {
+    let response = await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify({group_id: grpId, _id: route._id}),
+    });
+    const data = await response.json();
+
+    const coordsStore: any = [];
+    if (data) {
+      let {start_location, service_stop} = data.data[0];
+      let addresses = [start_location, ...service_stop];
+
+      let formattedAddressStrings = addresses.map((address) => {
+        return address.split(' ').join('%20');
+      });
+
+      let requests = formattedAddressStrings.map((address) =>
+        fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`),
+      );
+      Promise.all(requests)
+        .then((responses) => {
+          return Promise.all(
+            responses.map(function (response) {
+              return response.json();
+            }),
+          );
+        })
+        .then((data) => {
+          data.forEach((curData) => {
+            coordsStore.push(curData.features[0].center);
+          });
+
+          setCoordinates(coordsStore);
+          return new Promise((resolve) => {
+            resolve(coordsStore);
+          });
+        })
+        .then((data) => {
+          getOptimizedRoute(data);
+        })
+        .catch((err) => show({message: err.message}));
+    }
+  };
+
+  const constructMapQueryUrl = (coordsStore: any) => {
+    if (coordsStore.length > 0) {
+      let CoordsStringArray = coordsStore.map((coords: any) =>
+        coords.join(','),
+      );
+      let coordsString = CoordsStringArray.join(';');
+      let mapQueryUrl = `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordsString}?geometries=geojson&access_token=${mapboxToken}`;
+      return mapQueryUrl;
+    }
+    return '';
+  };
+
+  const getOptimizedRoute = async (coordinates: any) => {
+    if (coordinates.length > 0) {
+      await fetch(constructMapQueryUrl(coordinates))
+        .then((res) => res.json())
+        .then((data) => setRouteData({...data.trips[0].geometry}))
+        .catch((err) => show({message: err.message}));
+    }
+  };
 
   const renderRoutePoints = () => {
     if (coordinates.length === 0) {
-      
       return null;
     }
 
-    return coordinates.map((point: any, index:number) => {
-        let iconColor = ''
-      if(index === 0 ){
-          iconColor=pinColors.startPoint
-      }
-      else{
-          iconColor=pinColors.servicePoints
+    return coordinates.map((point: any, index: number) => {
+      let iconColor = '';
+      if (index === 0) {
+        iconColor = pinColors.startPoint;
+      } else {
+        iconColor = pinColors.servicePoints;
       }
       return (
         <MapboxGL.PointAnnotation
-          id={String(Math.random() * 10000)}
-          key={Math.random() * 10000}
-          coordinate={point}
-        >
-            <Icon name="map-marker" size={30} color={iconColor}/>
-            </MapboxGL.PointAnnotation>
+          id={index.toString()}
+          key={index.toString()}
+          coordinate={point}>
+          <Icon name="map-marker" size={30} color={iconColor} />
+        </MapboxGL.PointAnnotation>
       );
     });
   };
-  const renderRoute = () =>{
+
+  const renderRoute = () => {
     if (!routeData) {
       return null;
     }
     return (
       <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
-        <MapboxGL.LineLayer
-          id="routeFill"
-          style={layerStyles.route}
-        />
+        <MapboxGL.LineLayer id="routeFill" style={layerStyles.route} />
       </MapboxGL.ShapeSource>
     );
-  }
-  const renderArrows = ()=>{
+  };
+
+  const renderArrows = () => {
     if (!routeData) {
       return null;
     }
-    
-        return (
-          <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
-            <MapboxGL.SymbolLayer id='arrows' style={layerStyles.arrows} minZoomLevel={1} aboveLayerID="routeFill"/>
-          </MapboxGL.ShapeSource>
-        );
-      }
+
+    return (
+      <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
+        <MapboxGL.SymbolLayer
+          id="arrows"
+          style={layerStyles.arrows}
+          minZoomLevel={1}
+          aboveLayerID="routeFill"
+        />
+      </MapboxGL.ShapeSource>
+    );
+  };
 
   return (
-    // <Text>Hello</Text>
     <View>
-        {renderRoutePoints()}
-        {renderRoute()}
-        {renderArrows()}
+      {renderRoutePoints()}
+      {renderRoute()}
+      {renderArrows()}
     </View>
   );
 };

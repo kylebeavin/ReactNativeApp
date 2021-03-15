@@ -42,7 +42,9 @@ const ServicesScreen = () => {
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())
-      .then((json) => setOrders(json.data))
+      .then((json) => {
+        setOrders(json.data)
+      })
       .catch((err) => show({message: err.message}));
 
     setIsLoading(false);
@@ -50,7 +52,7 @@ const ServicesScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Service" help search />
+      <AppTitle title="Service" />
 
       <ScrollView
         style={styles.scrollView}
@@ -93,12 +95,12 @@ const ServicesScreen = () => {
                     style={styles.card}
                     key={i}
                     onPress={() =>
-                      navigation.navigate('OrderDetailsScreen', {order: u})
+                      navigation.navigate('OrderDetailsScreen', {model: u})
                     }>
                     <View style={{flexDirection: 'row'}}>
                       <View style={{flex: 1}}>
                         <Text style={styles.titleText}>{u.order_id}</Text>
-                        <Text>{u.account_name}</Text>
+                        <Text>{u.account_id.account_name}</Text>
                       </View>
                       <View style={{flex: 1}}>
                         <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{getDateStringsFromDate(u.service_date).date}</Text>

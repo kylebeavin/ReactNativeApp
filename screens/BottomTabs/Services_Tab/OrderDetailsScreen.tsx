@@ -23,7 +23,7 @@ interface Props {
 }
 
 const OrderDetailsScreen: React.FC<Props> = ({route}) => {
-  const order: Order = route.params.order;
+  const model: Order = route.params.model;
 
   //#region Use State Variables
   const navigation = useNavigation();
@@ -33,10 +33,9 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
   const [urlToggle, setUrlToggle] = useState(false);
   const [notesToggle, setNotesToggle] = useState(false);
   //#endregion
-
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Order Detail" help search />
+      <AppTitle title="Order Detail" />
 
       <ScrollView
         style={styles.scrollView}
@@ -44,40 +43,56 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         <AppNavBtnGrp>
           <View style={{marginRight: 60, marginTop: 12, paddingLeft: 10}}>
             <AppButton
-              title="Back"
+              title='Back'
               onPress={() => navigation.goBack()}
               outlined={true}
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={order} modal="UpdateOrderModal" />
+            <AppEditBtn item={model} modal='UpdateOrderModal' />
           </View>
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text style={{fontWeight: 'bold'}}>{order.order_id}</Text>
-          <Text>Agreement: {order.agreement_id ? 'Yes' : 'No'}</Text>
-          <Text>Account: {order.account_id.account_name}</Text>
-          <Text>Group: {order.group_id}</Text>
-          <Text>Recurring: {order.is_recurring ? 'Yes' : 'No'}</Text>
-          <Text>Active: {order.is_active ? 'Yes' : 'No'}</Text>
-          <Text>Demo: {order.is_demo ? 'Yes' : 'No'}</Text>
-          <Text>Services: {order.services.toString()}</Text>
-          <Text>Days: {order.service_days}</Text>
-          <Text>Monthly Rate: {order.monthly_rate}</Text>
-          <Text>Demand Rate: {order.demand_rate}</Text>
+          <Text style={{fontWeight: 'bold'}}>{model.order_id}</Text>
+          <Text>Account: {model.account_id.account_name}</Text>
+          <Text>Agreement: {model.agreement_id ? 'Yes' : 'No'}</Text>
+          <Text>Group: {model.group_id}</Text>
+          <Text>Recurring: {model.is_recurring ? 'Yes' : 'No'}</Text>
+          <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
+          <Text>Demo: {model.is_demo ? 'Yes' : 'No'}</Text>
+          <Text>Services: {model.services.toString()}</Text>
+          <Text>Days: {model.service_days}</Text>
+          <Text>Monthly Rate: {model.monthly_rate}</Text>
+          <Text>Demand Rate: {model.demand_rate}</Text>
           <Text>
-            Start Date: {getDateStringsFromDate(order.service_date).date}
+            Service Date: {getDateStringsFromDate(model.service_date).date}
           </Text>
+
+          {model.order_status === 'completed' ? (
+            <View>
+            <View style={{marginTop: 10}}>
+              <Text style={{ fontWeight: 'bold'}}>Completed:</Text>
+              </View>
+            <View style={{marginLeft: 20}}>
+              <Text>Containers Smashed: {model.containers_serviced}</Text>
+              <Text>Coords: {model.completed_geo_location}</Text>
+              <Text>Time: {getDateStringsFromDate(model.completed_time).date}{' '}{getDateStringsFromDate(model.completed_time).time}</Text>
+            </View>
+            </View>
+          ) : null}
         </View>
 
         <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
-          <AppTitle title="Status" />
+          <AppTitle title='Status' />
         </TouchableOpacity>
         {!statusToggle ? null : (
           <View style={{paddingLeft: 10}}>
-            <AppOrderStatusIndicator id={order._id} currentStatus={order.order_status}/>
+            <AppOrderStatusIndicator
+              id={model._id}
+              currentStatus={model.order_status}
+            />
           </View>
         )}
 
@@ -86,7 +101,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         </TouchableOpacity>
         {!urlToggle ? null : (
           <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
-            {order.url.map((item: string) => {
+            {model.url.map((item: string) => {
               return (
                 <View style={{marginBottom: 10}} key={item}>
                   <Text
@@ -109,12 +124,10 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         </TouchableOpacity>
         {!notesToggle ? null : (
           <View style={{paddingLeft: 10}}>
-            {order.notes.map((item: string) => {
+            {model.notes.map((item: string) => {
               return (
                 <View key={item}>
-                  <Text
-                    style={styles.link}
-                    onPress={() => null}>
+                  <Text style={styles.link} onPress={() => null}>
                     {item}
                   </Text>
                 </View>

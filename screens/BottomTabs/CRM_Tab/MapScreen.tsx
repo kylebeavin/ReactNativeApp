@@ -1,173 +1,234 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import { ScrollView, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import MapboxGL from '@react-native-mapbox-gl/maps';
+import Geolocation from '@react-native-community/geolocation';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import AppContext from '../../../providers/AppContext';
+import {ToastContext} from '../../../providers/ToastProvider';
+import {PermissionContext} from '../../../providers/PermissionContext';
+import {Account} from '../../../types/crm';
+import {getDateStringsFromDate} from '../../../utils/Helpers';
 import Configs from '../../../constants/Configs';
-import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
+import AppButton from '../../../components/Layout/AppButton';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import LinkConfig from '../../../navigation/LinkingConfiguration';
-import AppAddNew from '../../../components/Layout/AppAddNew';
-import {Location} from '../../../types/crm';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import { useIsFocused } from '@react-navigation/native';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import { getRequestHeadersAsync } from '../../../utils/Helpers';
-import { useFetch } from '../../../hooks/useFetch';
+
+MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 
 interface Props {
-    navigation: any;
+  navigation: any;
 }
 
 const MapScreen: React.FC<Props> = ({navigation}) => {
-  const {status, data, error} = useFetch(`${Configs.TCMC_URI}/api/locationsBy`, 'POST');
+  //#region Use State Variables
+  const {grpId, token} = useContext(AppContext);
+  const {getPermissions} = useContext(PermissionContext);
+
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const {show} = useContext(ToastContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const isFocused = useIsFocused();
+  const [userLocation, setUserLocation] = useState<any>();
+
+  //#endregion
 
   useEffect(() => {
-    if (status === "fetched") {
-      getLocations();
-    }
-  }, [isFocused, status]);
+    getUserLocation();
+    getAccounts();
+  }, []);
 
-  const getLocations = async () => {
-    setLocations(data.data);
-    setIsLoading(false);
-  }
+  const getUserLocation = async () => {
+    await getPermissions();
+    Geolocation.getCurrentPosition((info) => {
+      const {latitude, longitude} = info.coords;
+      setUserLocation([longitude, latitude]);
+    });
+  };
+
+  const getAccounts = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      method: 'POST',
+      body: JSON.stringify({group_id: grpId}),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data) {
+          setAccounts(json.data);
+        }
+      })
+      .catch((err) => show({message: err.message}))
+      .finally(() => setIsLoading(false));
+  };
+
+  const renderRoutePoints = () => {
+    if (accounts.length === 0) return;
+    return accounts.map((item: Account, index: number) => {
+      if (item.geo_location === null || item.geo_location.length === 0) return;
+      let coords = item.geo_location.split(',');
+      return (
+        <MapboxGL.PointAnnotation
+          id={index.toString()}
+          key={index.toString()}
+          coordinate={[parseFloat(coords[0]),parseFloat(coords[1])]}>
+          <FontAwesome name="map-marker" size={30} color={Colors.SMT_Primary_1} />
+        </MapboxGL.PointAnnotation>
+      );
+    });
+  };
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="CRM" help search />
+      <AppTitle title="CRM" />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <AppButton
-            title="CLIENTS"
-            onPress={() => navigation.navigate('AccountsScreen')}
-            outlined={true}
-          />
-          <AppButton
-            title="CALENDAR"
-            onPress={() => navigation.navigate('MeetingsScreen')}
-            outlined={true}
-          />
-          <View style={{marginRight: -10}}>
+        <View style={{paddingHorizontal: 10}}>
+          <AppNavBtnGrp>
             <AppButton
-              title="MAP"
-              onPress={() => navigation.navigate('MapScreen')}
-              outlined={false}
+              title="CLIENTS"
+              onPress={() => navigation.navigate('AccountsScreen')}
+              outlined={true}
             />
-          </View>
-        </AppNavBtnGrp>
+            <AppButton
+              title="CALENDAR"
+              onPress={() => navigation.navigate('MeetingsScreen')}
+              outlined={true}
+            />
+            <View style={{marginRight: -10}}>
+              <AppButton
+                title="MAP"
+                onPress={() => navigation.navigate('MapScreen')}
+                outlined={false}
+              />
+            </View>
+          </AppNavBtnGrp>
+        </View>
 
-        {locations.length === 0 ? null : (
-          <AppAddNew title="LOCATION" modal="CreateLocationModal" />
-        )}
+        <View style={{paddingHorizontal: 10}}>
+          {/* Map Card */}
+          {accounts.length === 0 ? null : (
+            <View
+              style={{
+                borderColor: Colors.SMT_Secondary_1,
+                marginBottom: 10,
+                borderRadius: 3,
+                backgroundColor: Colors.SMT_Secondary_1_Light_1,
+                borderWidth: 2,
+                height: 300,
+                justifyContent: 'center',
+              }}>
+              <View style={styles.mapContainer}>
+                <MapboxGL.MapView
+                  style={styles.map}
+                  styleURL={MapboxGL.StyleURL.Street}>
+                  <MapboxGL.UserLocation
+                    androidRenderMode="gps"
+                    visible={true}
+                  />
 
-        {isLoading ? (
-          <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
-        ) : (
-          <View>
-            {/* Map Card */}
-            {locations.length === 0 ? null : (
-              <View
-                style={{
-                  borderColor: Colors.SMT_Secondary_1,
-                  marginBottom: 10,
-                  borderRadius: 3,
-                  backgroundColor: Colors.SMT_Secondary_1_Light_1,
-                  borderWidth: 2,
-                  height: 300,
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    color: Colors.SMT_Tertiary_1,
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                  }}>
-                  MAP PLACEHOLDER
-                </Text>
+                  <MapboxGL.Camera
+                    zoomLevel={8}
+                    centerCoordinate={userLocation}
+                  />
+                  {renderRoutePoints()}
+                </MapboxGL.MapView>
               </View>
-            )}
+            </View>
+          )}
+        </View>
 
-            {/* Locations List */}
-            {locations.length === 0 ? (
-              <AppEmptyCard entity="locations" modal="CreateLocationModal" />
-            ) : (
-              locations.map((u, i) => {
-                return (
-                  <View style={styles.card} key={i}>
-                    <View style={styles.column1}>
-                      <Text style={{fontWeight: 'bold'}}>
-                        {u.location_name}
-                      </Text>
-                      <Text>{u.address_city + ', ' + u.address_state}</Text>
+        <View style={{marginBottom: 10}}>
+          <AppTitle title="Accounts" />
+        </View>
+
+        <View style={{paddingHorizontal: 10}}>
+          {/* Locations List */}
+          {accounts.length === 0 ? (
+            <AppEmptyCard entity="accounts" modal="CreateLocationModal" />
+          ) : (
+            accounts.map((u, i) => {
+              return (
+                <TouchableOpacity
+                  style={styles.card}
+                  key={i}
+                  onPress={() =>
+                    navigation.navigate('AccountDetailsScreen', {model: u})
+                  }>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                      <Text style={styles.titleText}>{u.account_name}</Text>
+                      <Text>{u.address_city}</Text>
                     </View>
-
-                    <View style={styles.column2}>
-                      <AppButton
-                        title="Details"
-                        backgroundColor={Colors.SMT_Secondary_2}
-                        onPress={() =>
-                          navigation.navigate('Modal', {
-                            modal: 'UpdateLocationModal',
-                            item: u,
-                          })
-                        }
-                      />
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={{
+                          color: Colors.SMT_Primary_1,
+                          textAlign: 'right',
+                        }}>
+                        {getDateStringsFromDate(u.createdAt).date}
+                      </Text>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          color: Colors.SMT_Secondary_2_Light_1,
+                          textAlign: 'right',
+                        }}>
+                        {getDateStringsFromDate(u.createdAt).time}
+                      </Text>
                     </View>
                   </View>
-                );
-              })
-            )}
-          </View>
-        )}
+                </TouchableOpacity>
+              );
+            })
+          )}
+        </View>
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
-    borderRadius: 3,
-    padding: 5,
+  mapContainer: {
+    height: '100%',
+    width: '100%',
   },
-  column1: {},
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginBottom: 20,
-  },
-  contentContainer: {
-    // This is the scrollable part
-  },
-  column2: {
+  map: {
     flex: 1,
-    alignItems: "flex-end",
   },
   screen: {
     marginBottom: 36,
   },
+  contentContainer: {
+    // This is the scrollable part
+  },
   scrollView: {
-    height: "100%",
-    width: "100%",
-    paddingHorizontal: 10,
+    height: '100%',
+    width: '100%',
   },
-  status: {},
-  statusValid: {
-    color: Colors.Success,
+  card: {
+    backgroundColor: Colors.SMT_Tertiary_1,
+    marginBottom: 3,
+    borderWidth: 1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
+    borderRadius: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
   },
-  statusInvalid: {
-    color: Colors.Info,
+  title: {
+    marginBottom: 10,
+  },
+  titleText: {
+    fontWeight: 'bold',
   },
 });
 

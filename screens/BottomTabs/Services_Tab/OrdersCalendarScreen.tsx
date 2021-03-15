@@ -35,13 +35,12 @@ const OrdersCalendarScreen = () => {
   const {show} = useContext(ToastContext);
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
-  const {getSelectedDateRange} = useDates();
+  const {getSelectedDateRange, addDays} = useDates();
   
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  
   // Refs
-  let selectedQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(new Date()), $lt: new Date(date.getDate() + 1)}}).current;
-  let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
+  let selectedQuery = useRef({group_id: grpId, service_date: {$gte: formatDate(new Date()), $lt: new Date(addDays(date, 1).toLocaleDateString())}}).current;
+  let outstandingQuery = useRef({group_id: grpId, service_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
     [formatDate(new Date())]: {selected: true},
@@ -73,7 +72,7 @@ const OrdersCalendarScreen = () => {
     // Select Day
     newDays[day.dateString] = {selected: true};
     //update queries
-    selectedQuery = {group_id: grpId, start_date: {$gte: day.dateString, $lt: lessThan.setDate(lessThan.getDate() + 1)}}
+    selectedQuery = {group_id: grpId, service_date: {$gte: day.dateString, $lt: lessThan.setDate(lessThan.getDate() + 1)}}
     
     // Fetch Orders
     await getSelectedDates();
@@ -105,9 +104,9 @@ const OrdersCalendarScreen = () => {
         let outstandingOrders: IMarkedDays = {};
         json.data.map((u: any, i: any) => {
           return (
-            outstandingOrders[formatDate(u.start_date)] = {selected: true, selectedColor: Colors.SMT_Primary_1}
-          )
-        })
+            outstandingOrders[formatDate(u.service_date)] = {selected: true, selectedColor: Colors.SMT_Primary_1}
+            )
+          })
         setOutstandingOrders({...outstandingOrders});
         return outstandingOrders;
       })
@@ -123,7 +122,9 @@ const OrdersCalendarScreen = () => {
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())
-      .then((json) => setSelectedOrders(json.data))
+      .then((json) => {
+        setSelectedOrders(json.data)
+      })
       .catch((err) => show({message: 'Error getting orders.'}));
   };
 
@@ -147,7 +148,7 @@ const OrdersCalendarScreen = () => {
 
   return (
     <>
-      <AppTitle title="Calendar" help search />
+      <AppTitle title="Calendar" />
 
       <ScrollView
         style={styles.scrollView}>
@@ -253,7 +254,7 @@ const OrdersCalendarScreen = () => {
                 style={styles.card}
                 key={i}
                 onPress={() =>
-                  navigation.navigate('OrderDetailsScreen', {order: u})
+                  navigation.navigate('OrderDetailsScreen', {model: u})
                 }>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{flex: 1}}>

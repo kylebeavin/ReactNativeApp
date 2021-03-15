@@ -17,7 +17,7 @@ interface Props {
 }
 
 const RouteDetailsScreen: React.FC<Props> = ({route}) => {
-  const truck: Truck = route.params.truck;
+  const model: Truck = route.params.model;
 
   //#region Use State Variables
   const navigation = useNavigation();
@@ -28,7 +28,7 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View>
-      <AppTitle title='Truck Detail' help search />
+      <AppTitle title='Truck Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -46,30 +46,30 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text>_id: {truck._id}</Text>
-          <Text>body_subtype: {truck.body_subtype}</Text>
-          <Text>body_type: {truck.body_type}</Text>
-          <Text>color: {truck.color}</Text>
-          <Text>documents: {truck.documents}</Text>
-          <Text>group_id: {truck.group_id}</Text>
-          <Text>hours: {truck.hours}</Text>
-          <Text>is_active: {truck.is_active}</Text>
-          <Text>license_number: {truck.license_number}</Text>
-          <Text>msrp: {truck.msrp}</Text>
-          <Text>name: {truck.name}</Text>
-          <Text>odo: {truck.odo}</Text>
-          <Text>operator: {truck.operator}</Text>
-          <Text>ownership: {truck.ownership}</Text>
-          <Text>pictures: {truck.pictures}</Text>
-          <Text>service_history: {truck.service_history}</Text>
-          <Text>service_status: {truck.service_status}</Text>
-          <Text>trim: {truck.trim}</Text>
-          <Text>registration: {truck.registration}</Text>
-          <Text>vehicle_make: {truck.vehicle_make}</Text>
-          <Text>vehicle_model: {truck.vehicle_model}</Text>
-          <Text>vehicle_type: {truck.vehicle_type}</Text>
-          <Text>vin: {truck.vin}</Text>
-          <Text>year: {truck.year}</Text>
+          <Text>_id: {model._id}</Text>
+          <Text>body_subtype: {model.body_subtype}</Text>
+          <Text>body_type: {model.body_type}</Text>
+          <Text>color: {model.color}</Text>
+          <Text>documents: {model.documents}</Text>
+          <Text>group_id: {model.group_id}</Text>
+          <Text>hours: {model.hours}</Text>
+          <Text>is_active: {model.is_active}</Text>
+          <Text>license_number: {model.license_number}</Text>
+          <Text>msrp: {model.msrp}</Text>
+          <Text>name: {model.name}</Text>
+          <Text>odo: {model.odo}</Text>
+          <Text>operator: {model.operator}</Text>
+          <Text>ownership: {model.ownership}</Text>
+          <Text>pictures: {model.pictures}</Text>
+          <Text>service_history: {model.service_history}</Text>
+          <Text>service_status: {model.service_status}</Text>
+          <Text>trim: {model.trim}</Text>
+          <Text>registration: {model.registration}</Text>
+          <Text>vehicle_make: {model.vehicle_make}</Text>
+          <Text>vehicle_model: {model.vehicle_model}</Text>
+          <Text>vehicle_type: {model.vehicle_type}</Text>
+          <Text>vin: {model.vin}</Text>
+          <Text>year: {model.year}</Text>
         </View>
 
         <TouchableOpacity

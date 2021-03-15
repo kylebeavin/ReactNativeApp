@@ -1,7 +1,7 @@
 import {Picker} from '@react-native-picker/picker';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import AppButton from '../../../components/Layout/AppButton';
 import AppList from '../../../components/Layout/AppList';
@@ -12,7 +12,7 @@ import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';
 import {RouteEvents} from '../../../types/enums';
 import {Route} from '../../../types/routes';
-import {formatDate} from '../../../utils/Helpers';
+import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 
 const RoutesCalendarScreen = () => {
   //#region Use State Variables
@@ -64,7 +64,7 @@ const RoutesCalendarScreen = () => {
 
   return (
     <View>
-      <AppTitle title='Calendar' help search />
+      <AppTitle title='Calendar' />
 
       <ScrollView
         style={styles.scrollView}
@@ -167,33 +167,39 @@ const RoutesCalendarScreen = () => {
             group_id: grpId,
             time: {$gte: greaterThanDate, $lt: lessThanDate},
           }}
-          renderItem={(u: any, i: number) => {
+          renderItem={(u: Route, i: number) => {
             return (
-              <View style={styles.card} key={i}>
-                <View style={styles.title}>
-                  <Text style={styles.titleText}>{u.start_location}</Text>
-                  <Text style={styles.titleText}>
-                    Status:
+              <TouchableOpacity
+                style={styles.card}
+                key={u._id}
+                onPress={() => navigation.navigate('RouteDetailsScreen', {model: u})}
+              >
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{flex: 1}}>
+                    <Text numberOfLines={1} style={styles.titleText}>
+                      {u._id}
+                    </Text>
+                    <Text>{u.route_stage}</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text
+                      style={{
+                        color: Colors.SMT_Primary_1,
+                        textAlign: 'right',
+                      }}>
+                      {getDateStringsFromDate(u.time).date}
+                    </Text>
                     <Text
                       style={{
                         fontWeight: 'bold',
                         color: Colors.SMT_Secondary_2_Light_1,
+                        textAlign: 'right',
                       }}>
-                      {' '}
-                      On Schedule
+                      {getDateStringsFromDate(u.time).time}
                     </Text>
-                  </Text>
+                  </View>
                 </View>
-
-                <View style={styles.btnContainer}>
-                  <AppButton
-                    title='Details'
-                    onPress={() =>
-                      navigation.navigate('RouteDetailsScreen', {route: u})
-                    }
-                  />
-                </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
         />
@@ -203,49 +209,65 @@ const RoutesCalendarScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    // This is the scrollable part
-  },
-  scrollView: {
-    height: '100%',
-    width: '100%',
-    paddingHorizontal: 10,
-  },
-  picker: {
-    flex: 1,
-    paddingLeft: 15,
-    borderColor: Colors.SMT_Secondary_1_Light_1,
-    borderWidth: 2,
-    borderRadius: 3,
-    height: 36,
-    overflow: 'hidden',
-  },
-  calendarContainer: {
-    marginBottom: 20,
-  },
-
-  //=== Card ===//
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: Colors.SMT_Tertiary_1,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: Colors.SMT_Secondary_2_Light_1,
-    borderRadius: 3,
-    padding: 5,
-  },
-  title: {
-    marginBottom: 10,
-  },
-  titleText: {
-    fontWeight: 'bold',
-  },
+  screen: {
+  marginBottom: 36,
+},
+contentContainer: {
+  // This is the scrollable part
+},
+mapContainer: {
+  height: '100%',
+  width: '100%',
+},
+map: {
+  flex: 1,
+},
+calendarContainer: {
+  marginBottom: 10,
+  marginTop: -10,
+  paddingHorizontal: 10,
+},
+container: {
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+  marginBottom: 20,
+},
+column2: {
+  flex: 1,
+  alignItems: 'flex-end',
+},
+picker: {
+  flex: 1,
+  paddingLeft: 15,
+  borderColor: Colors.SMT_Secondary_1_Light_1,
+  borderWidth: 2,
+  borderRadius: 3,
+  height: 36,
+  overflow: 'hidden',
+},
+scrollView: {
+  height: '100%',
+  width: '100%',
+},
+content: {
+  marginBottom: 10,
+},
+//=== Card ===//
+card: {
+  backgroundColor: Colors.SMT_Tertiary_1,
+  marginBottom: 3,
+  borderWidth: 1,
+  borderColor: Colors.SMT_Secondary_1_Light_1,
+  borderRadius: 3,
+  paddingVertical: 3,
+  paddingHorizontal: 5,
+},
+title: {
+  marginBottom: 10,
+},
+titleText: {
+  fontWeight: 'bold',
+},
 });
 
 export default RoutesCalendarScreen;

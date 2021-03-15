@@ -1,10 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
-  TouchableOpacity,
   Text,
 } from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
@@ -20,7 +19,7 @@ interface Props {
 }
 
 const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
-  const meeting: Meeting = route.params.meeting;
+  const model: Meeting = route.params.model;
 
   //#region Use State Variables
   const navigation = useNavigation();
@@ -28,7 +27,7 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Meeting Detail" help search />
+      <AppTitle title="Meeting Detail" />
 
       <ScrollView
         style={styles.scrollView}
@@ -43,27 +42,27 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={meeting} modal="UpdateMeetingModal" />
+            <AppEditBtn item={model} modal="UpdateMeetingModal" />
           </View>
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text style={{fontWeight: 'bold'}}>{meeting.title}</Text>
-          <Text>Account: {meeting.account_id.account_name}</Text>
-          <Text>Group: {meeting.group_id}</Text>
-          <Text>Contact: {meeting.contact_id}</Text>
-          <Text>Owner: {meeting.owner_id}</Text>
-          <Text>Active: {meeting.is_active ? 'Yes' : 'No'}</Text>
-          <Text>Address: {meeting.address_street}</Text>
-          <Text>City: {meeting.address_city}</Text>
-          <Text>State: {meeting.address_state}</Text>
-          <Text>Zip: {meeting.address_zip}</Text>
+          <Text style={{fontWeight: 'bold'}}>{model.title}</Text>
+          <Text>Account: {model.account_id.account_name}</Text>
+          <Text>Group: {model.group_id}</Text>
+          <Text>Contact: {model.contact_id}</Text>
+          <Text>Owner: {model.owner_id}</Text>
+          <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
+          <Text>Address: {model.address_street}</Text>
+          <Text>City: {model.address_city}</Text>
+          <Text>State: {model.address_state}</Text>
+          <Text>Zip: {model.address_zip}</Text>
           <Text>
-            Meeting Date: {getDateStringsFromDate(meeting.meeting_time).date}
+            Meeting Date: {getDateStringsFromDate(model.meeting_time).date}
           </Text>
-          <Text>Meeting Time: {getDateStringsFromDate(meeting.meeting_time).time}</Text>
-          <Text>Created On: {getDateStringsFromDate(meeting.createdAt).date} {getDateStringsFromDate(meeting.createdAt).time}</Text>
-          <Text>Updated On: {getDateStringsFromDate(meeting.updatedAt).date} {getDateStringsFromDate(meeting.updatedAt).time}</Text>
+          <Text>Meeting Time: {getDateStringsFromDate(model.meeting_time).time}</Text>
+          <Text>Created On: {getDateStringsFromDate(model.createdAt).date} {getDateStringsFromDate(model.createdAt).time}</Text>
+          <Text>Updated On: {getDateStringsFromDate(model.updatedAt).date} {getDateStringsFromDate(model.updatedAt).time}</Text>
         </View>
       </ScrollView>
     </View>
