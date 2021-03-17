@@ -29,94 +29,95 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {/* Summary Card */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>30 Day Summary</Text>
+    <View>
+      <View style={styles.container}>
+        {/* Summary Card */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>30 Day Summary</Text>
 
-        {/* Card Banner */}
-        <View style={styles.cardBanner}>
-          <View style={styles.cardBannerColumnOne}>
-            <Text>NET INCOME:</Text>
+          {/* Card Banner */}
+          <View style={styles.cardBanner}>
+            <View style={styles.cardBannerColumnOne}>
+              <Text>NET INCOME:</Text>
+            </View>
+            <View style={styles.cardBannerColumnTwo}>
+              <Text>$000000000.00</Text>
+            </View>
           </View>
-          <View style={styles.cardBannerColumnTwo}>
-            <Text>$000000000.00</Text>
+
+          {/* Card Content */}
+          <View style={styles.cardContent}>
+            <View style={styles.cardContentItem}>
+              <Text style={{textAlign: 'center'}}>Close Percentage</Text>
+              <Text>00%</Text>
+            </View>
+            <View style={styles.cardContentItem}>
+              <Text style={{textAlign: 'center'}}>Demos Done</Text>
+              <Text>00</Text>
+            </View>
+            <View style={styles.cardContentItem}>
+              <Text style={{textAlign: 'center'}}>Average Time Per Smash</Text>
+              <Text>00:00</Text>
+            </View>
+            <View style={styles.cardContentItem}>
+              <Text style={{textAlign: 'center'}}>Smashes Per Hour</Text>
+              <Text>00</Text>
+            </View>
           </View>
         </View>
 
-        {/* Card Content */}
-        <View style={styles.cardContent}>
-          <View style={styles.cardContentItem}>
-            <Text style={{textAlign: 'center'}}>Close Percentage</Text>
-            <Text>00%</Text>
+        {/* Date Picker */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1, marginRight: 20}}>
+            <Text style={{fontSize: 12}}>Month</Text>
+            <View style={styles.picker}>
+              <Picker
+                style={{height: 30}}
+                selectedValue={monthPicker}
+                mode="dropdown"
+                onValueChange={(itemValue) =>
+                  setMonthPicker(itemValue.toString())
+                }>
+                {Object.values(Months).map((item) => {
+                  return (
+                    <Picker.Item
+                      key={item.toString()}
+                      label={item.toString()}
+                      value={item.toString()}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
           </View>
-          <View style={styles.cardContentItem}>
-            <Text style={{textAlign: 'center'}}>Demos Done</Text>
-            <Text>00</Text>
-          </View>
-          <View style={styles.cardContentItem}>
-            <Text style={{textAlign: 'center'}}>Average Time Per Smash</Text>
-            <Text>00:00</Text>
-          </View>
-          <View style={styles.cardContentItem}>
-            <Text style={{textAlign: 'center'}}>Smashes Per Hour</Text>
-            <Text>00</Text>
+          <View style={{flex: 1}}>
+            <Text style={{fontSize: 12}}>Year</Text>
+            <View style={styles.picker}>
+              <Picker
+                style={{height: 30}}
+                selectedValue={yearPicker}
+                mode="dropdown"
+                onValueChange={(itemValue) =>
+                  setYearPicker(itemValue.toString())
+                }>
+                {yearPickerArr.map((item: Number) => {
+                  return (
+                    <Picker.Item
+                      key={item.toString()}
+                      label={item.toString()}
+                      value={item.toString()}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
           </View>
         </View>
       </View>
 
-      {/* Date Picker */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex: 1, marginRight: 20}}>
-          <Text style={{fontSize: 12}}>Month</Text>
-          <View style={styles.picker}>
-            <Picker
-              style={{height: 30}}
-              selectedValue={monthPicker}
-              mode='dropdown'
-              onValueChange={(itemValue) =>
-                setMonthPicker(itemValue.toString())
-              }>
-              {Object.values(Months).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-        <View style={{flex: 1}}>
-          <Text style={{fontSize: 12}}>Year</Text>
-          <View style={styles.picker}>
-            <Picker
-              style={{height: 30}}
-              selectedValue={yearPicker}
-              mode='dropdown'
-              onValueChange={(itemValue) =>
-                setYearPicker(itemValue.toString())
-              }>
-              {yearPickerArr.map((item: Number) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-      </View>
-
+      <AppTitle title="Status Rating" />
       {/* Status Rating */}
       <View style={styles.statusContainer}>
-        <AppTitle title='Status Rating' />
-
         {/* Status Header */}
         <View style={styles.statusHeader}>
           <Text style={styles.statusHeaderText}>
@@ -131,7 +132,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Secondary_2_Light_2},
               ]}
-              name='ios-checkmark-circle-outline'></Ionicons>
+              name="ios-checkmark-circle-outline"></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you're doing well at
             </Text>
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Primary_1_Light_1},
               ]}
-              name='ios-alert'></Ionicons>
+              name="ios-alert"></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you can do better
             </Text>
@@ -153,7 +154,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Secondary_2_Light_2},
               ]}
-              name='ios-checkmark-circle-outline'></Ionicons>
+              name="ios-checkmark-circle-outline"></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you're doing well at
             </Text>
@@ -164,7 +165,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Primary_1_Light_1},
               ]}
-              name='ios-alert'></Ionicons>
+              name="ios-alert"></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you can do better
             </Text>
@@ -174,7 +175,7 @@ const AdminDashboard = () => {
 
       {/* Income Reports */}
       <View style={styles.incomeReportsContainer}>
-        <AppTitle title='Income Reports' />
+        <AppTitle title="Income Reports" />
 
         <View style={styles.incomeReportsContent}>
           <View
@@ -273,6 +274,7 @@ const styles = StyleSheet.create({
   //====== Status Rating Styles =====
   statusContainer: {
     marginBottom: 10,
+    paddingHorizontal: 10
   },
   statusContent: {
     flex: 1,

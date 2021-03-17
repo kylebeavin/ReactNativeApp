@@ -8,6 +8,7 @@ import {
   Text,
 } from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
+import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppTitle from '../../../components/Layout/AppTitle';
 import {Route} from '../../../types/routes';
@@ -43,7 +44,9 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
             />
           </View>
-          <View style={{marginRight: -10}}>{/* Placeholder */}</View>
+          <View style={{paddingTop: 5}}>
+            <AppEditBtn item={model} modal="UpdateRouteModal" />
+          </View>
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>

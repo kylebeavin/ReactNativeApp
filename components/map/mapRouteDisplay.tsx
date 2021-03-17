@@ -110,7 +110,10 @@ const RoutesDisplay: React.FC<Props> = ({route}) => {
     if (coordinates.length > 0) {
       await fetch(constructMapQueryUrl(coordinates))
         .then((res) => res.json())
-        .then((data) => setRouteData({...data.trips[0].geometry}))
+        .then((data) => {
+          console.log(data)
+          setRouteData({...data.trips[0].geometry})
+        })
         .catch((err) => show({message: err.message}));
     }
   };

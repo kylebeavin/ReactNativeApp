@@ -25,6 +25,7 @@ import AssignRouteModal from './Routes/AssignRouteModal';
 import UpdateOrderStatusModal from './Services/UpdateOrderStatusModal';
 import StartOrderModal from './Services/StartOrderModal';
 import CompleteOrderModal from './Services/CompleteOrderModal';
+import AssignDriverModal from './Routes/AssignDriverModal';
 
 interface Props {
     navigation: any;
@@ -35,59 +36,61 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
   const renderSwitch = (modal: string, item: any) => {
     switch (modal) {
       //=== Create Modals ===//
-      case "CreateAccountModal":
+      case 'CreateAccountModal':
         return <CreateAccountModal />;
-      case "CreateContactModal":
+      case 'CreateContactModal':
         return <CreateContactModal navigation={navigation} account={item} />;
-      case "CreateLocationModal":
+      case 'CreateLocationModal':
         return <CreateLocationModal />;
-      case "CreateMeetingModal":
+      case 'CreateMeetingModal':
         return <CreateMeetingModal />;
-      case "CreateAgreementModal":
+      case 'CreateAgreementModal':
         return <CreateAgreementModal />;
-      case "CreateOrderModal":
+      case 'CreateOrderModal':
         return <CreateOrderModal />;
-      case "CreateDemoModal":
+      case 'CreateDemoModal':
         return <CreateDemoModal />;
-      case "CreateTruckModal":
+      case 'CreateTruckModal':
         return <CreateTruckModal />;
-      case "CreateRouteModal":
+      case 'CreateRouteModal':
         return <CreateRouteModal />;
-      case "CreateUserModal":
+      case 'CreateUserModal':
         return <CreateUserModal />;
-      case "CreatePreTripInspectionModal":
+      case 'CreatePreTripInspectionModal':
         return <CreatePreTripInspectionModal />;
-      case "CreateGroupModal":
+      case 'CreateGroupModal':
         return <CreateGroupModal />;
 
       //=== Update Modals ===//
-      case "UpdateAccountModal":
+      case 'UpdateAccountModal':
         return <UpdateAccountModal navigation={navigation} account={item} />;
-      case "UpdateContactModal":
+      case 'UpdateContactModal':
         return <UpdateContactModal navigation={navigation} contact={item} />;
-      case "UpdateLocationModal":
+      case 'UpdateLocationModal':
         return <UpdateLocationModal location={item} />;
-      case "UpdateMeetingModal": 
+      case 'UpdateMeetingModal': 
         return <UpdateMeetingModal meeting={item} />;
-      case "UpdateAgreementModal":
+      case 'UpdateAgreementModal':
         return <UpdateAgreementModal />;
-      case "UpdateOrderModal":
+      case 'UpdateOrderModal':
         return <UpdateOrderModal order={item} />;
-      case "UpdateDemoModal":
+      case 'UpdateDemoModal':
         return <UpdateDemoModal />;
-      case "UpdateRouteModal":
+      case 'UpdateRouteModal':
         return <UpdateRouteModal route={item} />;
 
       //=== Route Modals ===//
-      case "AssignRouteModal":
+      case 'AssignRouteModal':
         return <AssignRouteModal route={item} />;
+      case 'AssignDriverModal':
+        return <AssignDriverModal id={item} />;
 
       //=== Service Modals ===//
-      case "StartOrderModal":
+      case 'StartOrderModal':
         return <StartOrderModal order={item} />;
-      case "CompleteOrderModal":
+      case 'CompleteOrderModal':
         return <CompleteOrderModal order={item} />;
-      case "UpdateOrderStatusModal":
+      case 'UpdateOrderStatusModal':
         return <UpdateOrderStatusModal order={item} />;
 
       default:
@@ -114,11 +117,11 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     padding: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   formContainer: {
-    width: "100%",
+    width: '100%',
   },
 });
 

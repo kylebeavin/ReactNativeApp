@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -42,6 +42,10 @@ const RoutesScreen = () => {
   const [unassignedToggle, setUnassignedToggle] = useState(false);
   const [assignedToggle, setAssignedToggle] = useState(false);
   //#endregion
+
+  useEffect(() => {
+    
+  }, []);
 
   const getTrucks = async () => {
     await fetch(`${Configs.TCMC_URI}/api/truckBy`, {

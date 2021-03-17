@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,6 +9,9 @@ import {
 
 import AppTitle from '../../components/Layout/AppTitle';
 import AdminDashboard from '../../components/Dashboard/AdminDashboard';
+import AppContext from '../../providers/AppContext';
+import DriverDashboard from '../../components/Dashboard/DriverDashboard';
+import RoutesStatus from '../../components/Dashboard/RoutesStatus';
 
 interface Props {
   key: any;
@@ -16,64 +19,53 @@ interface Props {
 
 const DashboardScreen: React.FC<Props> = () => {
   //#region Use State Variables
-  const [groupToggle, setGroupToggle] = useState(true);
-  const [crmToggle, setCrmToggle] = useState(false);
+  const {role} = useContext(AppContext);
+
+  // Toggles
+  const [dashboardToggle, setDashboardToggle] = useState(role === 'admin' ? true : false);
+  const [crmToggle, setCrmToggle] = useState(role === '');
   const [servicesToggle, setServicesToggle] = useState(false);
-  const [routesToggle, setRoutesToggle] = useState(false);
+  const [routesToggle, setRoutesToggle] = useState(role === 'driver' ? true : false);
   const [invoicesToggle, setInvoicesToggle] = useState(false);
   //#endregion
 
-  return (
-    <>
-      <TouchableOpacity onPress={() => setGroupToggle(!groupToggle)}>
-        <AppTitle title='Dashboard' />
-      </TouchableOpacity>
+  const renderDashboard = () => {
+    switch (role) {
+      case 'admin':
+        return <AdminDashboard />;
+      case 'corporate':
+        return null;
+      case 'driver':
+        return <DriverDashboard />;
+        case 'gm':
+          return null;
+      case 'mechanic':
+        return null;
+      case 'partner':
+        return null;
+      case 'sales':
+        return null;
+      default: 
+        return null;
+    }
+  };
 
-      <ScrollView>
-        {groupToggle ? (
-          <AdminDashboard />
-        ) : null}
-        <TouchableOpacity onPress={() => setCrmToggle(!crmToggle)}>
-          <AppTitle title='CRM Status' />
-        </TouchableOpacity>
-        {crmToggle ? (
-          <View style={styles.container}>
-            <Text>Hello World!</Text>
-          </View>
-        ) : null}
-        <TouchableOpacity onPress={() => setServicesToggle(!servicesToggle)}>
-          <AppTitle title='Services Status' />
-        </TouchableOpacity>
-        {servicesToggle ? (
-          <View style={styles.container}>
-            <Text>Hello World!</Text>
-          </View>
-        ) : null}
-        <TouchableOpacity onPress={() => setRoutesToggle(!routesToggle)}>
-          <AppTitle title='Routes Status' />
-        </TouchableOpacity>
-        {routesToggle ? (
-          <View style={styles.container}>
-            <Text>Hello World!</Text>
-          </View>
-        ) : null}
-        <TouchableOpacity onPress={() => setInvoicesToggle(!invoicesToggle)}>
-          <AppTitle title='Invoices Status' />
-        </TouchableOpacity>
-        {invoicesToggle ? (
-          <View style={[styles.container, {marginBottom: 40}]}>
-            <Text>Hello World!</Text>
-          </View>
-        ) : null}
+  return (
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}>
+        {renderDashboard()}
       </ScrollView>
-    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+  contentContainer: {
+    // This is the scrollable part
+  },
+  scrollView: {
+    height: '100%',
+    width: '100%',
   },
 });
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import React, { useState } from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../../constants/Colors';
@@ -12,24 +12,42 @@ interface Props {
 
 const AppTitle: React.FC<Props> = (props) => {
   const {title, help, search} = props;
+
+  //#region Use State Variables
+  const [showHelp, setShowHelp] = useState(false);
+
+  //#endregion
+
   return (
-    <View style={styles.titleContainer}>
-      <View style={styles.titleView}>
-        <Text style={styles.titleText}>{title}</Text>
+    <>
+      <View style={styles.titleContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.titleText}>{title}</Text>
+        </View>
+
+        {help && (
+          <TouchableOpacity
+            onPress={() => setShowHelp(!showHelp)}
+            style={styles.titleHelpContainer}>
+            <Ionicons style={styles.titleHelpIcon} name="ios-help-circle" />
+          </TouchableOpacity>
+        )}
+
+        {search && (
+          <View style={styles.titleSearchContainer}>
+            <Ionicons style={styles.titleSearchIcon} name="ios-search" />
+          </View>
+        )}
       </View>
 
-      {help && (
-        <View style={styles.titleHelpContainer}>
-          <Ionicons style={styles.titleHelpIcon} name='ios-help-circle' />
+      {showHelp ? (
+        <View style={{position: 'absolute'}}>
+          <View style={styles.tooltip}>
+            <Text style={{color: 'white'}}>Hello tooltip</Text>
+          </View>
         </View>
-      )}
-
-      {search && (
-        <View style={styles.titleSearchContainer}>
-          <Ionicons style={styles.titleSearchIcon} name='ios-search' />
-        </View>
-      )}
-    </View>
+      ) : null}
+    </>
   );
 };
 
@@ -69,6 +87,13 @@ const styles = StyleSheet.create({
     color: Colors.TCMC_Navy,
     backgroundColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 150,
+  },
+  tooltip: {
+    backgroundColor: Colors.SMT_Primary_2_Light_1,
+    padding: 10,
+    borderRadius: 4,
+    borderWidth: 3,
+    borderColor: Colors.SMT_Primary_1_Dark_1
   },
 });
 

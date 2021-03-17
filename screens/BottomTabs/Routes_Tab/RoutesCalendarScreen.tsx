@@ -21,7 +21,6 @@ import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 import useDates from '../../../hooks/useDates';
 import { Route } from '../../../types/routes';
-import { or } from 'react-native-reanimated';
 
 interface IMarkedDays {
   [key: string]: {

@@ -62,7 +62,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
     formValues,
     formErrors,
     formValidations,
-    postNewRoute,
+    updateNewRoute,
   );
 
   // State
@@ -133,10 +133,10 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
     return updatedRoute;
   };
 
-  async function postNewRoute() {
+  async function updateNewRoute() {
     const route: Route = await getFormData();
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(route),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
