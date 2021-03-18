@@ -274,7 +274,7 @@ const RoutesCalendarScreen = () => {
                 <View style={{flexDirection: 'row'}}>
                   <View style={{flex: 1}}>
                     <Text numberOfLines={1} style={styles.titleText}>
-                      {u._id}
+                      {u.route_id}
                     </Text>
                     <Text>{u.route_stage}</Text>
                   </View>

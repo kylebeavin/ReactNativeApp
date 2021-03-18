@@ -243,7 +243,7 @@ const RoutesScreen = () => {
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>#{u._id}</Text>
+                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>{u.route_id}</Text>
                       <Text style={{color: Colors.SMT_Primary_1}}>{getDateStringsFromDate(u.time).date}</Text>
                     </View>
                     <AppRouteStageIndicator route={u} />
@@ -369,7 +369,7 @@ const RoutesScreen = () => {
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
-                        {u._id}
+                        {u.route_id}
                       </Text>
                       <Text>{u.route_stage}</Text>
                     </View>
@@ -419,7 +419,7 @@ const RoutesScreen = () => {
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
-                        {u._id}
+                        {u.route_id}
                       </Text>
                       <Text>{u.route_stage}</Text>
                     </View>
