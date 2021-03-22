@@ -72,13 +72,14 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
   const renderRoutePoints = () => {
     if (accounts.length === 0) return;
     return accounts.map((item: Account, index: number) => {
-      if (item.geo_location === null || item.geo_location.length === 0) return;
-      let coords = item.geo_location.split(',');
+      if (item.geo_location === null || item.geo_location.length <= 1) return;
+      console.log(item.geo_location)
       return (
         <MapboxGL.PointAnnotation
           id={index.toString()}
           key={index.toString()}
-          coordinate={[parseFloat(coords[0]),parseFloat(coords[1])]}>
+          coordinate={[parseFloat(item.geo_location[0]), parseFloat(item.geo_location[1])]}
+          >
           <FontAwesome name="map-marker" size={30} color={Colors.SMT_Primary_1} />
         </MapboxGL.PointAnnotation>
       );

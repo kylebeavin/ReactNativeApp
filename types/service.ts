@@ -28,7 +28,7 @@ export type Order = {
   completed_geo_location?: string;
   completed_time?: Date;
   container_qty: Number;
-  demand_rate: string;
+  demand_rate: number;
   group_id: string;
   haul_status: boolean;
   is_active: boolean;

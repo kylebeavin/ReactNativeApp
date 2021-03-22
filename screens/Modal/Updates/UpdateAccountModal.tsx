@@ -73,7 +73,6 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
       address_city: values.city,
       address_state: values.state,
       address_zip: values.zip,
-      created: account.created,
       demo: account.demo,
       email: values.email,
       hauling_contract: account.hauling_contract,
@@ -88,6 +87,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
       referral_group_id: account.referral_group_id,
       notes: values.notes,
       drawerIsVisible: account.drawerIsVisible,
+      createdAt: account.createdAt,
+      updatedAt: account.updatedAt,
     };
 
     return updatedAccount;
@@ -189,7 +190,7 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
         <AppTextInput
           label="Notes"
           name="notes"
-          value={values.notes}
+          value={values.notes[0]}
           onChange={(val) => handleChange('notes', val)}
           validations={[]}
           errors={errors.notes}

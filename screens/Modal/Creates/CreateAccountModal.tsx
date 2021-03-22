@@ -72,7 +72,6 @@ const CreateAccountModal = () => {
       address_city: values.city,
       address_state: values.state,
       address_zip: values.zip,
-      created: '',
       demo: '',
       email: values.email,
       hauling_contract: false,
@@ -84,9 +83,11 @@ const CreateAccountModal = () => {
       conversion: new Date(),
       national: false,
       referral: false,
-      referral_group_id: '',
+      referral_group_id: null,
       notes: [values.notes],
       drawerIsVisible: false,
+      createdAt: '',
+      updatedAt: '',
     };
 
     return account;

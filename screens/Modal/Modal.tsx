@@ -26,6 +26,7 @@ import UpdateOrderStatusModal from './Services/UpdateOrderStatusModal';
 import StartOrderModal from './Services/StartOrderModal';
 import CompleteOrderModal from './Services/CompleteOrderModal';
 import AssignDriverModal from './Routes/AssignDriverModal';
+import AssignTruckModal from './Routes/AssignTruckModal';
 
 interface Props {
     navigation: any;
@@ -57,7 +58,7 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
       case 'CreateUserModal':
         return <CreateUserModal />;
       case 'CreatePreTripInspectionModal':
-        return <CreatePreTripInspectionModal />;
+        return <CreatePreTripInspectionModal route={item} />;
       case 'CreateGroupModal':
         return <CreateGroupModal />;
 
@@ -84,6 +85,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <AssignRouteModal route={item} />;
       case 'AssignDriverModal':
         return <AssignDriverModal id={item} />;
+      case 'AssignTruckModal':
+        return <AssignTruckModal route={item} />;
 
       //=== Service Modals ===//
       case 'StartOrderModal':

@@ -1,7 +1,9 @@
+import { Picker } from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import App from '../../App';
+import { useFocusEffect } from '@react-navigation/native';
+
 import Colors from '../../constants/Colors';
 import Configs from '../../constants/Configs';
 import Layout from '../../constants/Layout';
@@ -26,9 +28,15 @@ const DriverDashboard = () => {
   const [showSelectRoutePopup, setShowSelectRoutePopup] = useState(false);
   //#endregion
 
-  useEffect(() => {
-    checkForAssignedRoute();
-  }, []);
+    useFocusEffect(
+      React.useCallback(() => {
+        if (!myRoute) {
+          checkForAssignedRoute();
+        } else {
+          getRouteStage();
+        }
+      }, [myRoute])
+    );
 
   const checkForAssignedRoute = async () => {
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
@@ -37,7 +45,7 @@ const DriverDashboard = () => {
       body: JSON.stringify({
         group_id: grpId,
         route_stage: {$ne: 'Completed'},
-        driver: id,
+        driver_id: id,
       }),
     })
       .then((res) => res.json())
@@ -49,7 +57,6 @@ const DriverDashboard = () => {
             setShowSelectRoutePopup(true);
           } else if (json.data.length == 1) {
             setMyRoute(json.data[0]);
-            setStatus(json.data.route_stage);
           }
         } else {
           show({message: json.message});
@@ -70,11 +77,24 @@ const DriverDashboard = () => {
     return Colors.SMT_Secondary_1;
   };
 
+  const getRouteStage = () => {
+    let stage = 'Empty';
+
+    if (myRoute!.service_stop.length > 0) stage = 'Built';
+    if (myRoute!.time > new Date()) stage = 'Routed';
+    if (myRoute!.driver_id != null && myRoute!.driver_id != '' && myRoute!.truck_id != null && myRoute!.truck_id != '') stage = 'Assigned';
+    if (myRoute!.inspection_id != null && myRoute!.inspection_id != '') stage = 'Inspected'; 
+    if (myRoute!.route_stage === 'Finalized') stage = 'Finalized';
+    if (myRoute!.route_stage === 'Completed') stage = 'Completed';
+
+    setStatus(stage);
+  };
+
   const renderActionButton = () => {
-    if (myRoute?.truck_id != null || myRoute?.truck_id != '') return <AppButton title="Assign Your Truck" onPress={() => null} />;
-    if (myRoute?.route_stage === 'Assigned') return <AppButton title='Start Pre-Trip Inspection' onPress={() => null} />;
-    if (myRoute?.route_stage === 'Finalized') return <AppButton title='Start Route' onPress={() => null} />;
-    if (myRoute?.route_stage === 'Started') return <AppButton title='End Route' onPress={() => null} />;
+    if (myRoute?.truck_id === null || myRoute?.truck_id === '') return <AppButton title="Assign Your Truck" onPress={() => navigation.navigate('Modal', {modal: 'AssignTruckModal', item: myRoute})} />;
+    if (status === 'Assigned') return <AppButton title='Start Pre-Trip Inspection' onPress={() => navigation.navigate('Modal' ,{modal: 'CreatePreTripInspectionModal', item: myRoute})} />;
+    if (status === 'Inspected') return <AppButton title='Start Route' onPress={() => navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}})} />;
+    if (status === 'Finalized') return <AppButton title='End Route' onPress={() => null} />;
 
     return null;
   };
@@ -156,7 +176,7 @@ const DriverDashboard = () => {
           {/* Route Status */}
           <View style={styles.statusHeader}>
             <Text style={styles.statusHeaderText}>
-              Status:{' '}
+              {myRoute?.route_id}:{' '}
               <Text
                 style={[styles.statusHeaderValue, {color: getStatusColor()}]}>
                 {status}

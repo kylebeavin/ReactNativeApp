@@ -65,8 +65,8 @@ const CreateMeetingModal: React.FC<Props> = () => {
     city: [isRequired],
     state: [isRequired],
     zip: [isRequired],
-    account: [isRequired],
-    contact: [isRequired],
+    account: [],
+    contact: [],
     notes: [],
   };
   //#endregion
@@ -165,7 +165,6 @@ const CreateMeetingModal: React.FC<Props> = () => {
 
   async function postNewMeeting() {
     const meeting: Meeting = await getFormData();
-
     await fetch(`${Configs.TCMC_URI}/api/meetings`, {
       method: 'POST',
       body: JSON.stringify(meeting),
@@ -173,6 +172,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+    console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('MeetingsScreen');

@@ -18,7 +18,11 @@ import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/Layout/AppCheckBox';
 import {RouteStages} from '../../../types/enums';
 
-const CreatePreTripInspectionModal = () => {
+interface Props {
+  route?: Route
+}
+
+const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
   //#region Form Initializers
   const formValues = {
     // Identify truck
@@ -27,7 +31,7 @@ const CreatePreTripInspectionModal = () => {
     is_active: true,
     type: '',
     truck_id: '',
-    route_id: '',
+    route_id: route ? route._id : '',
 
     // Truck Checklist
     odometer_reading: '',
@@ -183,7 +187,7 @@ const CreatePreTripInspectionModal = () => {
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
-          setType(data.data[0].vin);
+          setType(data.data[0].vehicle_type);
         } else {
           show({message: data.message});
         }
@@ -200,7 +204,7 @@ const CreatePreTripInspectionModal = () => {
       .then((res) => res.json())
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
-          data.data.unshift({_id: '-- No Route Selected --'});
+          data.data.unshift({_id: '-- No Route Selected --', route_id: '-- No Route Selected --'});
           setRoutesList(data.data);
         } else {
           show({message: data.message});
@@ -214,8 +218,8 @@ const CreatePreTripInspectionModal = () => {
       // Identify truck
       group_id: grpId,
       owner_id: id,
-      is_active: values.is_active,
-      type: type,
+      //is_active: values.is_active,
+      type: type.toString(),
       truck_id: values.truck_id,
       route_id: values.route_id,
 
@@ -265,11 +269,16 @@ const CreatePreTripInspectionModal = () => {
       .then((res) => res.json())
       .then(async (data) => {
         if (isSuccessStatusCode(data.status)) {
+          let inspectionId = data.data._id;
           if (preTripInspection.route_id !== '-- No Route Selected --') {
-            await updateRouteStage(preTripInspection);
+            await updateRouteStage(preTripInspection, inspectionId);
           }
           show({message: data.message});
-          navigation.navigate('RoutesScreen');
+          if (!route) {
+            navigation.navigate('RoutesScreen');
+          } else {
+            navigation.navigate('DashboardScreen');
+          }
         } else {
           show({message: data.message});
         }
@@ -277,12 +286,12 @@ const CreatePreTripInspectionModal = () => {
       .catch((err) => show({message: err.message}));
   }
 
-  const updateRouteStage = async (inspection: any) => {
+  const updateRouteStage = async (inspection: any, inspectionId: string) => {
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
       method: 'PUT',
       body: JSON.stringify({
         _id: inspection.route_id,
-        inspection_id: inspection._id,
+        inspection_id: inspectionId,
         route_stage: RouteStages.inspected,
       }),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
@@ -330,7 +339,7 @@ const CreatePreTripInspectionModal = () => {
             label='Type'
             name='type'
             value={type.toString()}
-            onChange={(val) => setType(val)}
+            onChange={(val) => null}
             validations={[]}
             errors={errors.type}
             setErrors={setErrors}
@@ -384,24 +393,39 @@ const CreatePreTripInspectionModal = () => {
           <View style={{flex: 1}}>
             {/* Route */}
             <View style={styles.fieldContainer}>
+              {route ? 
+              <AppTextInput
+                label='Route'
+                name='route_id'
+                value={route.route_id}
+                onChange={(val) => null}
+                validations={[]}
+                errors={errors.route_id}
+                setErrors={setErrors}
+                disabled
+              />
+               :
+               <>
               <Text style={styles.text}>Route</Text>
               <View style={[styles.picker, {height: 42}]}>
                 <Picker
                   selectedValue={values.route_id}
-                  onValueChange={(itemValue, itemIndex) =>
+                  onValueChange={(itemValue, itemIndex) => 
                     handleChange('route_id', itemValue.toString())
                   }>
                   {routesList.map((item, index) => {
                     return (
                       <Picker.Item
                         key={item._id}
-                        label={item._id}
+                        label={item.route_id}
                         value={item._id}
                       />
                     );
                   })}
                 </Picker>
               </View>
+              </>
+              }
             </View>
           </View>
         </View>

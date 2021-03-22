@@ -36,6 +36,18 @@ export const getDateStringsFromDate = (date: any): {date: string; time: string} 
   return dateObject;
 };
 
+export function formatDate(date: Date) {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 //#region Summary
 ///Function: Get the request headers interface object.
 ///Params: method - optional enum sets the method.
@@ -60,18 +72,6 @@ export const getRequestHeadersAsync = async (
 
   return headers;
 };
-
-export function formatDate(date: Date) {
-  var d = new Date(date),
-    month = '' + (d.getMonth() + 1),
-    day = '' + d.getDate(),
-    year = d.getFullYear();
-
-  if (month.length < 2) month = '0' + month;
-  if (day.length < 2) day = '0' + day;
-
-  return [year, month, day].join('-');
-}
 
 export const isValidEmail = (
   email: string,

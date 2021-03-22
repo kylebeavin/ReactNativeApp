@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -31,7 +31,7 @@ const CreateRouteModal = () => {
   //#region Form Initializers
   const formValues = {
     start_location: '',
-    time: formatDateString(new Date().toString()),
+    time: new Date().toLocaleDateString(),
     notes: '',
   };
   const formErrors = {
@@ -66,58 +66,17 @@ const CreateRouteModal = () => {
   const [ownersList, setOwnersList] = useState<SMT_User[]>([]);
   //#endregion
 
-  useEffect(() => {
-    getTrucksDropDown();
-    getOwnersDropDown()
-      .then((data) => {
-        setOwnersList(data);
-      })
-      .catch((err) => show({message: err.message}));
-  }, []);
-
-  const getTrucksDropDown = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (isSuccessStatusCode(data.status)) {
-          setTrucksList(data.data);
-          setTruckVin(data.data[0].vin);
-        } else {
-          show({message: data.message});
-        }
-      })
-      .catch((err) => show({message: err.message}));
-  };
-
-  const getOwnersDropDown = async (): Promise<SMT_User[]> => {
-    let userList: SMT_User[] = [];
-
-    await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then((res) => res.json())
-      .then((json) => (userList = json.data))
-      .catch((err) => show({message: err.message}));
-
-    return userList;
-  };
-
   const getFormData = async () => {
     const route: Route = {
       _id: '',
+      route_id: '',
       group_id: grpId,
-      truck_id: '',
       inspection_id: '',
       is_active: true,
       route_stage: 'unassigned',
       start_location: values.start_location,
-      driver: '',
+      //driver_id: '',
+      //truck_id: '',
       truck_vin: '_',
       service_stop: [],
       time: new Date(values.time),

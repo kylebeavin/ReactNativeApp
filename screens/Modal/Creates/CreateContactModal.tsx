@@ -102,11 +102,12 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   };
 
   const getOwnersDropDown = async (): Promise<SMT_User[]> => {
+    console.log('hi')
     let userList: SMT_User[] = [];
 
     await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
+      body: JSON.stringify({group_id: { $in: [`mongoose.Types.ObjectId(${grpId}`]}}),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())

@@ -39,7 +39,7 @@ export const Toast = () => {
         {transform: [{translateY: translateYRef.current}]},
       ]}>
       <TouchableOpacity onPress={hide} style={styles.content}>
-        <Text style={styles.toastMessage}>{toast.message}</Text>
+        <Text numberOfLines={3} style={styles.toastMessage}>{toast.message}</Text>
       </TouchableOpacity>
     </Animated.View>
   );

@@ -6,43 +6,41 @@ import AppTitle from '../../../components/Layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
-import useDates from '../../../hooks/useDates';
 import AppContext from '../../../providers/AppContext';
 import { ToastContext } from '../../../providers/ToastProvider';
-import { Route } from '../../../types/routes';
-import { formatDate, isSuccessStatusCode } from '../../../utils/Helpers';
+import { Route, Truck } from '../../../types/routes';
+import { isSuccessStatusCode } from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 
 interface Props {
-  id: string;
+  route: Route;
 }
 
-const AssignDriverModal: React.FC<Props> = ({id}) => {
+const AssignTruckModal: React.FC<Props> = ({route}) => {
   //#region Use State Variables
   const navigation = useNavigation();
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
-  const {addDays} = useDates();
 
-  const [route, setRoute] = useState('');
+  const [truck, setTruck] = useState('');
 
-  const [routesList, setRoutesList] = useState<Route[]>([]);
+  const [trucksList, setTrucksList] = useState<Truck[]>([]);
   //#endregion
 
   useEffect(() => {
-    getRoutes();
+    getTrucks();
   }, []);
   
-  const getRoutes = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
+  const getTrucks = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
         method: 'POST',
-        body: JSON.stringify({group_id: grpId, time: {$gte: formatDate(new Date()), $lt: formatDate(addDays(new Date(), 1))}, driver: {$in:[null,'']}}),
+        body: JSON.stringify({group_id: grpId}),
         headers: {'Content-Type': 'application/json', 'x-access-token': token}
     })
     .then(res => res.json())
     .then(json => {
         if (isSuccessStatusCode(json.status)) {
-            setRoutesList(json.data);
+            setTrucksList(json.data);
           } else {
             show({message: json.message});
           }
@@ -51,23 +49,22 @@ const AssignDriverModal: React.FC<Props> = ({id}) => {
   };
 
   const getRouteStage = () : string => {
-    let selectedRoute = routesList.find(u => u._id === route);
     let stage = 'Empty';
 
-    if (selectedRoute!.service_stop.length > 0) stage = 'Built';
-    if (selectedRoute!.time > new Date()) stage = 'Routed';
-    if (selectedRoute!.driver_id != null || selectedRoute!.driver_id != '' && selectedRoute!.truck_id != null || selectedRoute!.truck_id != '') stage = 'Assigned';
-    if (selectedRoute!.inspection_id != null || selectedRoute!.inspection_id != '') stage = 'Inspected';
-    if (selectedRoute!.route_stage === 'Finalized') stage = 'Finalized';
-    if (selectedRoute!.route_stage === 'Completed') stage = 'Completed';
+    if (route.service_stop.length > 0) stage = 'Built';
+    if (route.time > new Date()) stage = 'Routed';
+    if (route.driver != null || route.driver != '' && route.truck_id != null || route.truck_id != '') stage = 'Assigned';
+    if (route.inspection_id != null || route.inspection_id != '') stage = 'Inspected';
+    if (route.route_stage === 'Finalized') stage = 'Finalized';
+    if (route.route_stage === 'Completed') stage = 'Completed';
 
     return stage;
   };
 
-  const assignDriverToRoute = async () => {
+  const assignTruckToRoute = async () => {
     await fetch(`${Configs.TCMC_URI}/api/routes`, {
         method: 'PUT',
-        body: JSON.stringify({_id: route, driver_id: id, route_stage: getRouteStage()}),
+        body: JSON.stringify({_id: route._id, truck_id: truck, route_stage: getRouteStage()}),
         headers: {'Content-Type': 'application/json', 'x-access-token': token}
     })
     .then(res => res.json())
@@ -85,20 +82,20 @@ const AssignDriverModal: React.FC<Props> = ({id}) => {
   return (
     <>
       <View style={styles.form}>
-        <AppTitle title='Assign Driver' />
+        <AppTitle title='Assign Truck' />
         <View style={styles.container}>
-          {/* Route */}
+          {/* Truck */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Route</Text>
+            <Text style={styles.text}>Truck</Text>
             <View style={styles.picker}>
               <Picker
-                selectedValue={route}
-                onValueChange={(itemValue) => setRoute(itemValue.toString())}>
-                {routesList.map((item: Route) => {
+                selectedValue={truck}
+                onValueChange={(itemValue) => setTruck(itemValue.toString())}>
+                {trucksList.map((item: Truck) => {
                   return (
                     <Picker.Item
                       key={item._id}
-                      label={item.route_id}
+                      label={item.name}
                       value={item._id}
                     />
                   );
@@ -108,7 +105,7 @@ const AssignDriverModal: React.FC<Props> = ({id}) => {
           </View>
         </View>
       </View>
-      <ModalButtons navigation={navigation} save={assignDriverToRoute} />
+      <ModalButtons navigation={navigation} save={assignTruckToRoute} />
     </>
   );
 };
@@ -139,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AssignDriverModal;
+export default AssignTruckModal;

@@ -8,6 +8,7 @@ import {
   Text,
   Linking,
 } from 'react-native';
+import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppButton from '../../../components/Layout/AppButton';
 import AppEditBtn from '../../../components/Layout/AppEditBtn';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
@@ -113,6 +114,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         </TouchableOpacity>
         {!contactToggle ? null : (
           <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
+            <AppAddNew title='CONTACT' modal='CreateContactModal' />
             {contactsList.map((item: Contact) => {
               return (
                 <View style={{marginBottom: 10}} key={item._id}>

@@ -34,12 +34,14 @@ const AppRouteStageIndicator: React.FC<Props> = ({route}) => {
       route.route_stage === 'Completed'
     )
       setRouted(true);
-    if (
-      (route.driver.length > 0 && route.truck_id.length > 0) ||
-      route.route_stage === 'Finalized' ||
-      route.route_stage === 'Completed'
-    )
-      setAssigned(true);
+    if (route.driver_id && route.truck_id) {
+      if (
+        (route.driver_id!.length > 0 && route.truck_id!.length > 0) ||
+        route.route_stage === 'Finalized' ||
+        route.route_stage === 'Completed'
+      )
+        setAssigned(true);
+    }
     if (
       route.inspection_id != null ||
       route.route_stage === 'Finalized' ||
@@ -59,42 +61,42 @@ const AppRouteStageIndicator: React.FC<Props> = ({route}) => {
         {/* Built */}
         <MaterialIcons
           style={built ? {color: 'limegreen'} : null}
-          name='assignment'
+          name="assignment"
           size={24}
           color={Colors.SMT_Secondary_1}
         />
         {/* Routed */}
         <MaterialIcons
           style={routed ? {color: 'limegreen'} : null}
-          name='assignment-return'
+          name="assignment-return"
           size={24}
           color={Colors.SMT_Secondary_1}
         />
         {/* Assigned */}
         <MaterialIcons
           style={assigned ? {color: 'limegreen'} : null}
-          name='assignment-ind'
+          name="assignment-ind"
           size={24}
           color={Colors.SMT_Secondary_1}
         />
         {/* Inspected */}
         <MaterialCommunityIcons
           style={inspected ? {color: 'limegreen'} : null}
-          name='clipboard-pulse'
+          name="clipboard-pulse"
           size={24}
           color={Colors.SMT_Secondary_1}
         />
         {/* Finalized */}
         <MaterialIcons
           style={finalized ? {color: 'limegreen'} : null}
-          name='assignment-returned'
+          name="assignment-returned"
           size={24}
           color={Colors.SMT_Secondary_1}
         />
         {/* Completed */}
         <MaterialIcons
           style={completed ? {color: 'limegreen'} : null}
-          name='assignment-turned-in'
+          name="assignment-turned-in"
           size={24}
           color={Colors.SMT_Secondary_1}
         />

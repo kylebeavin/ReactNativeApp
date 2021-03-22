@@ -51,7 +51,7 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
 
         <View style={{paddingLeft: 10}}>
           <Text>_id: {model._id}</Text>
-          <Text>driver: {model.driver}</Text>
+          <Text>driver: {model.driver_id}</Text>
           <Text>group_id: {model.group_id}</Text>
           <Text>is_active: {model.is_active}</Text>
           <Text>route_stage: {model.route_stage}</Text>

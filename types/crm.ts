@@ -1,12 +1,12 @@
 export type Account = {
     _id: string;
-    group_id: string[];
     account_name: string;
+    group_id: string[];
     owner_id: string;
     contacts: Contact[];
     is_active: boolean;
     stage: string;
-    geo_location: string;
+    geo_location: string[];
     address_street: string;
     address_city: string;
     address_state: string;

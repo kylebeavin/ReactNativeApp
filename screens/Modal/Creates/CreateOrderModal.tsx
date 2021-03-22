@@ -33,7 +33,7 @@ const CreateOrderModal: React.FC<Props> = () => {
   //#region Form Initializers
   const formValues = {
     account: '',
-    monthlyRate: '',
+    monthlyRate: 0,
     demandRate: '',
     serviceDate: '',
     fileUploadUrl: '',
@@ -110,7 +110,6 @@ const CreateOrderModal: React.FC<Props> = () => {
     const order: Order = {
       _id: '',
       account_id: values.account,
-      agreement_id: '',
       containers_serviced: 0,
       container_qty: 0,
       demand_rate: values.demandRate,
@@ -143,6 +142,7 @@ const CreateOrderModal: React.FC<Props> = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('OrdersScreen');

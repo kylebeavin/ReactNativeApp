@@ -26,10 +26,10 @@ const ToastProvider: React.FC<Props> = ({children}) => {
 
   useEffect(() => {
     if (toast.visible) {
-      timeout.current = setTimeout(hide, 1500);
+      timeout.current = setTimeout(hide, 2500);
       return () => {
         if (timeout.current) {
-          //clearTimeout(timeout.current);
+          clearTimeout(timeout.current);
         }
       };
     }
