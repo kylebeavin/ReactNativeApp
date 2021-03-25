@@ -20,8 +20,8 @@ const CreateDemoModal = () => {
     const navigation = useNavigation();
 
     //#region Use State Variables
-    const [demo, setDemo] = useState("");
-    const [account, setAccount] = useState("");
+    const [demo, setDemo] = useState('');
+    const [account, setAccount] = useState('');
     const [accountList, setAccountList] = useState<Account[]>();
     //#endregion
     
@@ -39,9 +39,9 @@ const CreateDemoModal = () => {
           let accounts : Account[] = [];
           
           await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify({group_id: grpId}),
-            headers: {"Content-Type": "application/json","x-access-token": token},
+            headers: {'Content-Type': 'application/json','x-access-token': token},
           })
           .then((res) => res.json())
           .then((json) => accounts = json.data)
@@ -52,9 +52,9 @@ const CreateDemoModal = () => {
 
     const getFormData = async () => {
         const demo: Demo = {
-            _id: "",
+            _id: '',
             account_id: account,
-            created: "",
+            created: '',
         }
 
         return demo;
@@ -64,15 +64,15 @@ const CreateDemoModal = () => {
         const demo = await getFormData();
         
         const data = await fetch(`${Configs.TCMC_URI}/api/demos`, {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify(demo),
-            headers: {"Content-Type": "application/json","x-access-token": token},
+            headers: {'Content-Type': 'application/json','x-access-token': token},
             })
             .then(res => res.json())
             .then(data => data)
             .catch(err => show({message: err.message}));
 
-        navigation.navigate("DemosScreen");
+        navigation.navigate('DemosScreen');
 
         return data;
     };
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
       text: {
-      fontWeight: "bold",
+      fontWeight: 'bold',
       color: Colors.SMT_Secondary_1,
     },
     textInput: {

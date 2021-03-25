@@ -15,10 +15,10 @@ const InvoicesScreen = () => {
   return (
     <View style={styles.container}>
       <View>
-          <AppButton title="Show Toast" onPress={() => show({message: 'A new "Entity" has been added to your franchise! '})} />
+          <AppButton title='Show Toast' onPress={() => show({message: "A new 'Entity' has been added to your franchise! "})} />
       </View>
       <View>
-          <AppButton title="Show Camera" onPress={() => showCamera({})} />
+          <AppButton title='Show Camera' onPress={() => showCamera({})} />
       </View>
     </View>
   );

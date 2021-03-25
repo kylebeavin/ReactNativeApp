@@ -79,7 +79,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
           key={index.toString()}
           coordinate={[parseFloat(item.geo_location[0]), parseFloat(item.geo_location[1])]}
           >
-          <FontAwesome name="map-marker" size={30} color={Colors.SMT_Primary_1} />
+          <FontAwesome name='map-marker' size={30} color={Colors.SMT_Primary_1} />
         </MapboxGL.PointAnnotation>
       );
     });
@@ -87,7 +87,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="CRM" />
+      <AppTitle title='CRM' />
 
       <ScrollView
         style={styles.scrollView}
@@ -95,18 +95,18 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
-              title="CLIENTS"
+              title='CLIENTS'
               onPress={() => navigation.navigate('AccountsScreen')}
               outlined={true}
             />
             <AppButton
-              title="CALENDAR"
+              title='CALENDAR'
               onPress={() => navigation.navigate('MeetingsScreen')}
               outlined={true}
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title="MAP"
+                title='MAP'
                 onPress={() => navigation.navigate('MapScreen')}
                 outlined={false}
               />
@@ -132,7 +132,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
                   style={styles.map}
                   styleURL={MapboxGL.StyleURL.Street}>
                   <MapboxGL.UserLocation
-                    androidRenderMode="gps"
+                    androidRenderMode='gps'
                     visible={true}
                   />
 
@@ -148,13 +148,13 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
         </View>
 
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Accounts" />
+          <AppTitle title='Accounts' />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
           {/* Locations List */}
           {accounts.length === 0 ? (
-            <AppEmptyCard entity="accounts" modal="CreateLocationModal" />
+            <AppEmptyCard entity='accounts' modal='CreateLocationModal' />
           ) : (
             accounts.map((u, i) => {
               return (

@@ -40,7 +40,7 @@ const OrdersCalendarScreen = () => {
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   // Refs
   let selectedQuery = useRef({group_id: grpId, service_date: {$gte: formatDate(new Date()), $lt: new Date(addDays(date, 1).toLocaleDateString())}}).current;
-  let outstandingQuery = useRef({group_id: grpId, service_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
+  let outstandingQuery = useRef({group_id: grpId, service_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: 'completed'}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
     [formatDate(new Date())]: {selected: true},
@@ -131,7 +131,7 @@ const OrdersCalendarScreen = () => {
   const shallowEqual = (object1: any) => {
     // Not a complete shallow comparison 
     const keys1 = Object.keys(object1);
-    const keys2 = Object.keys({"selected": true});
+    const keys2 = Object.keys({'selected': true});
   
     if (keys1.length !== keys2.length) {
       return false;
@@ -148,7 +148,7 @@ const OrdersCalendarScreen = () => {
 
   return (
     <>
-      <AppTitle title="Calendar" />
+      <AppTitle title='Calendar' />
 
       <ScrollView
         style={styles.scrollView}>
@@ -156,7 +156,7 @@ const OrdersCalendarScreen = () => {
           <AppNavBtnGrp>
             <View style={{marginRight: 60, marginTop: 16}}>
               <AppButton
-                title="Back"
+                title='Back'
                 onPress={() => navigation.goBack()}
                 outlined={true}
                 icon={{type: 'MaterialIcons', name: 'arrow-back'}}
@@ -169,7 +169,7 @@ const OrdersCalendarScreen = () => {
                   <Picker
                     style={{height: 30}}
                     selectedValue={sortItem}
-                    mode="dropdown"
+                    mode='dropdown'
                     onValueChange={(itemValue, itemIndex) =>
                       setSortItem(itemValue.toString())
                     }>
@@ -244,7 +244,7 @@ const OrdersCalendarScreen = () => {
         </View>
 
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Service Events" />
+          <AppTitle title='Service Events' />
         </View>
 
         <View style={{paddingHorizontal: 10}}>

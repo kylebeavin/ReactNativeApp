@@ -48,7 +48,7 @@ const MeetingsScreen = () => {
       $lt: new Date(date.getDate() + 1),
     },
   }).current;
-  //let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: "completed"}}).current;
+  //let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: 'completed'}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
     [formatDate(new Date())]: {selected: true},
@@ -161,7 +161,7 @@ const MeetingsScreen = () => {
 
   return (
     <>
-      <AppTitle title="Calendar" />
+      <AppTitle title='Calendar' />
 
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
@@ -169,14 +169,14 @@ const MeetingsScreen = () => {
             <View
               style={{width: '50%', marginTop: 8}}>
               <AppButton
-                title="Back"
+                title='Back'
                 onPress={() => navigation.goBack()}
                 outlined={true}
                 icon={{type: 'MaterialIcons', name: 'arrow-back'}}
               />
             </View>
             <View style={{width: '150%', marginLeft: -85, marginBottom: -15}}>
-              <AppAddNew title="MEETING" modal="CreateMeetingModal" />
+              <AppAddNew title='MEETING' modal='CreateMeetingModal' />
             </View>
           </AppNavBtnGrp>
         </View>
@@ -236,7 +236,7 @@ const MeetingsScreen = () => {
         </View>
 
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Service Events" />
+          <AppTitle title='Service Events' />
         </View>
 
         <View style={{paddingHorizontal: 10}}>

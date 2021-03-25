@@ -61,25 +61,25 @@ const AccountScreen: React.FC<Props> = () => {
 
   return (
     <View style={{flex: 1}}>
-      <AppTitle title="CRM" />
+      <AppTitle title='CRM' />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <AppNavBtnGrp>
           <AppButton
-            title="CLIENTS"
+            title='CLIENTS'
             onPress={() => navigation.navigate('AccountsScreen')}
             outlined={false}
           />
           <AppButton
-            title="CALENDAR"
+            title='CALENDAR'
             onPress={() => navigation.navigate('MeetingsScreen')}
             outlined={true}
           />
           <View style={{marginRight: -10}}>
             <AppButton
-              title="MAP"
+              title='MAP'
               onPress={() => navigation.navigate('MapScreen')}
               outlined={true}
             />
@@ -87,7 +87,7 @@ const AccountScreen: React.FC<Props> = () => {
         </AppNavBtnGrp>
 
         {accounts.length === 0 ? null : (
-          <AppAddNew title="ACCOUNT" modal="CreateAccountModal" />
+          <AppAddNew title='ACCOUNT' modal='CreateAccountModal' />
         )}
 
         {isLoading ? (
@@ -95,7 +95,7 @@ const AccountScreen: React.FC<Props> = () => {
         ) : (
           <View style={{flex: 1}}>
             {accounts.length === 0 ? (
-              <AppEmptyCard entity="accounts" modal="CreateAccountModal" />
+              <AppEmptyCard entity='accounts' modal='CreateAccountModal' />
             ) : (
               accounts.map((u, i) => {
                 return (

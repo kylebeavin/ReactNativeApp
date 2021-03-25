@@ -43,7 +43,7 @@ const AppRouteStageIndicator: React.FC<Props> = ({route}) => {
         setAssigned(true);
     }
     if (
-      route.inspection_id != null ||
+      route.inspection_id != null || route.inspection_id != '',
       route.route_stage === 'Finalized' ||
       route.route_stage === 'Completed'
     )

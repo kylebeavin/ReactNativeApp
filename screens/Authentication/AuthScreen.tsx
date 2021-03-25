@@ -62,7 +62,7 @@ const AuthScreen: React.FC<Props> = () => {
       <View style={styles.imageContainer}>
         <Image 
           style={styles.image}
-          source={require("../../assets/images/smt_logo.png")}
+          source={require('../../assets/images/smt_logo.png')}
         />
       </View>
 
@@ -75,7 +75,7 @@ const AuthScreen: React.FC<Props> = () => {
             ref={emailRef}
             value={email}
             onChange={(text) => setEmail(text.nativeEvent.text)}
-            returnKeyType="next"
+            returnKeyType='next'
             onSubmitEditing={() => {
               let test = isValidEmail(email.trim());
               if (test.isValid) {
@@ -140,7 +140,7 @@ const AuthScreen: React.FC<Props> = () => {
         {/* Buttons */}
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
-            <AppButton title="Log In" onPress={() => signIn()} backgroundColor={Colors.SMT_Primary_1}/>
+            <AppButton title='Log In' onPress={() => signIn()} backgroundColor={Colors.SMT_Primary_1}/>
           </View>
         </View>
       </View>
@@ -159,7 +159,7 @@ const AuthScreen: React.FC<Props> = () => {
           </Text>
         </Text>
         <View style={{flex: 1, alignItems: 'flex-end'}}>
-          <Ionicons style={styles.helpIcon} name="ios-help-circle" />
+          <Ionicons style={styles.helpIcon} name='ios-help-circle' />
         </View>
       </View>
     

@@ -43,6 +43,7 @@ const ServicesScreen = () => {
     })
       .then((res) => res.json())
       .then((json) => {
+        
         setOrders(json.data)
       })
       .catch((err) => show({message: err.message}));
@@ -52,25 +53,25 @@ const ServicesScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Service" />
+      <AppTitle title='Service' />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <AppNavBtnGrp>
           <AppButton
-            title="ORDERS"
+            title='ORDERS'
             onPress={() => navigation.navigate('OrdersScreen')}
             outlined={false}
           />
           <AppButton
-            title="CALENDAR"
+            title='CALENDAR'
             onPress={() => navigation.navigate('OrdersCalendarScreen')}
             outlined={true}
           />
           <View style={{marginRight: -10}}>
             <AppButton
-              title="MAP"
+              title='MAP'
               onPress={() => navigation.navigate('OrdersMapScreen')}
               outlined={true}
             />
@@ -78,7 +79,7 @@ const ServicesScreen = () => {
         </AppNavBtnGrp>
 
         {orders.length === 0 ? null : (
-          <AppAddNew title="ORDER" modal="CreateOrderModal" />
+          <AppAddNew title='ORDER' modal='CreateOrderModal' />
         )}
 
         {isLoading ? (
@@ -87,7 +88,7 @@ const ServicesScreen = () => {
           <View>
             {/* Orders List */}
             {orders.length === 0 ? (
-              <AppEmptyCard entity="orders" modal="CreateOrderModal" />
+              <AppEmptyCard entity='orders' modal='CreateOrderModal' />
             ) : (
               orders.map((u, i) => {
                 return (

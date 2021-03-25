@@ -24,7 +24,7 @@ interface Props {
 
 const OrderDetailsScreen: React.FC<Props> = ({route}) => {
   const model: Order = route.params.model;
-
+  
   //#region Use State Variables
   const navigation = useNavigation();
 
@@ -35,7 +35,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
   //#endregion
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Order Detail" />
+      <AppTitle title='Order Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -63,7 +63,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
           <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
           <Text>Demo: {model.is_demo ? 'Yes' : 'No'}</Text>
           <Text>Services: {model.services.toString()}</Text>
-          <Text>Days: {model.service_days}</Text>
+          <Text>Days: {model.service_day}</Text>
           <Text>Monthly Rate: {model.monthly_rate}</Text>
           <Text>Demand Rate: {model.demand_rate}</Text>
           <Text>
@@ -97,7 +97,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         )}
 
         <TouchableOpacity onPress={() => setUrlToggle(!urlToggle)}>
-          <AppTitle title="Url" />
+          <AppTitle title='Url' />
         </TouchableOpacity>
         {!urlToggle ? null : (
           <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
@@ -120,7 +120,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         )}
 
         <TouchableOpacity onPress={() => setNotesToggle(!notesToggle)}>
-          <AppTitle title="Notes" />
+          <AppTitle title='Notes' />
         </TouchableOpacity>
         {!notesToggle ? null : (
           <View style={{paddingLeft: 10}}>

@@ -65,7 +65,7 @@ const ServicesScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Service" />
+      <AppTitle title='Service' />
 
       <ScrollView
         style={styles.scrollView}
@@ -73,18 +73,18 @@ const ServicesScreen: React.FC<Props> = () => {
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
-              title="ORDERS"
+              title='ORDERS'
               onPress={() => navigation.navigate('OrdersScreen')}
               outlined={true}
             />
             <AppButton
-              title="CALENDAR"
+              title='CALENDAR'
               onPress={() => navigation.navigate('OrdersCalendarScreen')}
               outlined={true}
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title="MAP"
+                title='MAP'
                 onPress={() => navigation.navigate('OrdersMapScreen')}
                 outlined={false}
               />
@@ -105,7 +105,7 @@ const ServicesScreen: React.FC<Props> = () => {
               <MapboxGL.MapView
                 style={styles.map}
                 styleURL={MapboxGL.StyleURL.Street}>
-                <MapboxGL.UserLocation androidRenderMode="gps" visible={true} />
+                <MapboxGL.UserLocation androidRenderMode='gps' visible={true} />
 
                 <MapboxGL.Camera
                   zoomLevel={8}

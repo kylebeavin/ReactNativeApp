@@ -121,10 +121,10 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Name */}
         <AppTextInput
-          label="Name"
-          name="name"
+          label='Name'
+          name='name'
           value={values.name}
-          onChange={(val) => handleChange("name", val)}
+          onChange={(val) => handleChange('name', val)}
           validations={[isRequired]}
           errors={errors.name}
           setErrors={setErrors}
@@ -132,8 +132,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Email */}
         <AppTextInput
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           value={values.email}
           onChange={(val) => handleChange('email', val)}
           validations={[isRequired, isEmail]}
@@ -143,8 +143,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Street */}
         <AppTextInput
-          label="Street"
-          name="street"
+          label='Street'
+          name='street'
           value={values.street}
           onChange={(val) => handleChange('street', val)}
           validations={[isRequired]}
@@ -154,8 +154,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* City */}
         <AppTextInput
-          label="City"
-          name="city"
+          label='City'
+          name='city'
           value={values.city}
           onChange={(val) => handleChange('city', val)}
           validations={[isRequired]}
@@ -165,8 +165,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* State */}
         <AppTextInput
-          label="State"
-          name="state"
+          label='State'
+          name='state'
           value={values.state}
           onChange={(val) => handleChange('state', val)}
           validations={[isRequired]}
@@ -176,8 +176,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
 
         {/* Zip */}
         <AppTextInput
-          label="Zip"
-          name="zip"
+          label='Zip'
+          name='zip'
           value={values.zip}
           onChange={(val) => handleChange('zip', val)}
           validations={[isRequired]}
@@ -188,8 +188,8 @@ const UpdateAccountModal: React.FC<Props> = ({navigation, account}) => {
         {/* Notes */}
         <View style={{marginBottom: 40}}>
         <AppTextInput
-          label="Notes"
-          name="notes"
+          label='Notes'
+          name='notes'
           value={values.notes[0]}
           onChange={(val) => handleChange('notes', val)}
           validations={[]}

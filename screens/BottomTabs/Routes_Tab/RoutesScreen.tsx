@@ -151,7 +151,7 @@ const RoutesScreen = () => {
 
   return (
     <View>
-      <AppTitle title="Routes" />
+      <AppTitle title='Routes' />
 
       <ScrollView
         style={styles.scrollView}
@@ -159,18 +159,18 @@ const RoutesScreen = () => {
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
-              title="ROUTES"
+              title='ROUTES'
               onPress={() => navigation.navigate('RoutesScreen')}
               outlined={false}
             />
             <AppButton
-              title="CALENDAR"
+              title='CALENDAR'
               onPress={() => navigation.navigate('RoutesCalendarScreen')}
               outlined={true}
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title="MAP"
+                title='MAP'
                 onPress={() => navigation.navigate('RoutesMapScreen')}
                 outlined={true}
               />
@@ -183,17 +183,17 @@ const RoutesScreen = () => {
             getTrucks();
             setTruckToggle(!truckToggle);
           }}>
-          <AppTitle title="Trucks" />
+          <AppTitle title='Trucks' />
         </TouchableOpacity>
         {!truckToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="TRUCK" modal="CreateTruckModal" />
+            <AppAddNew title='TRUCK' modal='CreateTruckModal' />
             {trucks.map((u: Truck) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate("TruckDetailsScreen", {model: u})}>
+                  onPress={() => navigation.navigate('TruckDetailsScreen', {model: u})}>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>{u.name}</Text>
@@ -228,11 +228,11 @@ const RoutesScreen = () => {
             getRoutes();
             setRouteToggle(!routeToggle);
           }}>
-          <AppTitle title="Routes" />
+          <AppTitle title='Routes' />
         </TouchableOpacity>
         {!routeToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="ROUTE" modal="CreateRouteModal" />
+            <AppAddNew title='ROUTE' modal='CreateRouteModal' />
             {routes.map((u, i) => {
               return (
                 <TouchableOpacity
@@ -259,17 +259,17 @@ const RoutesScreen = () => {
             getUsers();
             setUserToggle(!userToggle);
           }}>
-          <AppTitle title="Users" />
+          <AppTitle title='Users' />
         </TouchableOpacity>
         {!userToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="USER" modal="CreateUserModal" />
+            <AppAddNew title='USER' modal='CreateUserModal' />
             {users.map((u: SMT_User) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate("UserDetailsScreen", {model: u})}>
+                  onPress={() => navigation.navigate('UserDetailsScreen', {model: u})}>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
@@ -306,13 +306,13 @@ const RoutesScreen = () => {
             getInspections();
             setInspectionsToggle(!inspectionsToggle);
           }}>
-          <AppTitle title="Inspections" />
+          <AppTitle title='Inspections' />
         </TouchableOpacity>
         {!inspectionsToggle ? null : (
           <View style={styles.subList}>
             <AppAddNew
-              title="INSPECTION"
-              modal="CreatePreTripInspectionModal"
+              title='INSPECTION'
+              modal='CreatePreTripInspectionModal'
             />
             {inspections.map((u, i) => {
               return (
@@ -356,7 +356,7 @@ const RoutesScreen = () => {
             getUnassignedRoutes();
             setUnassignedToggle(!unassignedToggle);
           }}>
-          <AppTitle title="Unassigned" />
+          <AppTitle title='Unassigned' />
         </TouchableOpacity>
         {!unassignedToggle ? null : (
           <View style={styles.subList}>
@@ -365,7 +365,7 @@ const RoutesScreen = () => {
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate("Modal", {modal: "AssignRouteModal", item: u})}>
+                  onPress={() => navigation.navigate('Modal', {modal: 'AssignRouteModal', item: u})}>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
@@ -404,7 +404,7 @@ const RoutesScreen = () => {
             getAssignedRoutes();
             setAssignedToggle(!assignedToggle)
           }}>
-          <AppTitle title="Assigned" />
+          <AppTitle title='Assigned' />
         </TouchableOpacity>
         {!assignedToggle ? null : (
           <View style={styles.subList}>
@@ -414,7 +414,7 @@ const RoutesScreen = () => {
                   style={styles.card}
                   key={u._id}
                   onPress={() =>
-                    navigation.navigate("Modal", {modal: "AssignRouteModal", item: u})
+                    navigation.navigate('Modal', {modal: 'AssignRouteModal', item: u})
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>

@@ -36,7 +36,7 @@ const AssignDriverModal: React.FC<Props> = ({id}) => {
   const getRoutes = async () => {
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
         method: 'POST',
-        body: JSON.stringify({group_id: grpId, time: {$gte: formatDate(new Date()), $lt: formatDate(addDays(new Date(), 1))}, driver: {$in:[null,'']}}),
+        body: JSON.stringify({group_id: grpId, time: {$gte: formatDate(new Date()), $lt: formatDate(addDays(new Date(), 1))}, driver: {$in:[null,'']}, route_stage: {$ne: 'Completed'}}),
         headers: {'Content-Type': 'application/json', 'x-access-token': token}
     })
     .then(res => res.json())

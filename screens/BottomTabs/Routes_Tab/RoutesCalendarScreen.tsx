@@ -40,7 +40,7 @@ const RoutesCalendarScreen = () => {
   let firstDayOfThisMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   // Refs
   let selectedQuery = useRef({group_id: grpId, time: {$gte: formatDate(new Date()), $lt: new Date(addDays(date, 1).toLocaleDateString())}}).current;
-  let outstandingQuery = useRef({group_id: grpId, time: {$gte: formatDate(firstDayOfThisMonth), $lt: new Date(date.setHours(0))}, route_stage: {$ne: "completed"}}).current;
+  let outstandingQuery = useRef({group_id: grpId, time: {$gte: formatDate(firstDayOfThisMonth), $lt: new Date(date.setHours(0))}, route_stage: {$ne: 'completed'}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
     [formatDate(new Date())]: {selected: true},
@@ -95,7 +95,7 @@ const RoutesCalendarScreen = () => {
 
   const onMonthChange = (month: any) => {
     // Get First and Last Day for query.
-    outstandingQuery = {group_id: grpId, time: {$gte: formatDate(firstDay(month.dateString)), $lt: addDays(lastDay(month.dateString), 1)}, route_stage: {$ne: "Completed"}};
+    outstandingQuery = {group_id: grpId, time: {$gte: formatDate(firstDay(month.dateString)), $lt: addDays(lastDay(month.dateString), 1)}, route_stage: {$ne: 'Completed'}};
     // Fetch Outstanding Orders
     getSelectedDates();
   };
@@ -147,7 +147,7 @@ const RoutesCalendarScreen = () => {
   const shallowEqual = (object1: any) => {
     // Not a complete shallow comparison 
     const keys1 = Object.keys(object1);
-    const keys2 = Object.keys({"selected": true});
+    const keys2 = Object.keys({'selected': true});
   
     if (keys1.length !== keys2.length) {
       return false;
@@ -164,7 +164,7 @@ const RoutesCalendarScreen = () => {
 
   return (
     <>
-      <AppTitle title="Calendar" />
+      <AppTitle title='Calendar' />
 
       <ScrollView
         style={styles.scrollView}>
@@ -172,7 +172,7 @@ const RoutesCalendarScreen = () => {
           <AppNavBtnGrp>
             <View style={{marginRight: 60, marginTop: 16}}>
               <AppButton
-                title="Back"
+                title='Back'
                 onPress={() => navigation.goBack()}
                 outlined={true}
                 icon={{type: 'MaterialIcons', name: 'arrow-back'}}
@@ -185,7 +185,7 @@ const RoutesCalendarScreen = () => {
                   <Picker
                     style={{height: 30}}
                     selectedValue={sortItem}
-                    mode="dropdown"
+                    mode='dropdown'
                     onValueChange={(itemValue, itemIndex) =>
                       setSortItem(itemValue.toString())
                     }>
@@ -260,7 +260,7 @@ const RoutesCalendarScreen = () => {
         </View>
 
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Route Events" />
+          <AppTitle title='Route Events' />
         </View>
 
         <View style={{paddingHorizontal: 10}}>

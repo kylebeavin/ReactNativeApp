@@ -44,7 +44,7 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={model} modal="UpdateTruckModal" />
+            <AppEditBtn item={model} modal='UpdateTruckModal' />
           </View>
         </AppNavBtnGrp>
 

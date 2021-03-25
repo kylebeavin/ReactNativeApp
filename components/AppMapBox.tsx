@@ -40,7 +40,7 @@ const AppMapBox: React.FC<Props> = ({locations, children}) => {
           <MapboxGL.MapView
             style={styles.map}
             styleURL={MapboxGL.StyleURL.Street}>
-            <MapboxGL.UserLocation androidRenderMode="gps" visible={true} />
+            <MapboxGL.UserLocation androidRenderMode='gps' visible={true} />
             {children}
             <MapboxGL.Camera zoomLevel={9} centerCoordinate={userLocation} />
           </MapboxGL.MapView>

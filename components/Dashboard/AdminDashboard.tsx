@@ -74,7 +74,7 @@ const AdminDashboard = () => {
               <Picker
                 style={{height: 30}}
                 selectedValue={monthPicker}
-                mode="dropdown"
+                mode='dropdown'
                 onValueChange={(itemValue) =>
                   setMonthPicker(itemValue.toString())
                 }>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
               <Picker
                 style={{height: 30}}
                 selectedValue={yearPicker}
-                mode="dropdown"
+                mode='dropdown'
                 onValueChange={(itemValue) =>
                   setYearPicker(itemValue.toString())
                 }>
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
         </View>
       </View>
 
-      <AppTitle title="Status Rating" />
+      <AppTitle title='Status Rating' />
       {/* Status Rating */}
       <View style={styles.statusContainer}>
         {/* Status Header */}
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Secondary_2_Light_2},
               ]}
-              name="ios-checkmark-circle-outline"></Ionicons>
+              name='ios-checkmark-circle-outline'></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you're doing well at
             </Text>
@@ -143,7 +143,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Primary_1_Light_1},
               ]}
-              name="ios-alert"></Ionicons>
+              name='ios-alert'></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you can do better
             </Text>
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Secondary_2_Light_2},
               ]}
-              name="ios-checkmark-circle-outline"></Ionicons>
+              name='ios-checkmark-circle-outline'></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you're doing well at
             </Text>
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
                 styles.statusContentItemIcon,
                 {color: Colors.SMT_Primary_1_Light_1},
               ]}
-              name="ios-alert"></Ionicons>
+              name='ios-alert'></Ionicons>
             <Text style={{textAlign: 'center'}}>
               Something you can do better
             </Text>
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
 
       {/* Income Reports */}
       <View style={styles.incomeReportsContainer}>
-        <AppTitle title="Income Reports" />
+        <AppTitle title='Income Reports' />
 
         <View style={styles.incomeReportsContent}>
           <View

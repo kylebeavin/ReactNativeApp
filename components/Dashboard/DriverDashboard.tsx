@@ -1,4 +1,3 @@
-import { Picker } from '@react-native-picker/picker';
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
@@ -21,7 +20,7 @@ const DriverDashboard = () => {
   const navigation = useNavigation();
   const {id, grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
-  const {getDriverRouteStateAsync, setDriverRouteStateAsync} = useAsyncStorage();
+  const {getDriverRouteStateAsync, setDriverRouteStateAsync, clearDriverRouteStateAsync} = useAsyncStorage();
   const [status, setStatus] = useState('Unassigned');
   const [myRoute, setMyRoute] = useState<Route>();
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -32,13 +31,15 @@ const DriverDashboard = () => {
 
     useFocusEffect(
       React.useCallback(() => {
-        if (!myRoute) {
           checkForAssignedRoute();
-        } else {
-          getRouteStage();
-        }
-      }, [myRoute])
+      }, [])
     );
+
+    useEffect(() => {
+      if (myRoute) {
+        getRouteStage();
+      }
+    }, [myRoute]);
 
   const checkForAssignedRoute = async () => {
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
@@ -93,16 +94,29 @@ const DriverDashboard = () => {
   };
 
   const renderActionButton = () => {
-    if (myRoute?.truck_id === null || myRoute?.truck_id === '') return <AppButton title="Assign Your Truck" onPress={() => navigation.navigate('Modal', {modal: 'AssignTruckModal', item: myRoute})} />;
+    if (myRoute?.truck_id === null || myRoute?.truck_id === '') return <AppButton title='Assign Your Truck' onPress={() => navigation.navigate('Modal', {modal: 'AssignTruckModal', item: myRoute})} />;
     if (status === 'Assigned') return <AppButton title='Start Pre-Trip Inspection' onPress={() => navigation.navigate('Modal' ,{modal: 'CreatePreTripInspectionModal', item: myRoute})} />;
     if (status === 'Inspected') return <AppButton title='Start Route' onPress={handleStartOnPress} />;
-    if (status === 'Finalized') return <AppButton title='End Route' onPress={() => null} />;
-
+    if (status === 'Finalized') {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <AppButton
+            title='Go To Route'
+            onPress={() =>
+              navigation.navigate('Routes', {
+                screen: 'RouteNavigationScreen',
+                params: {model: myRoute},
+              })
+            }
+          />
+          <AppButton title='End Route' onPress={handleEndOnPress} />
+        </View>
+      );
+    }
     return null;
   };
 
   const handleStartOnPress = () => {
-    // ToDo: update route stage to finalized.
     getDriverRouteStateAsync().then(value => {
       if (value) {
         navigation.navigate('Routes', {screen: 'RouteNavigationScreen', params: {model: myRoute}});
@@ -116,10 +130,53 @@ const DriverDashboard = () => {
           }
         }
         setDriverRouteStateAsync(routeState).then(value => {
-          if (value) navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}});
+          if (value) {
+            fetch(`${Configs.TCMC_URI}/api/routes`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+              },
+              body: JSON.stringify({
+                _id: myRoute?._id,
+                route_stage: 'Finalized',
+              }),
+            })
+              .then((res) => res.json())
+              .then((json) => {
+                if (isSuccessStatusCode(json.status)) {
+                  navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}});
+                } else {
+                  show({message: json.message});
+                }
+              })
+              .catch((err) => show({message: err.message}));
+          }
         });
       }
     });
+  };
+
+  const handleEndOnPress = () => {
+    fetch(`${Configs.TCMC_URI}/api/routes`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify({_id: myRoute?._id, route_stage: 'Completed'}),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (isSuccessStatusCode(json.status)) {
+          clearDriverRouteStateAsync().then(value => {
+            if (value) {
+              setMyRoute(undefined);
+              setStatus('Unassigned');
+            }
+          });
+        } else {
+          show({message: json.message});
+        }
+      })
+      .catch((err) => show({message: err.message}));
   };
 
   return (
@@ -192,7 +249,7 @@ const DriverDashboard = () => {
         </View>
       </View>
 
-      <AppTitle title="Route Details" />
+      <AppTitle title='Route Details' />
       <View style={styles.container}>
         {/* Route Details */}
         <View style={styles.statusContainer}>
@@ -234,7 +291,7 @@ const DriverDashboard = () => {
             </View>
             <View>
               {!myRoute ? (
-                <AppEmptyCard entity="Routes" modal="AssignDriverModal" />
+                <AppEmptyCard entity='Routes' modal='AssignDriverModal' />
               ) : (
                 myRoute?.service_stop.map((u) => {
                   return (
@@ -286,7 +343,7 @@ const DriverDashboard = () => {
               {backgroundColor: 'black', opacity: 0.5},
             ]}></View>
           <View style={styles.popup}>
-            <AppTitle title="Select Route" />
+            <AppTitle title='Select Route' />
             <View style={styles.container}>
               {routes.map((u: Route) => {
                 return (

@@ -46,9 +46,9 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
   const getContactsList = async () => {
 
     await fetch(`${Configs.TCMC_URI}/api/contactsBy`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({account_id: model._id}),
-      headers: {"Content-Type": "application/json", "x-access-token": token}
+      headers: {'Content-Type': 'application/json', 'x-access-token': token}
     })
     .then((res) => res.json())
     .then((json) => setContactsList(json.data))
@@ -57,7 +57,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Account Detail" />
+      <AppTitle title='Account Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -65,14 +65,14 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         <AppNavBtnGrp>
           <View style={{marginRight: 60, marginTop: 12, paddingLeft: 10}}>
             <AppButton
-              title="Back"
+              title='Back'
               onPress={() => navigation.goBack()}
               outlined={true}
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={model} modal="UpdateAccountModal" />
+            <AppEditBtn item={model} modal='UpdateAccountModal' />
           </View>
         </AppNavBtnGrp>
 
@@ -101,7 +101,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         </View>
 
         <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
-          <AppTitle title="Status" />
+          <AppTitle title='Status' />
         </TouchableOpacity>
         {!statusToggle ? null : (
           <View style={{paddingLeft: 10}}>
@@ -110,7 +110,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         )}
 
         <TouchableOpacity onPress={() => setContactToggle(!contactToggle)}>
-          <AppTitle title="Contacts" />
+          <AppTitle title='Contacts' />
         </TouchableOpacity>
         {!contactToggle ? null : (
           <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
@@ -130,7 +130,7 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
         )}
 
         <TouchableOpacity onPress={() => setNotesToggle(!notesToggle)}>
-          <AppTitle title="Notes" />
+          <AppTitle title='Notes' />
         </TouchableOpacity>
         {!notesToggle ? null : (
           <View style={{paddingLeft: 10}}>

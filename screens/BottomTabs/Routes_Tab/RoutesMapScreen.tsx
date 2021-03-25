@@ -66,7 +66,7 @@ const RoutesMapScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Routes" />
+      <AppTitle title='Routes' />
 
       <ScrollView
         style={styles.scrollView}
@@ -74,18 +74,18 @@ const RoutesMapScreen = () => {
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
-              title="ROUTES"
+              title='ROUTES'
               onPress={() => navigation.navigate('RoutesScreen')}
               outlined={true}
             />
             <AppButton
-              title="CALENDAR"
+              title='CALENDAR'
               onPress={() => navigation.navigate('RoutesCalendarScreen')}
               outlined={true}
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title="MAP"
+                title='MAP'
                 onPress={() => navigation.navigate('MapScreen')}
                 outlined={false}
               />
@@ -107,7 +107,7 @@ const RoutesMapScreen = () => {
               <MapboxGL.MapView
                 style={styles.map}
                 styleURL={MapboxGL.StyleURL.Street}>
-                <MapboxGL.UserLocation androidRenderMode="gps" visible={true} />
+                <MapboxGL.UserLocation androidRenderMode='gps' visible={true} />
 
                 <MapboxGL.Camera
                   zoomLevel={8}

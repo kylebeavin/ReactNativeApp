@@ -209,8 +209,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Location */}
         <AppTextInput
-          label="Location"
-          name="location"
+          label='Location'
+          name='location'
           value={location}
           onChange={(val) => null}
           validations={[]}
@@ -271,7 +271,7 @@ const CreateOrderModal: React.FC<Props> = () => {
           </View>
         </View>
 
-        {/* Service Days */}
+        {/* Service Frequency */}
         <View style={styles.fieldContainer}>
           <Text style={styles.text}>Frequency</Text>
           <View style={styles.picker}>
@@ -295,8 +295,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Monthly Rate */}
         <AppTextInput
-          label="Monthly Rate"
-          name="monthlyRate"
+          label='Monthly Rate'
+          name='monthlyRate'
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
@@ -307,8 +307,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* Demand Rate */}
         <AppTextInput
-          label="Demand Rate"
-          name="demandRate"
+          label='Demand Rate'
+          name='demandRate'
           value={values.demandRate}
           onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
@@ -335,7 +335,7 @@ const CreateOrderModal: React.FC<Props> = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title="Calendar"
+                title='Calendar'
                 onPress={() => openStartDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -356,8 +356,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* File Upload URL */}
         <AppTextInput
-          label="File Upload URL"
-          name="fileUploadUrl"
+          label='File Upload URL'
+          name='fileUploadUrl'
           value={values.fileUploadUrl}
           onChange={(val) => handleChange('fileUploadUrl', val)}
           validations={[]}
@@ -368,8 +368,8 @@ const CreateOrderModal: React.FC<Props> = () => {
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
           <AppTextInput
-            label="Notes"
-            name="notes"
+            label='Notes'
+            name='notes'
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

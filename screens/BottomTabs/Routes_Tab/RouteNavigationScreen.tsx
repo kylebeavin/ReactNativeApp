@@ -44,7 +44,6 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   useEffect(() => {
     getStops();
     getCachedState();
-    // clearDriverRouteStateAsync()
   }, []);
 
   useEffect(() => {
@@ -118,6 +117,8 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   };
 
   const handleGoOnPress = (stop: Order, stopNumber: number) => {
+    console.log(stop)
+    console.log(stopNumber)
     // Update Cache
     let newState: DriverRouteState = {
       routeStage: 'Navigating',
@@ -176,10 +177,8 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
           .then((res) => res.json())
           .then((json) => {
             if (isSuccessStatusCode(json.status)) {
-              console.log('true')
               setRouteState(newState);
             } else {
-              console.log('false')
               show({message: json.message});
             }
           })
@@ -235,7 +234,7 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
                 (order) => order._id === u._id,
               ) + 1}`}
             />
-            <TouchableOpacity style={[styles.card, u.order_status === 'completed' && {backgroundColor: 'limegreen'}]} onPress={() => null}>
+            <TouchableOpacity style={[styles.card, u.order_status === 'completed' && {backgroundColor: 'honeydew'}]} onPress={() => null}>
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 1}}>
                   <Text style={styles.titleText}>{u.order_id}</Text>
@@ -244,7 +243,7 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
                 </View>
                 <View style={{flex: 1}}>
                   <View style={{alignSelf: 'flex-end'}}>
-                  <AppButton title="Go" onPress={() => handleGoOnPress(u, ordersList.findIndex(order => order._id === u._id))} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined  />
+                  <AppButton title='Go' onPress={() => handleGoOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined  />
                   </View>
                 </View>
               </View>
@@ -323,9 +322,9 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
                 </View>
                 <View style={{flex: 1}}>
                   <View style={{alignSelf: 'flex-end'}}>
-                  {i == 0 && routeState.stopsState.currentStatus === '' || i == 0 && routeState.stopsState.currentStatus === 'Completed' ? <AppButton title="Go" onPress={() => handleGoOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
-                    {i == 0 && routeState.stopsState.currentStatus === 'Navigating' ? <AppButton title="Arrive" onPress={() => handleArriveOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
-                    {i == 0 && routeState.stopsState.currentStatus === 'Smashing' ? <AppButton title="Complete" onPress={() => handleCompleteOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
+                  {i == 0 && routeState.stopsState.currentStatus === '' || i == 0 && routeState.stopsState.currentStatus === 'Completed' ? <AppButton title='Go' onPress={() => handleGoOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
+                    {i == 0 && routeState.stopsState.currentStatus === 'Navigating' ? <AppButton title='Arrive' onPress={() => handleArriveOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
+                    {i == 0 && routeState.stopsState.currentStatus === 'Smashing' ? <AppButton title='Complete' onPress={() => handleCompleteOnPress(u, ordersList.findIndex(order => order._id === u._id) + 1)} icon={{type: 'MaterialIcons', name: 'navigation'}} outlined />: null}
                   </View>
                 </View>
               </View>
@@ -350,7 +349,7 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
         </View>
 
         <TouchableOpacity style={{marginBottom: 5}} onPress={() => setStopsToggle(!stopsToggle)}>
-          <AppTitle title="Route Stops" />
+          <AppTitle title='Route Stops' />
         </TouchableOpacity>
         {!stopsToggle ? null : (
           <View style={{paddingHorizontal: 10}}>

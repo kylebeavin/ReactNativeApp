@@ -36,8 +36,8 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
   const formValues = {
     account: order.account_id,
     monthlyRate: order.monthly_rate,
-    demandRate: order.demand_rate,
-    serviceDate: order.service_date,
+    demandRate: order.demand_rate.toString(),
+    serviceDate: new Date(order.service_date).toLocaleDateString(),
     fileUploadUrl: order.url.toString(),
     notes: order.notes.toString(),
   };
@@ -53,12 +53,9 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
 
   const formValidations = {
     account: [isRequired],
-    serviceFrequency: [isRequired],
-    monthlyRate: [isRequired],
     demandRate: [isRequired],
-    termDate: [isRequired],
-    startDate: [isRequired],
-    endDate: [isRequired],
+    monthlyRate: [isRequired],
+    serviceDate: [isRequired],
     fileUploadUrl: [isRequired],
     notes: [],
   };
@@ -82,7 +79,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
   // DropDowns
   const [accountList, setAccountList] = useState<Account[]>();
   const [services, setServices] = useState(order.services);
-  const [serviceDays, setServiceDays] = useState(order.service_days);
+  const [serviceDays, setServiceDays] = useState(order.service_day);
 
   // Popups
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
@@ -125,13 +122,15 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
       is_active: order.is_active,
       is_demo: isDemo,
       is_recurring: isRecurring,
+      location: order.location,
       monthly_rate: values.monthlyRate,
       notes: [values.notes],
       order_id: order.order_id,
       order_status: order.order_status,
       services: services,
       service_date: values.serviceDate,
-      service_days: serviceDays,
+      service_day: serviceDays,
+      service_frequency: order.service_frequency,
       url: [values.fileUploadUrl],
 
       // UI
@@ -143,7 +142,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
   async function updateOrder() {
     const order: Order = await getFormData();
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(order),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
@@ -335,7 +334,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           <Calendar
             style={{borderRadius: 4}}
             onDayPress={(day) => {
-              handleChange('startDate', formatDateString(day.dateString));
+              handleChange('serviceDate', formatDateString(day.dateString));
               setShowStartDateCalendar(false);
             }}
           />

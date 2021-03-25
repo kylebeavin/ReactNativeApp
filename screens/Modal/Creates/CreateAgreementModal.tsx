@@ -28,20 +28,20 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const {grpId, token} = useContext(AppContext);
     const {show} = useContext(ToastContext);
     //#region === Use State Variables ===//
-    const [account, setAccount] = useState("");
-    const [group, setGroup] = useState("");
+    const [account, setAccount] = useState('');
+    const [group, setGroup] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
-    const [services, setServices] = useState("");
-    const [serviceFrequency, setServiceFrequency] = useState("");
+    const [services, setServices] = useState('');
+    const [serviceFrequency, setServiceFrequency] = useState('');
     const [servicePer, setServicePer] = useState(ServicesPer.day.toString());
     const [serviceDays, setServiceDays] = useState(Days.sun.toString());
-    const [monthlyRate, setMonthlyRate] = useState("");
-    const [demandRate, setDemandRate] = useState("");
-    const [termDate, setTermDate] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [notes, setNotes] = useState("");
-    const [fileUploadUrl, setFileUploadUrl] = useState("");
+    const [monthlyRate, setMonthlyRate] = useState('');
+    const [demandRate, setDemandRate] = useState('');
+    const [termDate, setTermDate] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [notes, setNotes] = useState('');
+    const [fileUploadUrl, setFileUploadUrl] = useState('');
 
     // DropDowns
     const [accountList, setAccountList] = useState<Account[]>();
@@ -78,9 +78,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
       let accountsList: Account[] = [];
 
       await fetch(`${Configs.TCMC_URI}/api/accountsBy`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({group_id: grpId}),
-        headers: {"Content-Type": "application/json","x-access-token": token},
+        headers: {'Content-Type': 'application/json','x-access-token': token},
       })
         .then((res) => res.json())
         .then((json) => (accountsList = json.data))
@@ -90,7 +90,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
 
     const getFormData = async () => {
       const agreement: Agreement = {
-        _id: "",
+        _id: '',
         account_id: account, 
         group_id: grpId,
         is_recurring: isRecurring,
@@ -103,7 +103,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
         term_date: termDate,
         start_date: startDate,
         end_date: endDate,
-        created: "",
+        created: '',
         is_active: true,
         notes: notes,
         url: fileUploadUrl,
@@ -115,15 +115,15 @@ const CreateAgreementModal: React.FC<Props> = () => {
       const agreement: Agreement = await getFormData();
 
       await fetch(`${Configs.TCMC_URI}/api/agreements`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(agreement),
-        headers: {"Content-Type": "application/json","x-access-token": token},
+        headers: {'Content-Type': 'application/json','x-access-token': token},
         })
         .then((res) => res.json())
         .then((data) => data)
         .catch((err) => show({message: err.message}));
     
-      navigation.navigate("ServicesScreen");
+      navigation.navigate('ServicesScreen');
     };
 
     const openStartDateCalendar = (show: boolean) => {
@@ -291,7 +291,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </View>
               <View style={[styles.column, styles.calendarButton]}>
                 <AppButton
-                  title="Calendar"
+                  title='Calendar'
                   onPress={() => openStartDateCalendar(true)}
                   icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
@@ -318,7 +318,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </View>
               <View style={[styles.column, styles.calendarButton]}>
                 <AppButton
-                  title="Calendar"
+                  title='Calendar'
                   onPress={() => openEndDateCalendar(true)}
                   icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     text: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         color: Colors.SMT_Secondary_1,
     },
     textInput: {

@@ -27,7 +27,7 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
 
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title="Meeting Detail" />
+      <AppTitle title='Meeting Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -35,14 +35,14 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
         <AppNavBtnGrp>
           <View style={{marginRight: 60, marginTop: 12, paddingLeft: 10}}>
             <AppButton
-              title="Back"
+              title='Back'
               onPress={() => navigation.goBack()}
               outlined={true}
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={model} modal="UpdateMeetingModal" />
+            <AppEditBtn item={model} modal='UpdateMeetingModal' />
           </View>
         </AppNavBtnGrp>
 
