@@ -73,7 +73,6 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
     if (accounts.length === 0) return;
     return accounts.map((item: Account, index: number) => {
       if (item.geo_location === null || item.geo_location.length <= 1) return;
-      console.log(item.geo_location)
       return (
         <MapboxGL.PointAnnotation
           id={index.toString()}

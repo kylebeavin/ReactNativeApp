@@ -1,12 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import AppContext from '../../providers/AppContext';
 import Configs from '../../constants/Configs';
-import { ToastContext } from '../../providers/ToastProvider';
-import { Route } from '../../types/routes';
+import AppContext from '../../providers/AppContext';
+import {ToastContext} from '../../providers/ToastProvider';
+import {Route} from '../../types/routes';
 
 //#region Local Vars
 const mapboxToken = Configs.MAPBOX_ACCESS_TOKEN;
@@ -31,10 +30,11 @@ const pinColors = {
 //#endregion
 
 interface Props {
-  route: Route
+  route: Route;
+  locations: string[];
 }
 
-const RoutesDisplay: React.FC<Props> = ({route}) => {
+const DriverNavigationMap: React.FC<Props> = ({route, locations}) => {
   //#region Use State Variables
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
@@ -44,54 +44,43 @@ const RoutesDisplay: React.FC<Props> = ({route}) => {
 
   useEffect(() => {
     if (route) {
-      getRouteLocationsFromApi();
+      if (locations) {
+        getRouteLocationsFromApi();
+      }
     }
-  }, [route]);
+  }, [route, locations]);
 
   const getRouteLocationsFromApi = async () => {
-    let response = await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-      body: JSON.stringify({group_id: grpId, _id: route._id}),
-    });
-
-    const data = await response.json();
-
     const coordsStore: any = [];
 
-    if (data) {
-      let {start_location, service_stop} = data.data[0];
-      let addresses = [start_location, ...service_stop];
+    let formattedAddressStrings = locations.map((address) => {
+      return address.split(' ').join('%20');
+    });
 
-      let formattedAddressStrings = addresses.map((address) => {
-        return address.split(' ').join('%20');
-      });
-      
-      let requests = formattedAddressStrings.map((address) =>
-        fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`),
-      );
+    let requests = formattedAddressStrings.map((address) =>
+      fetch(`${mapboxBaseUrl}${address}.json?access_token=${mapboxToken}`),
+    );
 
-      Promise.all(requests)
-        .then((responses) => {
-          return Promise.all(
-            responses.map(function (response) {
-              return response.json();
-            }),
-          );
-        })
-        .then((data) => {
-          data.forEach((curData) => {
-            coordsStore.push(curData.features[0].center);
-          });
+    Promise.all(requests)
+      .then((responses) => {
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          }),
+        );
+      })
+      .then((data) => {
+        data.forEach((curData) => {
+          coordsStore.push(curData.features[0].center);
+        });
 
-          setCoordinates(coordsStore);
-          return new Promise((resolve) => {
-            resolve(coordsStore);
-          });
-        })
-        .then((data) => getOptimizedRoute(data))
-        .catch((err) => show({message: err.message}));
-    }
+        setCoordinates(coordsStore);
+        return new Promise((resolve) => {
+          resolve(coordsStore);
+        });
+      })
+      .then((data) => getOptimizedRoute(data))
+      .catch((err) => show({message: err.message}));
   };
 
   const constructMapQueryUrl = (coordsStore: any) => {
@@ -111,9 +100,13 @@ const RoutesDisplay: React.FC<Props> = ({route}) => {
       await fetch(constructMapQueryUrl(coordinates))
         .then((res) => res.json())
         .then((data) => {
-          setRouteData({...data.trips[0].geometry})
+            if (data.code === 'Ok') {
+                setRouteData({...data.trips[0].geometry});
+            }
         })
-        .catch((err) => show({message: err.message}));
+        .catch((err) => {
+            show({message: err.message})
+        });
     }
   };
 
@@ -155,17 +148,6 @@ const RoutesDisplay: React.FC<Props> = ({route}) => {
     if (!routeData) {
       return null;
     }
-
-    return (
-      <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
-        <MapboxGL.SymbolLayer
-          id="arrows"
-          style={layerStyles.arrows}
-          minZoomLevel={1}
-          aboveLayerID="routeFill"
-        />
-      </MapboxGL.ShapeSource>
-    );
   };
 
   return (
@@ -177,4 +159,6 @@ const RoutesDisplay: React.FC<Props> = ({route}) => {
   );
 };
 
-export default RoutesDisplay;
+const styles = StyleSheet.create({});
+
+export default DriverNavigationMap;

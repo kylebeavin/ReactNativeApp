@@ -20,7 +20,7 @@ import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/Layout/AppButton';
 import Layout from '../../../constants/Layout';
 import {Order} from '../../../types/service';
-import {Days, Services} from '../../../types/enums';
+import {Days, Services, ServicesPer} from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
@@ -33,8 +33,9 @@ const CreateOrderModal: React.FC<Props> = () => {
   //#region Form Initializers
   const formValues = {
     account: '',
-    monthlyRate: 0,
+    monthlyRate: '',
     demandRate: '',
+    location: '',
     serviceDate: '',
     fileUploadUrl: '',
     notes: '',
@@ -44,6 +45,7 @@ const CreateOrderModal: React.FC<Props> = () => {
     account: [],
     monthlyRate: [],
     demandRate: [],
+    location: [],
     serviceDate: [],
     fileUploadUrl: [],
     notes: [],
@@ -53,6 +55,7 @@ const CreateOrderModal: React.FC<Props> = () => {
     account: [isRequired],
     monthlyRate: [isRequired],
     demandRate: [isRequired],
+    location: [],
     serviceDate: [isRequired],
     fileUploadUrl: [],
     notes: [],
@@ -70,6 +73,9 @@ const CreateOrderModal: React.FC<Props> = () => {
     postNewOrder,
   );
 
+  // State
+  const [location, setLocation] = useState('');
+
   // Checkboxes
   const [isRecurring, setIsRecurring] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
@@ -78,6 +84,7 @@ const CreateOrderModal: React.FC<Props> = () => {
   const [accountList, setAccountList] = useState<Account[]>();
   const [services, setServices] = useState(Services.smash.toString());
   const [serviceDays, setServiceDays] = useState(Days.sun.toString());
+  const [servicePer, setServicePer] = useState(ServicesPer.day.toString())
 
   // Popups
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
@@ -91,6 +98,16 @@ const CreateOrderModal: React.FC<Props> = () => {
       })
       .catch((err) => show({message: err.message}));
   }, []);
+
+  useEffect(() => {
+    if (accountList) {
+      setLocation(
+        `${accountList![0].address_street}, ${accountList![0].address_city}, ${
+          accountList![0].address_state
+        } ${accountList![0].address_zip}`,
+      );
+    }
+  }, [accountList]);
 
   const getAccountsDropDown = async (): Promise<Account[]> => {
     let accountsList: Account[] = [];
@@ -118,13 +135,15 @@ const CreateOrderModal: React.FC<Props> = () => {
       is_active: true,
       is_demo: isDemo,
       is_recurring: isRecurring,
+      location: location,
       monthly_rate: values.monthlyRate,
       notes: [values.notes],
       order_id: '',
       order_status: 'not started',
       services: services,
       service_date: values.serviceDate,
-      service_days: serviceDays,
+      service_day: serviceDays,
+      service_frequency: servicePer,
       url: [values.fileUploadUrl],
 
       account_name: '',
@@ -134,7 +153,7 @@ const CreateOrderModal: React.FC<Props> = () => {
 
   async function postNewOrder() {
     const order: Order = await getFormData();
-    
+
     await fetch(`${Configs.TCMC_URI}/api/orders`, {
       method: 'POST',
       body: JSON.stringify(order),
@@ -142,7 +161,6 @@ const CreateOrderModal: React.FC<Props> = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('OrdersScreen');
@@ -166,8 +184,15 @@ const CreateOrderModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.account}
-              onValueChange={(itemValue) => {
+              onValueChange={(itemValue, itemIndex) => {
                 handleChange('account', itemValue.toString());
+                setLocation(
+                  `${accountList![itemIndex].address_street}, ${
+                    accountList![itemIndex].address_city
+                  }, ${accountList![itemIndex].address_state} ${
+                    accountList![itemIndex].address_zip
+                  }`,
+                );
               }}>
               {accountList?.map((item) => {
                 return (
@@ -181,6 +206,18 @@ const CreateOrderModal: React.FC<Props> = () => {
             </Picker>
           </View>
         </View>
+
+        {/* Location */}
+        <AppTextInput
+          label="Location"
+          name="location"
+          value={location}
+          onChange={(val) => null}
+          validations={[]}
+          errors={errors.location}
+          setErrors={setErrors}
+          disabled
+        />
 
         {/* isRecurring */}
         <View style={styles.fieldContainer}>
@@ -198,9 +235,7 @@ const CreateOrderModal: React.FC<Props> = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={services}
-              onValueChange={(itemValue) =>
-                setServices(itemValue.toString())
-              }>
+              onValueChange={(itemValue) => setServices(itemValue.toString())}>
               {Object.values(Services).map((item) => {
                 return (
                   <Picker.Item
@@ -236,26 +271,50 @@ const CreateOrderModal: React.FC<Props> = () => {
           </View>
         </View>
 
+        {/* Service Days */}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Frequency</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={servicePer}
+              onValueChange={(itemValue) =>
+                setServicePer(itemValue.toString())
+              }>
+              {Object.values(ServicesPer).map((item) => {
+                return (
+                  <Picker.Item
+                    key={item.toString()}
+                    label={item.toString()}
+                    value={item.toString()}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+        </View>
+
         {/* Monthly Rate */}
         <AppTextInput
-          label='Monthly Rate'
-          name='monthlyRate'
+          label="Monthly Rate"
+          name="monthlyRate"
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
           errors={errors.monthlyRate}
           setErrors={setErrors}
+          keyboardType='number-pad'
         />
 
         {/* Demand Rate */}
         <AppTextInput
-          label='Demand Rate'
-          name='demandRate'
+          label="Demand Rate"
+          name="demandRate"
           value={values.demandRate}
           onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
           errors={errors.demandRate}
           setErrors={setErrors}
+          keyboardType='number-pad'
         />
 
         {/* Service Date */}
@@ -276,7 +335,7 @@ const CreateOrderModal: React.FC<Props> = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title='Calendar'
+                title="Calendar"
                 onPress={() => openStartDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -297,8 +356,8 @@ const CreateOrderModal: React.FC<Props> = () => {
 
         {/* File Upload URL */}
         <AppTextInput
-          label='File Upload URL'
-          name='fileUploadUrl'
+          label="File Upload URL"
+          name="fileUploadUrl"
           value={values.fileUploadUrl}
           onChange={(val) => handleChange('fileUploadUrl', val)}
           validations={[]}
@@ -309,8 +368,8 @@ const CreateOrderModal: React.FC<Props> = () => {
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
           <AppTextInput
-            label='Notes'
-            name='notes'
+            label="Notes"
+            name="notes"
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}
@@ -335,7 +394,6 @@ const CreateOrderModal: React.FC<Props> = () => {
           />
         </TouchableOpacity>
       ) : null}
-
     </View>
   );
 };

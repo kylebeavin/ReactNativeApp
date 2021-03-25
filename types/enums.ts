@@ -43,6 +43,7 @@ export enum Services {
 export enum ServicesPer {
   day = 'day',
   week = 'week',
+  biweek = 'bi-week',
   month = 'month',
 }
 

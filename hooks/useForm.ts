@@ -29,7 +29,7 @@ const useForm = <T, Z, Y>(
   const [values, setValues] = useState<T>(formFields);
   const [errors, setErrors] = useState<Z>(formErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {show} = useContext(ToastContext); // ToDo: show error message on validation failure.
+  const {show} = useContext(ToastContext);
 
   const handleChange = (name: string, value: any) => {
     setValues({

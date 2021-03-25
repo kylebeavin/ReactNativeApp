@@ -107,7 +107,6 @@ const RoutesCalendarScreen = () => {
   };
 
   const getOutstandingRoutes = async (): Promise<IMarkedDays[]> => {
-    console.log(outstandingQuery)
     const orders: any = await fetch(
       `${Configs.TCMC_URI}/api/routesBy`,
       {

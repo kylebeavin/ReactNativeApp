@@ -102,7 +102,6 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   };
 
   const getOwnersDropDown = async (): Promise<SMT_User[]> => {
-    console.log('hi')
     let userList: SMT_User[] = [];
 
     await fetch(`${Configs.TCMC_URI}/api/usersBy`, {

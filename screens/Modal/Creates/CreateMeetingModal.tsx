@@ -172,7 +172,6 @@ const CreateMeetingModal: React.FC<Props> = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-    console.log(data)
         if (isSuccessStatusCode(data.status)) {
           show({message: data.message});
           navigation.navigate('MeetingsScreen');

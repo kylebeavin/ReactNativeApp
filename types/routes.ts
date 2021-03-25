@@ -71,15 +71,24 @@ export type PreTripInspection = {
   chocks_chains: boolean;
   
   // Smash Unit Checklist
-  drum_cap: boolean
-  grease_distribution: boolean
-  chain_tension: boolean
-  machine_lights: boolean
-  machine_hours: string
+  drum_cap: boolean;
+  grease_distribution: boolean;
+  chain_tension: boolean;
+  machine_lights: boolean;
+  machine_hours: string;
 
   // Sign-Off Checklist
-  vehicle_condition: boolean
-  required_documents: Array<string>
-  engine_warning: boolean
-  drivers_signature: string // will point to url of driver signature image.
+  vehicle_condition: boolean;
+  required_documents: Array<string>;
+  engine_warning: boolean;
+  drivers_signature: string; // will point to url of driver signature image.
+}
+
+export type DriverRouteState = {
+  routeStage: string;
+  stopsState: {
+    currentId: string;
+    currentStop: string;
+    currentStatus: string;
+  }
 }

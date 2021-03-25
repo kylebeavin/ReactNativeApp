@@ -9,17 +9,19 @@ import Configs from '../../constants/Configs';
 import Layout from '../../constants/Layout';
 import AppContext from '../../providers/AppContext';
 import {ToastContext} from '../../providers/ToastProvider';
-import {Route} from '../../types/routes';
+import {DriverRouteState, Route} from '../../types/routes';
 import {getDateStringsFromDate, isSuccessStatusCode} from '../../utils/Helpers';
 import AppButton from '../Layout/AppButton';
 import AppEmptyCard from '../Layout/AppEmptyCard';
 import AppTitle from '../Layout/AppTitle';
+import useAsyncStorage from '../../hooks/useAsyncStorage';
 
 const DriverDashboard = () => {
   //#region Use State Variables
   const navigation = useNavigation();
   const {id, grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
+  const {getDriverRouteStateAsync, setDriverRouteStateAsync} = useAsyncStorage();
   const [status, setStatus] = useState('Unassigned');
   const [myRoute, setMyRoute] = useState<Route>();
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -93,10 +95,31 @@ const DriverDashboard = () => {
   const renderActionButton = () => {
     if (myRoute?.truck_id === null || myRoute?.truck_id === '') return <AppButton title="Assign Your Truck" onPress={() => navigation.navigate('Modal', {modal: 'AssignTruckModal', item: myRoute})} />;
     if (status === 'Assigned') return <AppButton title='Start Pre-Trip Inspection' onPress={() => navigation.navigate('Modal' ,{modal: 'CreatePreTripInspectionModal', item: myRoute})} />;
-    if (status === 'Inspected') return <AppButton title='Start Route' onPress={() => navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}})} />;
+    if (status === 'Inspected') return <AppButton title='Start Route' onPress={handleStartOnPress} />;
     if (status === 'Finalized') return <AppButton title='End Route' onPress={() => null} />;
 
     return null;
+  };
+
+  const handleStartOnPress = () => {
+    // ToDo: update route stage to finalized.
+    getDriverRouteStateAsync().then(value => {
+      if (value) {
+        navigation.navigate('Routes', {screen: 'RouteNavigationScreen', params: {model: myRoute}});
+      } else {
+        let routeState: DriverRouteState = {
+          routeStage: 'Started',
+          stopsState: {
+            currentId: '',
+            currentStop: '',
+            currentStatus: ''
+          }
+        }
+        setDriverRouteStateAsync(routeState).then(value => {
+          if (value) navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}});
+        });
+      }
+    });
   };
 
   return (

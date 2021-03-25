@@ -28,19 +28,21 @@ export type Order = {
   completed_geo_location?: string;
   completed_time?: Date;
   container_qty: Number;
-  demand_rate: number;
+  demand_rate: string;
   group_id: string;
   haul_status: boolean;
   is_active: boolean;
   is_demo: boolean;
   is_recurring: boolean;
   monthly_rate: string;
+  location: string;
   notes: string[];
   order_id: string;
   order_status: string;
   services: string;
   service_date: string;
-  service_days: string;
+  service_day: string;
+  service_frequency: string;
   url: string[];
 
   // UI 
