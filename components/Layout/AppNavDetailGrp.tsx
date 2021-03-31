@@ -15,7 +15,7 @@ const AppNavDetailGrp: React.FC<Props> = ({route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftComponent}>
-        <MaterialIcons name="arrow-back-ios" size={24} color={Colors.SMT_Tertiary_1} onPress={() => navigation.navigate('DashboardScreen')} />
+        <MaterialIcons name="arrow-back-ios" size={24} color={Colors.SMT_Tertiary_1} onPress={() => navigation.pop()} />
       </View>
       <View style={styles.centerComponent}>
         <Text style={{color: Colors.SMT_Tertiary_1, fontWeight: 'bold', fontSize: 16}}>{route.route_id}</Text>

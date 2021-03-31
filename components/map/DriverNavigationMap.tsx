@@ -32,9 +32,10 @@ const pinColors = {
 interface Props {
   route: Route;
   locations: string[];
+  directions?: boolean;
 }
 
-const DriverNavigationMap: React.FC<Props> = ({route, locations}) => {
+const DriverNavigationMap: React.FC<Props> = ({route, locations, directions}) => {
   //#region Use State Variables
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
@@ -44,7 +45,7 @@ const DriverNavigationMap: React.FC<Props> = ({route, locations}) => {
 
   useEffect(() => {
     if (route) {
-      if (locations) {
+      if (locations.length > 0) {
         getRouteLocationsFromApi();
       }
     }
@@ -79,12 +80,28 @@ const DriverNavigationMap: React.FC<Props> = ({route, locations}) => {
           resolve(coordsStore);
         });
       })
-      .then((data) => getOptimizedRoute(data))
+      .then((data) => {
+        directions ? getDirections(data) : getOptimizedRoute(data)
+      })
       .catch((err) => show({message: err.message}));
+      
+  };
+
+  const getDirections = async (coordinates: any) => {
+    let coords = coordinates[0][0] + ',' + coordinates[0][1] + ';' + coordinates[1][0] + ',' + coordinates[1][1];
+    if (coordinates.length > 0) {
+      await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?steps=true&geometries=geojson&access_token=${mapboxToken}`)
+        .then(res => res.json())
+        .then(json => {
+          console.log(json.routes[0].legs[0].steps)
+          setRouteData(json.routes[0].geometry)
+        })
+        .catch(err => show({message: err.message}));
+    }
   };
 
   const constructMapQueryUrl = (coordsStore: any) => {
-    if (coordsStore.length > 0) {
+    if (coordsStore.length > 1) {
       let CoordsStringArray = coordsStore.map((coords: any) =>
         coords.join(','),
       );
@@ -137,6 +154,7 @@ const DriverNavigationMap: React.FC<Props> = ({route, locations}) => {
     if (!routeData) {
       return null;
     }
+
     return (
       <MapboxGL.ShapeSource id="routeSource" shape={routeData}>
         <MapboxGL.LineLayer id="routeFill" style={layerStyles.route} />

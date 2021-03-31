@@ -18,7 +18,10 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {SMT_User} from '../../../types';
 import {Truck, Route, PreTripInspection} from '../../../types/routes';
-import {getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
+import {
+  getDateStringsFromDate,
+  isSuccessStatusCode,
+} from '../../../utils/Helpers';
 
 const RoutesScreen = () => {
   //#region Use State Variables
@@ -43,62 +46,67 @@ const RoutesScreen = () => {
   const [assignedToggle, setAssignedToggle] = useState(false);
   //#endregion
 
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   const getTrucks = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (isSuccessStatusCode(data.status)) {
-          setTrucks(data.data);
-        } else {
-          show({message: data.message});
-        }
+    if (!truckToggle) {
+      await fetch(`${Configs.TCMC_URI}/api/truckBy`, {
+        method: 'POST',
+        body: JSON.stringify({group_id: grpId}),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
       })
-      .catch((err) => show({message: err.message}));
+        .then((res) => res.json())
+        .then((data) => {
+          if (isSuccessStatusCode(data.status)) {
+            setTrucks(data.data);
+          } else {
+            show({message: data.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
+    }
   };
 
   const getRoutes = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (isSuccessStatusCode(data.status)) {
-          setRoutes(data.data);
-        } else {
-          show({message: data.message});
-        }
+    if (!routeToggle) {
+      await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
+        method: 'POST',
+        body: JSON.stringify({group_id: grpId}),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
       })
-      .catch((err) => show({message: err.message}));
+        .then((res) => res.json())
+        .then((data) => {
+          if (isSuccessStatusCode(data.status)) {
+            setRoutes(data.data);
+          } else {
+            show({message: data.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
+    }
   };
 
   const getUsers = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
-      method: 'POST',
-      body: JSON.stringify({group_id: grpId}),
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (isSuccessStatusCode(data.status)) {
-          setUsers(data.data);
-        } else {
-          show({message: data.message});
-        }
+    if (!userToggle) {
+      await fetch(`${Configs.TCMC_URI}/api/usersBy`, {
+        method: 'POST',
+        body: JSON.stringify({group_id: grpId}),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
       })
-      .catch((err) => show({message: err.message}));
+        .then((res) => res.json())
+        .then((data) => {
+          if (isSuccessStatusCode(data.status)) {
+            setUsers(data.data);
+          } else {
+            show({message: data.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
+    }
   };
 
   const getInspections = async () => {
+    if (!inspectionsToggle) {
     await fetch(`${Configs.TCMC_URI}/api/pre-tripBy`, {
       method: 'POST',
       body: JSON.stringify({group_id: grpId}),
@@ -113,12 +121,18 @@ const RoutesScreen = () => {
         }
       })
       .catch((err) => show({message: err.message}));
+    }
   };
 
   const getUnassignedRoutes = async () => {
+    if (!unassignedToggle) {
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId, driver: {$in:[null,'']}, truck_id: {$in:[null,'']}}),
+      body: JSON.stringify({
+        group_id: grpId,
+        driver: {$in: [null, '']},
+        truck_id: {$in: [null, '']},
+      }),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())
@@ -130,12 +144,19 @@ const RoutesScreen = () => {
         }
       })
       .catch((err) => show({message: err.message}));
+    }
   };
 
   const getAssignedRoutes = async () => {
+    if (!assignedToggle) {
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
       method: 'POST',
-      body: JSON.stringify({group_id: grpId, route_stage: {$ne: 'Completed'}, driver: {$nin:[null,'']}, truck_id: {$nin:[null,'']}}),
+      body: JSON.stringify({
+        group_id: grpId,
+        route_stage: {$ne: 'Completed'},
+        driver: {$nin: [null, '']},
+        truck_id: {$nin: [null, '']},
+      }),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())
@@ -147,11 +168,12 @@ const RoutesScreen = () => {
         }
       })
       .catch((err) => show({message: err.message}));
+    }
   };
 
   return (
     <View>
-      <AppTitle title='Routes' />
+      <AppTitle title="Routes" />
 
       <ScrollView
         style={styles.scrollView}
@@ -159,18 +181,18 @@ const RoutesScreen = () => {
         <View style={{paddingHorizontal: 10}}>
           <AppNavBtnGrp>
             <AppButton
-              title='ROUTES'
+              title="ROUTES"
               onPress={() => navigation.navigate('RoutesScreen')}
               outlined={false}
             />
             <AppButton
-              title='CALENDAR'
+              title="CALENDAR"
               onPress={() => navigation.navigate('RoutesCalendarScreen')}
               outlined={true}
             />
             <View style={{marginRight: -10}}>
               <AppButton
-                title='MAP'
+                title="MAP"
                 onPress={() => navigation.navigate('RoutesMapScreen')}
                 outlined={true}
               />
@@ -183,20 +205,24 @@ const RoutesScreen = () => {
             getTrucks();
             setTruckToggle(!truckToggle);
           }}>
-          <AppTitle title='Trucks' />
+          <AppTitle title="Trucks" />
         </TouchableOpacity>
         {!truckToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title='TRUCK' modal='CreateTruckModal' />
+            <AppAddNew title="TRUCK" modal="CreateTruckModal" />
             {trucks.map((u: Truck) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate('TruckDetailsScreen', {model: u})}>
+                  onPress={() =>
+                    navigation.navigate('TruckDetailsScreen', {model: u})
+                  }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={styles.titleText}>{u.name}</Text>
+                      <Text numberOfLines={1} style={styles.titleText}>
+                        {u.name}
+                      </Text>
                       <Text>{u.service_status}</Text>
                     </View>
                     <View style={{flex: 1}}>
@@ -228,11 +254,11 @@ const RoutesScreen = () => {
             getRoutes();
             setRouteToggle(!routeToggle);
           }}>
-          <AppTitle title='Routes' />
+          <AppTitle title="Routes" />
         </TouchableOpacity>
         {!routeToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title='ROUTE' modal='CreateRouteModal' />
+            <AppAddNew title="ROUTE" modal="CreateRouteModal" />
             {routes.map((u, i) => {
               return (
                 <TouchableOpacity
@@ -243,8 +269,12 @@ const RoutesScreen = () => {
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>{u.route_id}</Text>
-                      <Text style={{color: Colors.SMT_Primary_1}}>{getDateStringsFromDate(u.time).date}</Text>
+                      <Text numberOfLines={1} style={{fontWeight: 'bold'}}>
+                        {u.route_id}
+                      </Text>
+                      <Text style={{color: Colors.SMT_Primary_1}}>
+                        {getDateStringsFromDate(u.time).date}
+                      </Text>
                     </View>
                     <AppRouteStageIndicator route={u} />
                   </View>
@@ -259,17 +289,19 @@ const RoutesScreen = () => {
             getUsers();
             setUserToggle(!userToggle);
           }}>
-          <AppTitle title='Users' />
+          <AppTitle title="Users" />
         </TouchableOpacity>
         {!userToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title='USER' modal='CreateUserModal' />
+            <AppAddNew title="USER" modal="CreateUserModal" />
             {users.map((u: SMT_User) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate('UserDetailsScreen', {model: u})}>
+                  onPress={() =>
+                    navigation.navigate('UserDetailsScreen', {model: u})
+                  }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
@@ -306,20 +338,24 @@ const RoutesScreen = () => {
             getInspections();
             setInspectionsToggle(!inspectionsToggle);
           }}>
-          <AppTitle title='Inspections' />
+          <AppTitle title="Inspections" />
         </TouchableOpacity>
         {!inspectionsToggle ? null : (
           <View style={styles.subList}>
             <AppAddNew
-              title='INSPECTION'
-              modal='CreatePreTripInspectionModal'
+              title="INSPECTION"
+              modal="CreatePreTripInspectionModal"
             />
             {inspections.map((u, i) => {
               return (
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate('PreTripInspectionDetailsScreen', {model: u})}>
+                  onPress={() =>
+                    navigation.navigate('PreTripInspectionDetailsScreen', {
+                      model: u,
+                    })
+                  }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={styles.titleText}>
@@ -328,7 +364,8 @@ const RoutesScreen = () => {
                       <Text>Pre-Trip</Text>
                     </View>
                     <View style={{flex: 1}}>
-                      <Text numberOfLines={1}
+                      <Text
+                        numberOfLines={1}
                         style={{
                           color: Colors.SMT_Primary_1,
                           textAlign: 'right',
@@ -356,7 +393,7 @@ const RoutesScreen = () => {
             getUnassignedRoutes();
             setUnassignedToggle(!unassignedToggle);
           }}>
-          <AppTitle title='Unassigned' />
+          <AppTitle title="Unassigned" />
         </TouchableOpacity>
         {!unassignedToggle ? null : (
           <View style={styles.subList}>
@@ -365,56 +402,11 @@ const RoutesScreen = () => {
                 <TouchableOpacity
                   style={styles.card}
                   key={u._id}
-                  onPress={() => navigation.navigate('Modal', {modal: 'AssignRouteModal', item: u})}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={styles.titleText}>
-                        {u.route_id}
-                      </Text>
-                      <Text>{u.route_stage}</Text>
-                    </View>
-                    <View style={{flex: 1}}>
-                      <Text
-                        style={{
-                          color: Colors.SMT_Primary_1,
-                          textAlign: 'right',
-                        }}>
-                        {getDateStringsFromDate(u.time).date}
-                      </Text>
-                      <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
-                        <Text>Stops: </Text>
-                        <Text
-                          style={{
-                            fontWeight: 'bold',
-                            color: u.service_stop.length > 0 ? Colors.SMT_Secondary_2_Light_1 : Colors.SMT_Primary_1,
-                            textAlign: 'right',
-                          }}>
-                          {u.service_stop.length}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        )}
-
-        <TouchableOpacity onPress={() => {
-            getAssignedRoutes();
-            setAssignedToggle(!assignedToggle)
-          }}>
-          <AppTitle title='Assigned' />
-        </TouchableOpacity>
-        {!assignedToggle ? null : (
-          <View style={styles.subList}>
-            {assigned.map((u, i) => {
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  key={u._id}
                   onPress={() =>
-                    navigation.navigate('Modal', {modal: 'AssignRouteModal', item: u})
+                    navigation.navigate('Modal', {
+                      modal: 'AssignRouteModal',
+                      item: u,
+                    })
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
@@ -431,12 +423,74 @@ const RoutesScreen = () => {
                         }}>
                         {getDateStringsFromDate(u.time).date}
                       </Text>
-                      <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+                      <View
+                        style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
                         <Text>Stops: </Text>
                         <Text
                           style={{
                             fontWeight: 'bold',
-                            color: u.service_stop.length > 0 ? Colors.SMT_Secondary_2_Light_1 : Colors.SMT_Primary_1,
+                            color:
+                              u.service_stop.length > 0
+                                ? Colors.SMT_Secondary_2_Light_1
+                                : Colors.SMT_Primary_1,
+                            textAlign: 'right',
+                          }}>
+                          {u.service_stop.length}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        <TouchableOpacity
+          onPress={() => {
+            getAssignedRoutes();
+            setAssignedToggle(!assignedToggle);
+          }}>
+          <AppTitle title="Assigned" />
+        </TouchableOpacity>
+        {!assignedToggle ? null : (
+          <View style={styles.subList}>
+            {assigned.map((u, i) => {
+              return (
+                <TouchableOpacity
+                  style={styles.card}
+                  key={u._id}
+                  onPress={() =>
+                    navigation.navigate('Modal', {
+                      modal: 'AssignRouteModal',
+                      item: u,
+                    })
+                  }>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                      <Text numberOfLines={1} style={styles.titleText}>
+                        {u.route_id}
+                      </Text>
+                      <Text>{u.route_stage}</Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={{
+                          color: Colors.SMT_Primary_1,
+                          textAlign: 'right',
+                        }}>
+                        {getDateStringsFromDate(u.time).date}
+                      </Text>
+                      <View
+                        style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+                        <Text>Stops: </Text>
+                        <Text
+                          style={{
+                            fontWeight: 'bold',
+                            color:
+                              u.service_stop.length > 0
+                                ? Colors.SMT_Secondary_2_Light_1
+                                : Colors.SMT_Primary_1,
                             textAlign: 'right',
                           }}>
                           {u.service_stop.length}

@@ -28,10 +28,10 @@ const DriverDashboard = () => {
   // Pop ups
   const [showSelectRoutePopup, setShowSelectRoutePopup] = useState(false);
   //#endregion
-
+    
     useFocusEffect(
       React.useCallback(() => {
-          checkForAssignedRoute();
+        checkForAssignedRoute();
       }, [])
     );
 
@@ -60,6 +60,9 @@ const DriverDashboard = () => {
             setShowSelectRoutePopup(true);
           } else if (json.data.length == 1) {
             setMyRoute(json.data[0]);
+          } else {
+            setMyRoute(undefined);
+            setStatus('Unassigned');
           }
         } else {
           show({message: json.message});
@@ -117,44 +120,41 @@ const DriverDashboard = () => {
   };
 
   const handleStartOnPress = () => {
-    getDriverRouteStateAsync().then(value => {
-      if (value) {
-        navigation.navigate('Routes', {screen: 'RouteNavigationScreen', params: {model: myRoute}});
-      } else {
-        let routeState: DriverRouteState = {
-          routeStage: 'Started',
-          stopsState: {
-            currentId: '',
-            currentStop: '',
-            currentStatus: ''
+    fetch(`${Configs.TCMC_URI}/api/routes`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify({
+        _id: myRoute?._id,
+        route_stage: 'Finalized',
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (isSuccessStatusCode(json.status)) {
+          let routeState: DriverRouteState = {
+            routeStage: 'Started',
+            stopsState: {
+              currentId: '',
+              currentStop: '',
+              currentStatus: ''
+            }
           }
+          setDriverRouteStateAsync(routeState).then((value) => {
+            if (value) {
+              navigation.navigate('Routes', {
+                screen: 'RouteNavigationScreen',
+                params: {model: myRoute},
+              });
+            }
+          });
+        } else {
+          show({message: json.message});
         }
-        setDriverRouteStateAsync(routeState).then(value => {
-          if (value) {
-            fetch(`${Configs.TCMC_URI}/api/routes`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-access-token': token,
-              },
-              body: JSON.stringify({
-                _id: myRoute?._id,
-                route_stage: 'Finalized',
-              }),
-            })
-              .then((res) => res.json())
-              .then((json) => {
-                if (isSuccessStatusCode(json.status)) {
-                  navigation.navigate('Routes',{screen:'RouteNavigationScreen', params: {model: myRoute}});
-                } else {
-                  show({message: json.message});
-                }
-              })
-              .catch((err) => show({message: err.message}));
-          }
-        });
-      }
-    });
+      })
+      .catch((err) => show({message: err.message}));
   };
 
   const handleEndOnPress = () => {
@@ -170,6 +170,7 @@ const DriverDashboard = () => {
             if (value) {
               setMyRoute(undefined);
               setStatus('Unassigned');
+              show({message: 'You completed the route.'});
             }
           });
         } else {

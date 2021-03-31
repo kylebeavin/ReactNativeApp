@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import AppButton from '../../../components/Layout/AppButton';
 import { ToastContext } from '../../../providers/ToastProvider';
 import { CameraContext } from '../../../providers/CameraProvider';
+import useTest from '../../../hooks/useTest';
 
 interface Props {
   
@@ -11,6 +12,7 @@ interface Props {
 const InvoicesScreen = () => {
   const {show} = useContext(ToastContext);
   const {showCamera} = useContext(CameraContext);
+  const {generateTestRouteWithStops} = useTest();
 
   return (
     <View style={styles.container}>
@@ -19,6 +21,9 @@ const InvoicesScreen = () => {
       </View>
       <View>
           <AppButton title='Show Camera' onPress={() => showCamera({})} />
+      </View>
+      <View>
+          <AppButton title='Generate Test Route &amp; Orders' onPress={() => generateTestRouteWithStops()} />
       </View>
     </View>
   );

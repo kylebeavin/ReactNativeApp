@@ -11,11 +11,11 @@ MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 const mapboxBaseUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
 
 interface Props {
-  locations: string[];
   children?: any;
+  zoomLevel?: number;
 }
 
-const AppMapBox: React.FC<Props> = ({locations, children}) => {
+const AppMapBox: React.FC<Props> = ({children, zoomLevel}) => {
   //#region Use State Variables
   const {getPermissions} = useContext(PermissionContext);
   const [userLocation, setUserLocation] = useState<any>();
@@ -42,7 +42,7 @@ const AppMapBox: React.FC<Props> = ({locations, children}) => {
             styleURL={MapboxGL.StyleURL.Street}>
             <MapboxGL.UserLocation androidRenderMode='gps' visible={true} />
             {children}
-            <MapboxGL.Camera zoomLevel={9} centerCoordinate={userLocation} />
+            <MapboxGL.Camera zoomLevel={zoomLevel ? zoomLevel : 9} centerCoordinate={userLocation} />
           </MapboxGL.MapView>
         </View>
       </View>

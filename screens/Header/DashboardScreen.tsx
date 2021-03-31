@@ -13,11 +13,7 @@ import AppContext from '../../providers/AppContext';
 import DriverDashboard from '../../components/Dashboard/DriverDashboard';
 import RoutesStatus from '../../components/Dashboard/RoutesStatus';
 
-interface Props {
-  key: any;
-}
-
-const DashboardScreen: React.FC<Props> = () => {
+const DashboardScreen = () => {
   //#region Use State Variables
   const {role} = useContext(AppContext);
 
@@ -36,7 +32,7 @@ const DashboardScreen: React.FC<Props> = () => {
       case 'corporate':
         return null;
       case 'driver':
-        return <DriverDashboard />;
+        return <DriverDashboard/>;
         case 'gm':
           return null;
       case 'mechanic':

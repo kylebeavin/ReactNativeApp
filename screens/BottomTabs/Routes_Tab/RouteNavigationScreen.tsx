@@ -20,6 +20,9 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import AppButton from '../../../components/Layout/AppButton';
 import DriverNavigationMap from '../../../components/map/DriverNavigationMap';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
+import { useNavigation } from '@react-navigation/native';
+import useMapbox from '../../../hooks/useMapbox';
+import MapboxGL from '@react-native-mapbox-gl/maps';
 
 interface Props {
   route: any;
@@ -29,6 +32,8 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   const model: Route = route.params.model;
 
   //#region Use State Variables
+  const navigation = useNavigation();
+  const {getCoordinates} = useMapbox();
   const {grpId, token, displayName} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const {getDriverRouteStateAsync, setDriverRouteStateAsync, clearDriverRouteStateAsync} = useAsyncStorage();
@@ -47,7 +52,9 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   }, []);
 
   useEffect(() => {
-    console.log(routeState)
+    if (routeState?.routeStage === 'Started') {
+      getStops();
+    }
   }, [routeState]);
 
   const getCachedState = async () => {
@@ -82,7 +89,7 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
             monthly_rate: '',
             location: model.start_location,
             notes: [],
-            order_status: '',
+            order_status: getLastStopStatus(),
             services: '',
             service_date: '',
             service_day: '',
@@ -99,6 +106,12 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
       .catch((err) => show({message: err.message}));
   };
 
+  const getLastStopStatus = (): string => {
+    if (routeState?.stopsState.currentId === 'lastStop' && routeState?.stopsState.currentStatus === 'Smashing') return 'started';
+    if (routeState?.stopsState.currentId === 'lastStop' && routeState?.stopsState.currentStatus === 'Completed') return 'completed';
+    return 'not started';
+  };
+
   const getLocations = () : string[] => {
     let locations: string[] = [];
 
@@ -108,17 +121,50 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
     return locations;
   };
 
-  const getDirections = () => {
-    // This method is going to depend on the state of the driver's route & stop states.
+  const getDirections = () : string[] => {
+    let locations: string[] = [];
+  
+    if (routeState && ordersList.length > 0) {
+      if (routeState?.stopsState.currentStop === '1') {
+
+        locations.push(model.start_location);
+        locations.push(ordersList[0].location);
+      } else {
+        locations.push(ordersList[parseInt(routeState?.stopsState.currentStop) - 2].location);
+        locations.push(ordersList[parseInt(routeState?.stopsState.currentStop) - 1].location);
+      }
+    }
+      
+    return locations;
   };
 
   const renderMapState = () => {
-    // This method is going to depend on the state of the driver's route & stop states.
+    let addresses = [];
+    if (routeState?.routeStage === 'Started') {
+      addresses = getLocations();
+      return (
+        <AppMapBox>
+          <DriverNavigationMap route={model} locations={addresses} />
+        </AppMapBox>
+      );
+    } else if (routeState?.routeStage === 'Navigating') {
+      addresses = getDirections()
+
+      if (addresses.length > 0) {
+        return (
+          <AppMapBox zoomLevel={15}>
+            <DriverNavigationMap
+              route={model}
+              locations={addresses}
+              directions
+            />
+          </AppMapBox>
+        );
+      }
+    }
   };
 
   const handleGoOnPress = (stop: Order, stopNumber: number) => {
-    console.log(stop)
-    console.log(stopNumber)
     // Update Cache
     let newState: DriverRouteState = {
       routeStage: 'Navigating',
@@ -128,29 +174,33 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
         currentStatus: 'Navigating'
       }
     }
-    setDriverRouteStateAsync(newState).then(value => {
-      if (value) {
-        // Update DB
-        if (routeState?.stopsState.currentId === 'lastStop') {
-          setRouteState(newState);
-        } else {
-        fetch(`${Configs.TCMC_URI}/api/orders`, {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json', 'x-access-token': token},
-          body: JSON.stringify({_id: stop._id, notes: `${displayName} is on his way.`})
-        })
+
+    if (newState.stopsState.currentId === 'lastStop') {
+      setDriverRouteStateAsync(newState).then(value => {
+        setRouteState(newState);
+      });
+    } else {
+      fetch(`${Configs.TCMC_URI}/api/orders`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
+        body: JSON.stringify({
+          _id: stop._id,
+          notes: `${displayName} is on their way.`,
+        }),
+      })
         .then((res) => res.json())
         .then((json) => {
-        if (isSuccessStatusCode(json.status)) {
-          setRouteState(newState);
-        } else {
-          show({message: json.message});
-        }
-      })
-      .catch((err) => show({message: err.message}));
-      }
+          if (isSuccessStatusCode(json.status)) {
+            setDriverRouteStateAsync(newState).then(value => value ? setRouteState(newState) : null);
+          } else {
+            show({message: json.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
     }
-    })
   };
 
   const handleArriveOnPress = (stop: Order, stopNumber: number) => {
@@ -198,30 +248,54 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
         currentStatus: 'Completed'
       }
     }
-    setDriverRouteStateAsync(newState).then(value => {
-      if (value) {
-        // Update DB
-        if (routeState?.stopsState.currentId === 'lastStop') {
-          newState.routeStage = 'Started';
-          setRouteState(newState);
-        } else {
-        fetch(`${Configs.TCMC_URI}/api/orders`, {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json', 'x-access-token': token},
-          body: JSON.stringify({_id: stop._id, order_status: 'completed'})
-        })
+
+    if (newState.stopsState.currentId === 'lastStop') {
+      newState.routeStage = 'Started';
+      setDriverRouteStateAsync(newState).then(value => value ? setRouteState(newState) : null);
+    } else {
+      fetch(`${Configs.TCMC_URI}/api/orders`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
+        body: JSON.stringify({
+          _id: stop._id,
+          order_status: 'completed',
+        }),
+      })
         .then((res) => res.json())
         .then((json) => {
+          if (isSuccessStatusCode(json.status)) {
+            setDriverRouteStateAsync(newState).then(value => value ? setRouteState(newState) : null);
+          } else {
+            show({message: json.message});
+          }
+        })
+        .catch((err) => show({message: err.message}));
+    }
+  };
+
+  const handleCompleteRoute = () => {
+    fetch(`${Configs.TCMC_URI}/api/routes`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify({_id: model._id, route_stage: 'Completed'}),
+    })
+      .then((res) => res.json())
+      .then((json) => {
         if (isSuccessStatusCode(json.status)) {
-          setRouteState(newState);
+          clearDriverRouteStateAsync().then(value => {
+            if (value) {
+              navigation.navigate('DashboardScreen');
+              show({message: 'You completed the route.'});
+            }
+          });
         } else {
           show({message: json.message});
         }
       })
       .catch((err) => show({message: err.message}));
-      }
-    }
-    })
   };
 
   const renderListState = () => {
@@ -251,38 +325,12 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
           </View>
         );
       });
-    } else if (routeState.routeStage === 'Navigating') {
+    } else if (ordersList.length > 0 && routeState.routeStage === 'Navigating') {
         let navigationList : Order[] = [];
 
         // Calculate where we are in route.
         if (routeState.stopsState.currentStop === '1' && routeState.stopsState.currentStatus !== 'Completed') {
           // If we're on our first stop.
-          let firstStop: Order = {
-            _id: 'firstStop',
-            order_id: 'Start-0',
-            account_id: '',
-            agreement_id: '',
-            containers_serviced: 0,
-            completed_geo_location: '',
-            completed_time: new Date(),
-            container_qty: 0,
-            demand_rate: '',
-            group_id: '',
-            haul_status: false,
-            is_active: false,
-            is_demo: false,
-            is_recurring: false,
-            monthly_rate: '',
-            location: model.start_location,
-            notes: [],
-            order_status: '',
-            services: '',
-            service_date: '',
-            service_day: '',
-            service_frequency: '',
-            url: [],
-            account_name: ''
-          }
           navigationList.push(ordersList[0]);
           navigationList.push(ordersList[1]);
         } else {
@@ -335,6 +383,19 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
     }
   };
 
+  const renderCompleteButton = () => {
+    let isComplete = true;
+    ordersList.forEach(u => u.order_status === 'not started' || u.order_status === 'started' ? isComplete = false : null)
+
+    if (isComplete) {
+      return (
+        <View style={{paddingHorizontal: 10}} >
+        <AppButton title='Complete Route' onPress={handleCompleteRoute} />
+      </View>
+    )
+  }
+  };
+
   return (
     <View>
       <ScrollView
@@ -343,14 +404,13 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
         <AppNavDetailGrp route={model} />
 
         <View style={{paddingHorizontal: 10}}>
-          <AppMapBox locations={getLocations()}>
-            <DriverNavigationMap route={model} locations={getLocations()} />
-          </AppMapBox>
+          {renderMapState()}
         </View>
 
         <TouchableOpacity style={{marginBottom: 5}} onPress={() => setStopsToggle(!stopsToggle)}>
           <AppTitle title='Route Stops' />
         </TouchableOpacity>
+        {renderCompleteButton()}
         {!stopsToggle ? null : (
           <View style={{paddingHorizontal: 10}}>
             {renderListState()}
