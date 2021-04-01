@@ -35,10 +35,10 @@ const useMapbox = () => {
     return coordsStore;
   };
 
-  const getOptimizedRoute = async (coordinates: MapboxPoint[]): Promise<MapboxGeometry> => {
+  const getOptimizedRoute = async (coordinates: MapboxPoint[]): Promise<GeoJSON.Geometry> => {
     // Use the optimized-trips endpoint for planning the stops order ahead of time.
     // Todo: For a more complete implementation return the entire response object.
-    let route: MapboxGeometry;
+    let route: GeoJSON.Geometry;
 
     await fetch(`${mapboxUri}/optimized-trips/v1/mapbox/driving/${formatCoordinates(coordinates)}?geometries=geojson&access_token${Configs.MAPBOX_ACCESS_TOKEN}`)
       .then((res) => res.json())
@@ -48,7 +48,7 @@ const useMapbox = () => {
         }
       });
 
-    return (route = {type: 'fail', coordinates: []});
+    return (route = {type: 'LineString', coordinates: []});
   };
 
   const getDirections = async (coordinates: MapboxPoint[]) : Promise<MapboxRoute> => {

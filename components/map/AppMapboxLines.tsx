@@ -6,13 +6,13 @@ import Configs from '../../constants/Configs';
 import { MapboxGeometry, MapboxPoint } from '../../types/mapbox';
 
 interface Props {
-    coordinates: GeoJSON.Geometry;
+    geometry: GeoJSON.Geometry;
 }
 
-const AppMapboxLines: React.FC<Props> = ({coordinates}) => {
+const AppMapboxLines: React.FC<Props> = ({geometry}) => {
 
     return (
-        <MapboxGL.ShapeSource id="routeSource" shape={coordinates}>
+        <MapboxGL.ShapeSource id="routeSource" shape={geometry}>
         <MapboxGL.LineLayer id="routeFill" style={styles.route} />
       </MapboxGL.ShapeSource>
     );

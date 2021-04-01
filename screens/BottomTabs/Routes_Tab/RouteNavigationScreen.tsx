@@ -23,6 +23,9 @@ import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import useMapbox from '../../../hooks/useMapbox';
 import MapboxGL from '@react-native-mapbox-gl/maps';
+import { MapboxPoint } from '../../../types/mapbox';
+import AppMapboxPoint from '../../../components/map/AppMapboxPoint';
+import AppMapboxLines from '../../../components/map/AppMapboxLines';
 
 interface Props {
   route: any;
@@ -33,7 +36,7 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
 
   //#region Use State Variables
   const navigation = useNavigation();
-  const {getCoordinates} = useMapbox();
+  const {getCoordinates, getOptimizedRoute} = useMapbox();
   const {grpId, token, displayName} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const {getDriverRouteStateAsync, setDriverRouteStateAsync, clearDriverRouteStateAsync} = useAsyncStorage();
@@ -41,6 +44,8 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   // State
   const [routeState, setRouteState] = useState<DriverRouteState>();
   const [ordersList, setOrdersList] = useState<Order[]>([]);
+  const [coordinates, setCoordinates] = useState<MapboxPoint[]>([]);
+  const [routeLine, setRouteLine] = useState<GeoJSON.Geometry>();
 
   // Toggles
   const [stopsToggle, setStopsToggle] = useState(true);
@@ -58,7 +63,8 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   }, [routeState]);
 
   useEffect(() => {
-    getCoordinates(ordersList.map(u => u.location)).then(value => console.log(value));
+    getCoordinates(ordersList.map(u => u.location)).then(value => setCoordinates(value));
+    getOptimizedRoute(coordinates).then(geometry => setRouteLine(geometry));
   }, []);
 
   const getCachedState = async () => {
@@ -148,7 +154,15 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
       addresses = getLocations();
       return (
         <AppMapBox>
-          <DriverNavigationMap route={model} locations={addresses} />
+          {/* <DriverNavigationMap route={model} locations={addresses} /> */}
+          { coordinates.map(u => {
+            return (
+              <AppMapboxPoint id={`${u[0]}${u[1]}`} point={u} />
+              )
+          })
+          }
+
+          <AppMapboxLines geometry={coordinates} />
         </AppMapBox>
       );
     } else if (routeState?.routeStage === 'Navigating') {
