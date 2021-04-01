@@ -57,6 +57,10 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
     }
   }, [routeState]);
 
+  useEffect(() => {
+    getCoordinates(ordersList.map(u => u.location)).then(value => console.log(value));
+  }, []);
+
   const getCachedState = async () => {
     await getDriverRouteStateAsync().then(value => !value ? null : setRouteState(value));
   }
