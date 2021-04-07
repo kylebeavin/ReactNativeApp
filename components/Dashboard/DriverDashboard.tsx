@@ -106,7 +106,7 @@ const DriverDashboard = () => {
           <AppButton
             title='Go To Route'
             onPress={() =>
-              navigation.navigate('Routes', {
+              navigation.navigate('Dashboard', {
                 screen: 'RouteNavigationScreen',
                 params: {model: myRoute},
               })
@@ -144,7 +144,7 @@ const DriverDashboard = () => {
           }
           setDriverRouteStateAsync(routeState).then((value) => {
             if (value) {
-              navigation.navigate('Routes', {
+              navigation.navigate('Dashboard', {
                 screen: 'RouteNavigationScreen',
                 params: {model: myRoute},
               });

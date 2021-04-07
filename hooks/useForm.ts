@@ -24,6 +24,7 @@ const useForm = <T, Z, Y>(
   handleSubmit(): void;
   values: T;
   errors: Z;
+  setValues: React.Dispatch<React.SetStateAction<T>>;
   setErrors: React.Dispatch<React.SetStateAction<Z>>;
 } => {
   const [values, setValues] = useState<T>(formFields);
@@ -76,6 +77,7 @@ const useForm = <T, Z, Y>(
     handleChange,
     handleSubmit,
     values,
+    setValues,
     errors,
     setErrors,
   };

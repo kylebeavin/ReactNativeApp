@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob'
 import AppButton from '../../../components/Layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -75,23 +76,6 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
     );
   }, []);
 
-  const createFormData = (photo: any, body: any) => {
-    const data = new FormData();
-    data.append('photo', {
-      name: 'order_completed.jpeg',
-      type: 'image/jpeg',
-      uri:
-        Platform.OS === 'android'
-          ? photo.uri
-          : photo.uri.replace('file://', ''),
-    });
-
-    Object.keys(body).forEach((key) => {
-      data.append(key, body[key]);
-    });
-    return data;
-  };
-
   async function updateStatus() {
     if (containerImage.uri === '') {
       setValid(false);
@@ -107,27 +91,32 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
       completed_geo_location: location,
       completed_time: new Date(),
     };
-
-    await fetch(`${Configs.TCMC_URI}/api/orderPics`, {
-      method: 'POST',
-      headers: {'x-access-token': token},
-      body: createFormData(containerImage, requestBody),
-    })
+    
+    await RNFetchBlob.fetch(
+      'POST',
+      `${Configs.TCMC_URI}/api/orderPics`,
+      {'x-access-token': token},
+      [
+        { name: 'order_completed.jpeg', filename: 'order_completed.jpeg', data: RNFetchBlob.wrap(Platform.OS === 'android'? containerImage.uri: containerImage.uri.replace('file://', ''))},
+        { name: 'body' , data: JSON.stringify(requestBody)}
+      ],
+    )
       .then((res) => res.json())
       .then((json) => {
         if (isSuccessStatusCode(json.status)) {
           show({message: json.message});
           navigation.navigate('OrdersScreen');
         } else {
+          console.log(json)
           show({message: json.message});
         }
       })
       .catch((err) => show({message: err.message}));
   }
-
+  
   useEffect(() => {
     if (containerImage.uri !== '') setValid(true);
-    Object.keys(pictures).map((key) => {
+    Object.keys(pictures).map((key: string) => {
       if (key === 'Container') {
         setContainerImage({
           base64: pictures[key].base64,

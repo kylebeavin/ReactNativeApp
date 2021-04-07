@@ -6,24 +6,31 @@ import Configs from '../../constants/Configs';
 import { MapboxGeometry, MapboxPoint } from '../../types/mapbox';
 
 interface Props {
-    geometry: GeoJSON.Geometry;
+    geometry: any;
 }
 
 const AppMapboxLines: React.FC<Props> = ({geometry}) => {
+    
+    const lineStyle = {
+      lineColor: Colors.SMT_Secondary_2_Light_1,
+      lineWidth: 3,
+      lineOpacity: 0.84,
+    };
 
     return (
+      <>
         <MapboxGL.ShapeSource id="routeSource" shape={geometry}>
-        <MapboxGL.LineLayer id="routeFill" style={styles.route} />
-      </MapboxGL.ShapeSource>
+          <MapboxGL.LineLayer id="routeFill" style={lineStyle} />
+        </MapboxGL.ShapeSource>
+      </>
     );
 }
 
-const styles = StyleSheet.create<any>({
-    route: {
-        lineColor: Colors.SMT_Secondary_2_Light_1,
-        lineWidth: 3,
-        lineOpacity: 0.84
+AppMapboxLines.defaultProps = {
+    geometry: {
+        type: "LineString",
+        coordinates: []
     }
-});
+};
 
 export default AppMapboxLines;

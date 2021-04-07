@@ -93,7 +93,6 @@ const DriverNavigationMap: React.FC<Props> = ({route, locations, directions}) =>
       await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?steps=true&geometries=geojson&access_token=${mapboxToken}`)
         .then(res => res.json())
         .then(json => {
-          console.log(json.routes[0].legs[0].steps)
           setRouteData(json.routes[0].geometry)
         })
         .catch(err => show({message: err.message}));

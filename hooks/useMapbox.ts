@@ -1,10 +1,14 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import Configs from '../constants/Configs';
 import {ToastContext} from '../providers/ToastProvider';
 import {MapboxGeometry, MapboxPoint, MapboxRoute} from '../types/mapbox';
 
 const useMapbox = () => {
   const mapboxUri: string = 'https://api.mapbox.com';
+
+  const {show} = useContext(ToastContext)
+
+  const [routeLine, setRouteLine] = useState<MapboxGeometry>({type: 'LineString', coordinates: []});
 
   const getCoordinates = async (addresses: string[]): Promise<MapboxPoint[]> => {
     // Use geocoding endpoint to convert addresses to coordinates.
@@ -35,20 +39,20 @@ const useMapbox = () => {
     return coordsStore;
   };
 
-  const getOptimizedRoute = async (coordinates: MapboxPoint[]): Promise<GeoJSON.Geometry> => {
+  const getOptimizedRoute = async (coordinates: MapboxPoint[]): Promise<any> => {
     // Use the optimized-trips endpoint for planning the stops order ahead of time.
     // Todo: For a more complete implementation return the entire response object.
-    let route: GeoJSON.Geometry;
-
-    await fetch(`${mapboxUri}/optimized-trips/v1/mapbox/driving/${formatCoordinates(coordinates)}?geometries=geojson&access_token${Configs.MAPBOX_ACCESS_TOKEN}`)
+    let test = await fetch(`${mapboxUri}/optimized-trips/v1/mapbox/driving/${formatCoordinates(coordinates)}?geometries=geojson&access_token=${Configs.MAPBOX_ACCESS_TOKEN}`)
       .then((res) => res.json())
       .then((json) => {
         if (json.code === 'Ok') {
-          return (route = json.trips[0].geometry);
+          setRouteLine(json.trips[0].geometry);
+          return new Promise(resolve => resolve(json.trips[0].geometry));
         }
-      });
+      })
+      .catch(err => show({message: err.message}));
 
-    return (route = {type: 'LineString', coordinates: []});
+    return test;
   };
 
   const getDirections = async (coordinates: MapboxPoint[]) : Promise<MapboxRoute> => {
@@ -100,14 +104,17 @@ const useMapbox = () => {
       coord.join(','),
     );
     coordsString = coordsStringArr.join(';');
-
+    
     return coordsString;
   };
 
   return {
     getCoordinates,
     getOptimizedRoute,
-    getDirections
+    getDirections,
+    routeLine,
+    formatAddresses,
+    formatCoordinates
   };
 };
 

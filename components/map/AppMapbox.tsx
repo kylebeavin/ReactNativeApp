@@ -3,9 +3,9 @@ import {StyleSheet, View} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import Geolocation from '@react-native-community/geolocation';
 
-import Colors from '../constants/Colors';
-import Configs from '../constants/Configs';
-import {PermissionContext} from '../providers/PermissionContext';
+import Colors from '../../constants/Colors';
+import Configs from '../../constants/Configs';
+import {PermissionContext} from '../../providers/PermissionContext';
 
 MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 const mapboxBaseUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
@@ -15,7 +15,7 @@ interface Props {
   zoomLevel?: number;
 }
 
-const AppMapBox: React.FC<Props> = ({children, zoomLevel}) => {
+const AppMapbox: React.FC<Props> = ({children, zoomLevel}) => {
   //#region Use State Variables
   const {getPermissions} = useContext(PermissionContext);
   const [userLocation, setUserLocation] = useState<any>();
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppMapBox;
+export default AppMapbox;

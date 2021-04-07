@@ -59,7 +59,7 @@ const useTest = () => {
                     console.log(json.message);
                     data.push(json.data);
                 } else {
-                    console.log('fail');
+                    console.log(json.message);
                 }
             })
             .catch(err => console.log('err'));
@@ -92,7 +92,7 @@ const useTest = () => {
             if (isSuccessStatusCode(json.status)) {
                 console.log(json.message);
             } else {
-                console.log('fail');
+                console.log(json.message);
             }
         })
         .catch(err => console.log('err'));

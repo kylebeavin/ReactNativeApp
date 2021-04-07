@@ -69,6 +69,7 @@ function DashboardNavigator() {
         name='DashboardScreen'
         component={DashboardScreen}
       />
+      <DashboardStack.Screen name='RouteNavigationScreen' component={RouteNavigationScreen} />
     </DashboardStack.Navigator>
   );
 }
@@ -132,7 +133,6 @@ function RoutesNavigator() {
       <RoutesStack.Screen name='RoutesMapScreen' component={RoutesMapScreen} />
       <RoutesStack.Screen name='RouteDetailsScreen' component={RouteDetailsScreen} />
       <RoutesStack.Screen name='TruckDetailsScreen' component={TruckDetailsScreen}/>
-      <RoutesStack.Screen name='RouteNavigationScreen' component={RouteNavigationScreen} />
     </RoutesStack.Navigator>
   );
 }
