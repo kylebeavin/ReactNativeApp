@@ -15,8 +15,8 @@ interface Props {
 
 const AuthScreen: React.FC<Props> = () => {
   //#region State Variables
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('kyle.beavin@tcmcllc.com');
+  const [password, setPassword] = useState('password123');
   const [emailValidator, setEmailValidator] = useState({isValid: false, message: '', isVisible: false});
   const [passwordValidator, setPasswordValidator] = useState({isValid: false, message: '', isVisible: false});
   const {setId, setIsAuth, setToken, setGrpId, setDisplayName, setGrpArr, setRole, setImage} = useContext(AppContext);
