@@ -13,9 +13,9 @@ export default {
               MapScreen: 'three',
             },
           },
-          Services: {
+          Orders: {
             screens: {
-              ServicesScreen: 'two',
+              OrdersScreen: 'two',
             },
           },
           Routes: {

@@ -12,10 +12,10 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
-import AppCheckBox from '../../../components/Layout/AppCheckBox';
+import AppCheckBox from '../../../components/layout/AppCheckBox';
 import {RouteStages} from '../../../types/enums';
 
 interface Props {

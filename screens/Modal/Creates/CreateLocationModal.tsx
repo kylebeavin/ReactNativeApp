@@ -12,7 +12,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
 import {isRequired} from '../../../utils/Validators';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 
 interface Props {}
 

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Colors from '../../constants/Colors';
 import AppContext from '../../providers/AppContext';
-import AppTitle from '../Layout/AppTitle';
+import AppTitle from '../layout/AppTitle';
 
 interface Props {
   title: string;

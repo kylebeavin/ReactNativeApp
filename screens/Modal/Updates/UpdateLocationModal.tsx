@@ -7,7 +7,7 @@ import Configs from '../../../constants/Configs';
 import {Location, Account} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {isRequired} from '../../../utils/Validators';
 import {useNavigation} from '@react-navigation/native';
 import AppContext from '../../../providers/AppContext';

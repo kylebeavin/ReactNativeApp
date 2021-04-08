@@ -15,11 +15,11 @@ import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
 import {isRequired, isEmail} from '../../../utils/Validators';
 import {Group} from '../../../types';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import {TextInputMask} from 'react-native-masked-text';
 import {Calendar} from 'react-native-calendars';
 

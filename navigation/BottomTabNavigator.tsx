@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import AppTabBar from '../components/Footer/AppTabBar';
+import AppTabBar from '../components/footer/AppTabBar';
 import {
   BottomTabParamList,
   DashboardParamList,
@@ -11,28 +11,28 @@ import {
   ReportsParamList,
   CRM_ParamList,
   SettingsParamList,
-  ServicesParamList,
+  OrdersParamList,
 } from '../types/navigation';
 import Colors from '../constants/Colors';
-import DashboardScreen from '../screens/Header/DashboardScreen';
-import SettingsScreen from '../screens/Header/SettingsScreen';
-import AccountsScreen from '../screens/BottomTabs/CRM_Tab/AccountsScreen';
-import OrdersCalendarScreen from '../screens/BottomTabs/Services_Tab/OrdersCalendarScreen';
-import RoutesScreen from '../screens/BottomTabs/Routes_Tab/RoutesScreen';
-import InvoiceScreen from '../screens/BottomTabs/Invoices_Tab/InvoicesScreen';
-import ReportScreen from '../screens/BottomTabs/Reports_Tab/ReportsScreen';
-import MeetingsScreen from '../screens/BottomTabs/CRM_Tab/MeetingsScreen';
-import MapScreen from '../screens/BottomTabs/CRM_Tab/MapScreen';
-import OrdersScreen from '../screens/BottomTabs/Services_Tab/OrdersScreen';
-import OrdersMapScreen from '../screens/BottomTabs/Services_Tab/OrdersMapScreen';
-import RoutesMapScreen from '../screens/BottomTabs/Routes_Tab/RoutesMapScreen';
-import RoutesCalendarScreen from '../screens/BottomTabs/Routes_Tab/RoutesCalendarScreen';
-import RouteDetailsScreen from '../screens/BottomTabs/Routes_Tab/RouteDetailsScreen';
-import TruckDetailsScreen from '../screens/BottomTabs/Routes_Tab/TruckDetailsScreen';
-import OrderDetailsScreen from '../screens/BottomTabs/Services_Tab/OrderDetailsScreen';
-import MeetingDetailsScreen from '../screens/BottomTabs/CRM_Tab/MeetingDetailsScreen';
-import AccountDetailsScreen from '../screens/BottomTabs/CRM_Tab/AccountDetailsScreen';
-import RouteNavigationScreen from '../screens/BottomTabs/Routes_Tab/RouteNavigationScreen';
+import DashboardScreen from '../screens/header/DashboardScreen';
+import SettingsScreen from '../screens/header/SettingsScreen';
+import CrmScreen from '../screens/bottom_tabs/crm_tab/CrmScreen';
+import OrdersCalendarScreen from '../screens/bottom_tabs/orders_tab/OrdersCalendarScreen';
+import RoutesScreen from '../screens/bottom_tabs/routes_tab/RoutesScreen';
+import InvoiceScreen from '../screens/bottom_tabs/invoices_tab/InvoicesScreen';
+import ReportScreen from '../screens/bottom_tabs/reports_tab/ReportsScreen';
+import CrmCalendarScreen from '../screens/bottom_tabs/crm_tab/CrmCalendarScreen';
+import CrmMapScreen from '../screens/bottom_tabs/crm_tab/CrmMapScreen';
+import OrdersScreen from '../screens/bottom_tabs/orders_tab/OrdersScreen';
+import OrdersMapScreen from '../screens/bottom_tabs/orders_tab/OrdersMapScreen';
+import RoutesMapScreen from '../screens/bottom_tabs/routes_tab/RoutesMapScreen';
+import RoutesCalendarScreen from '../screens/bottom_tabs/routes_tab/RoutesCalendarScreen';
+import RouteDetailsScreen from '../screens/bottom_tabs/routes_tab/RouteDetailsScreen';
+import TruckDetailsScreen from '../screens/bottom_tabs/routes_tab/TruckDetailsScreen';
+import OrderDetailsScreen from '../screens/bottom_tabs/orders_tab/OrderDetailsScreen';
+import MeetingDetailsScreen from '../screens/bottom_tabs/crm_tab/MeetingDetailsScreen';
+import AccountDetailsScreen from '../screens/bottom_tabs/crm_tab/AccountDetailsScreen';
+import RouteNavigationScreen from '../screens/bottom_tabs/routes_tab/RouteNavigationScreen';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -41,7 +41,7 @@ const InvoicesStack = createStackNavigator<InvoicesParamList>();
 const ReportsStack = createStackNavigator<ReportsParamList>();
 const RoutesStack = createStackNavigator<RoutesParamList>();
 const CRM_Stack = createStackNavigator<CRM_ParamList>();
-const ServicesStack = createStackNavigator<ServicesParamList>();
+const OrdersStack = createStackNavigator<OrdersParamList>();
 
 export default function BottomTabNavigator() {
   return (
@@ -95,9 +95,9 @@ function CRM_Navigator() {
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <CRM_Stack.Screen name='AccountsScreen' component={AccountsScreen} />
-      <CRM_Stack.Screen name='MeetingsScreen' component={MeetingsScreen} />
-      <CRM_Stack.Screen name='MapScreen' component={MapScreen} />
+      <CRM_Stack.Screen name='CrmScreen' component={CrmScreen} />
+      <CRM_Stack.Screen name='CrmCalendarScreen' component={CrmCalendarScreen} />
+      <CRM_Stack.Screen name='CrmMapScreen' component={CrmMapScreen} />
       <CRM_Stack.Screen name='AccountDetailsScreen' component={AccountDetailsScreen} />
       <CRM_Stack.Screen name='MeetingDetailsScreen' component={MeetingDetailsScreen} />
     </CRM_Stack.Navigator>
@@ -106,17 +106,17 @@ function CRM_Navigator() {
 
 function OrdersNavigator() {
   return (
-    <ServicesStack.Navigator
+    <OrdersStack.Navigator
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: Colors.TCMC_White},
       }}
     >
-      <ServicesStack.Screen name='OrdersScreen' component={OrdersScreen} />
-      <ServicesStack.Screen name='OrdersCalendarScreen' component={OrdersCalendarScreen} />
-      <ServicesStack.Screen name='OrdersMapScreen' component={OrdersMapScreen} />
-      <ServicesStack.Screen name='OrderDetailsScreen' component={OrderDetailsScreen} />
-    </ServicesStack.Navigator>
+      <OrdersStack.Screen name='OrdersScreen' component={OrdersScreen} />
+      <OrdersStack.Screen name='OrdersCalendarScreen' component={OrdersCalendarScreen} />
+      <OrdersStack.Screen name='OrdersMapScreen' component={OrdersMapScreen} />
+      <OrdersStack.Screen name='OrderDetailsScreen' component={OrderDetailsScreen} />
+    </OrdersStack.Navigator>
   );
 }
 

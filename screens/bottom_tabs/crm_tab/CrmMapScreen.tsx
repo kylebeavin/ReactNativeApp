@@ -17,11 +17,11 @@ import {Account} from '../../../types/crm';
 import {getDateStringsFromDate} from '../../../utils/Helpers';
 import Configs from '../../../constants/Configs';
 import Colors from '../../../constants/Colors';
-import AppButton from '../../../components/Layout/AppButton';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppButton from '../../../components/layout/AppButton';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppEmptyCard from '../../../components/layout/AppEmptyCard';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 
@@ -29,7 +29,7 @@ interface Props {
   navigation: any;
 }
 
-const MapScreen: React.FC<Props> = ({navigation}) => {
+const CrmMapScreen: React.FC<Props> = ({navigation}) => {
   //#region Use State Variables
   const {grpId, token} = useContext(AppContext);
   const {getPermissions} = useContext(PermissionContext);
@@ -94,7 +94,13 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
-          <AppNavGroup add={{title: 'Account', modal: 'CreateAccountModal'}} list='AccountsScreen' schedule='MeetingsScreen' map='MapScreen' focused='Map' />
+          <AppNavGroup
+            add={{title: 'Account', modal: 'CreateAccountModal'}}
+            list='CrmScreen'
+            schedule='CrmCalendarScreen'
+            map='CrmMapScreen'
+            focused='Map'
+          />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
@@ -215,4 +221,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapScreen;
+export default CrmMapScreen;

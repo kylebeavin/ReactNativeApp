@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Animated } from 'react-native';
 import Colors from '../../constants/Colors';
 
-import AppButton from '../Layout/AppButton';
+import AppButton from '../layout/AppButton';
 
 const AppTab = (props: any) => {
     const { focusAnim, title, onPress} = props;

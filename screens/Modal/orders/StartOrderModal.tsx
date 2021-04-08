@@ -8,7 +8,7 @@ import {
   Text,
   Platform,
 } from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
@@ -17,7 +17,7 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import {CameraContext} from '../../../providers/CameraProvider';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppTitle from '../../../components/layout/AppTitle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {

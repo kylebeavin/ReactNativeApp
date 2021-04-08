@@ -8,21 +8,21 @@ import {
 } from 'react-native';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Configs from '../../../constants/Configs';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Colors from '../../../constants/Colors';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import {Order} from '../../../types/service';
-import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import AppAddNew from '../../../components/Layout/AppAddNew';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import {Order} from '../../../types/orders';
+import AppEmptyCard from '../../../components/layout/AppEmptyCard';
+import AppAddNew from '../../../components/layout/AppAddNew';
 import AppContext from '../../../providers/AppContext';
 import {useContext} from 'react';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { getDateStringsFromDate } from '../../../utils/Helpers';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
-const ServicesScreen = () => {
+const OrdersScreen = () => {
   //#region Use State Variables
   const navigation = useNavigation();
   const {grpId, token} = useContext(AppContext);
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServicesScreen;
+export default OrdersScreen;

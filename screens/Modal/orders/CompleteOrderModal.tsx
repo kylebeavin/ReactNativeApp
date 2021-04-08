@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob'
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
@@ -19,13 +19,13 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import {CameraContext} from '../../../providers/CameraProvider';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppTitle from '../../../components/layout/AppTitle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useForm from '../../../hooks/useForm';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {isRequired} from '../../../utils/Validators';
 import Geolocation from '@react-native-community/geolocation';
-import AppCheckBox from '../../../components/Layout/AppCheckBox';
+import AppCheckBox from '../../../components/layout/AppCheckBox';
 
 interface Props {
   order: {_id: string};

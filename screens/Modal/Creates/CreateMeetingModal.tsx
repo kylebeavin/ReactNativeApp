@@ -16,13 +16,13 @@ import Configs from '../../../constants/Configs';
 import {Meeting, Account, Contact} from '../../../types/crm';
 import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
 import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 
 interface Props {}
 

@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';

@@ -10,19 +10,18 @@ import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import {Calendar} from 'react-native-calendars';
 
-import {Services} from '../../../types/enums';
+import {RouteEvents} from '../../../types/enums';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
-import AppButton from '../../../components/Layout/AppButton';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import AppButton from '../../../components/layout/AppButton';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 import useDates from '../../../hooks/useDates';
-import {Meeting} from '../../../types/crm';
-import AppAddNew from '../../../components/Layout/AppAddNew';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import { Route } from '../../../types/routes';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 interface IMarkedDays {
   [key: string]: {
@@ -31,33 +30,26 @@ interface IMarkedDays {
   };
 }
 
-const MeetingsScreen = () => {
+const RoutesCalendarScreen = () => {
   //#region Use State Variables
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
-  const {getSelectedDateRange} = useDates();
-
-  let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-
+  const {addDays, firstDay, lastDay} = useDates();
+  
+  let firstDayOfThisMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   // Refs
-  let selectedQuery = useRef({
-    group_id: grpId,
-    meeting_time: {
-      $gte: formatDate(new Date()),
-      $lt: new Date(date.getDate() + 1),
-    },
-  }).current;
-  //let outstandingQuery = useRef({group_id: grpId, start_date: {$gte: formatDate(firstDay), $lt: new Date(date.setHours(0))}, order_status: {$ne: 'completed'}}).current;
+  let selectedQuery = useRef({group_id: grpId, time: {$gte: formatDate(new Date()), $lt: new Date(addDays(date, 1).toLocaleDateString())}}).current;
+  let outstandingQuery = useRef({group_id: grpId, time: {$gte: formatDate(firstDayOfThisMonth), $lt: new Date(date.setHours(0))}, route_stage: {$ne: 'completed'}}).current;
   // Calendar
   const [selectedDates, setSelectedDates] = useState<any>({
     [formatDate(new Date())]: {selected: true},
   });
-  //const [outstandingOrders, setOutstandingOrders] = useState<any>({});
+  const [outstandingRoutes, setOutstandingRoutes] = useState<any>({});
 
   // List
-  const [selectedMeetings, setSelectedMeetings] = useState<Meeting[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<Route[]>([]);
 
   // Picker
   const [sortItem, setSortItem] = useState('');
@@ -68,9 +60,18 @@ const MeetingsScreen = () => {
   }, []);
 
   const onDayPress = async (day: any) => {
+    outstandingQuery = {
+      group_id: grpId,
+      time: {
+        $gte: formatDate(firstDay(day.dateString)),
+        $lt: addDays(lastDay(day.dateString), 1),
+      },
+      route_stage: {$ne: 'Completed'},
+    };
     // DeSelect Day
     let lessThan = new Date(day.dateString);
     let newDays = selectedDates;
+
     // Find and Remove the date object with only 1 key (currently selected date).
     Object.keys(newDays).find((key) => {
       if (shallowEqual(newDays[key])) {
@@ -80,103 +81,109 @@ const MeetingsScreen = () => {
 
     // Select Day
     newDays[day.dateString] = {selected: true};
+
     //update queries
     selectedQuery = {
       group_id: grpId,
-      meeting_time: {
+      time: {
         $gte: day.dateString,
         $lt: lessThan.setDate(lessThan.getDate() + 1),
       },
     };
-
     // Fetch Orders
     await getSelectedDates();
   };
 
   const onMonthChange = (month: any) => {
-    // Get First and Last Day
+    // Get First and Last Day for query.
+    outstandingQuery = {group_id: grpId, time: {$gte: formatDate(firstDay(month.dateString)), $lt: addDays(lastDay(month.dateString), 1)}, route_stage: {$ne: 'Completed'}};
     // Fetch Outstanding Orders
+    getSelectedDates();
   };
 
   const getSelectedDates = async () => {
-    await getSelectedMeetings();
-    //const oOrderDays: IMarkedDays[] = await getOutstandingOrders();
-
-    //setSelectedDates({...oOrderDays, ...selectedDates});
-    setSelectedDates({...selectedDates});
+    await getSelectedRoutes();
+    const oRouteDays: IMarkedDays[] = await getOutstandingRoutes();
+    setSelectedDates({...oRouteDays, ...selectedDates});
   };
 
-  // const getOutstandingOrders = async (): Promise<IMarkedDays[]> => {
-  //   const orders: any = await fetch(
-  //     `${Configs.TCMC_URI}/api/ordersBy`,
-  //     {
-  //       method: 'POST',
-  //       body: JSON.stringify(outstandingQuery),
-  //       headers: {'Content-Type': 'application/json', 'x-access-token': token},
-  //     },
-  //   )
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       let outstandingOrders: IMarkedDays = {};
-  //       json.data.map((u: any, i: any) => {
-  //         return (
-  //           outstandingOrders[formatDate(u.start_date)] = {selected: true, selectedColor: Colors.SMT_Primary_1}
-  //         )
-  //       })
-  //       setOutstandingOrders({...outstandingOrders});
-  //       return outstandingOrders;
-  //     })
-  //     .catch((err) => show({message: 'Error getting orders.'}));
+  const getOutstandingRoutes = async (): Promise<IMarkedDays[]> => {
+    const orders: any = await fetch(
+      `${Configs.TCMC_URI}/api/routesBy`,
+      {
+        method: 'POST',
+        body: JSON.stringify(outstandingQuery),
+        headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      },
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        let outstandingRoutes: IMarkedDays = {};
+        json.data.map((u: any, i: any) => {
+          return (
+            outstandingRoutes[formatDate(u.time)] = {selected: true, selectedColor: Colors.SMT_Primary_1}
+            )
+          })
+        setOutstandingRoutes({...outstandingRoutes});
+        return outstandingRoutes;
+      })
+      .catch((err) => show({message: 'Error getting routes.'}));
 
-  //   return orders;
-  // };
+    return orders;
+  };
 
-  const getSelectedMeetings = async () => {
-    await fetch(`${Configs.TCMC_URI}/api/MeetingsBy`, {
+  const getSelectedRoutes = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
       method: 'POST',
       body: JSON.stringify(selectedQuery),
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
     })
       .then((res) => res.json())
-      .then((json) => setSelectedMeetings(json.data))
-      .catch((err) => show({message: 'Error getting meetings.'}));
+      .then((json) => {
+        setSelectedRoutes(json.data)
+      })
+      .catch((err) => show({message: 'Error getting routes.'}));
   };
 
   const shallowEqual = (object1: any) => {
-    // Not a complete shallow comparison
+    // Not a complete shallow comparison 
     const keys1 = Object.keys(object1);
-    const keys2 = Object.keys({selected: true});
-
+    const keys2 = Object.keys({'selected': true});
+  
     if (keys1.length !== keys2.length) {
       return false;
     }
-
+  
     // for (let key of keys1) {
     //   if (object1[key] !== object2[key]) {
     //     return false;
     //   }
     // }
-
+  
     return true;
-  };
+  }
 
   return (
     <>
-      <AppTitle title="CRM" />
+      <AppTitle title="Routes" />
 
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Meeting', modal: 'CreateMeetingModal'}}
-            list="AccountsScreen"
-            schedule="MeetingsScreen"
-            map="MapScreen"
+            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            list="RoutesScreen"
+            schedule="RoutesCalendarScreen"
+            map="RoutesMapScreen"
             focused="Schedule"
           />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
-          <View style={[styles.calendarContainer, {paddingLeft:1, marginRight: -0, paddingBottom: 7}]}>
+          <View
+            style={[
+              styles.calendarContainer,
+              {paddingLeft: 1, marginRight: -0, paddingBottom: 7},
+            ]}>
             <Calendar
               // ToDo: Modified the Calendars style sheets here C:\Users\kyleb\Desktop\Code\Smash-app-native\node_modules\react-native-calendars\src\calendar\style.js
               // This is bad practice to modify a dependency directly will need to revisit when i make calendar component.
@@ -235,27 +242,32 @@ const MeetingsScreen = () => {
         </View>
 
         <View style={{marginBottom: 10}}>
-          <AppTitle title="Service Events" />
+          <AppTitle title="Route Events" />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
-          {selectedMeetings.map((u, i) => {
+          {selectedRoutes.map((u: Route) => {
             return (
               <TouchableOpacity
                 style={styles.card}
-                key={i}
+                key={u._id}
                 onPress={() =>
-                  navigation.navigate('MeetingDetailsScreen', {model: u})
+                  navigation.navigate('RouteDetailsScreen', {model: u})
                 }>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{flex: 1}}>
-                    <Text style={styles.titleText}>{u.title}</Text>
-                    <Text>{u.address_city}</Text>
+                    <Text numberOfLines={1} style={styles.titleText}>
+                      {u.route_id}
+                    </Text>
+                    <Text>{u.route_stage}</Text>
                   </View>
                   <View style={{flex: 1}}>
                     <Text
-                      style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>
-                      {getDateStringsFromDate(u.meeting_time).date}
+                      style={{
+                        color: Colors.SMT_Primary_1,
+                        textAlign: 'right',
+                      }}>
+                      {getDateStringsFromDate(u.time).date}
                     </Text>
                     <Text
                       style={{
@@ -263,7 +275,7 @@ const MeetingsScreen = () => {
                         color: Colors.SMT_Secondary_2_Light_1,
                         textAlign: 'right',
                       }}>
-                      {getDateStringsFromDate(u.meeting_time).time}
+                      {getDateStringsFromDate(u.time).time}
                     </Text>
                   </View>
                 </View>
@@ -331,4 +343,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MeetingsScreen;
+export default RoutesCalendarScreen;

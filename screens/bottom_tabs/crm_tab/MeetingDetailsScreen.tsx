@@ -6,10 +6,10 @@ import {
   ScrollView,
   Text,
 } from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
-import AppEditBtn from '../../../components/Layout/AppEditBtn';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppButton from '../../../components/layout/AppButton';
+import AppEditBtn from '../../../components/layout/AppEditBtn';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import { Meeting } from '../../../types/crm';
 import {getDateStringsFromDate} from '../../../utils/Helpers';

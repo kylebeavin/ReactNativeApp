@@ -20,13 +20,13 @@ import {
   isSuccessStatusCode,
 } from '../../../utils/Helpers';
 import {TextInputMask} from 'react-native-masked-text';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import {isRequired} from '../../../utils/Validators';
 import {useNavigation} from '@react-navigation/native';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 
 interface Props {
   meeting: Meeting;

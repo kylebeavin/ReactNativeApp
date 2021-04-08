@@ -7,30 +7,29 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
-import AppEditBtn from '../../../components/Layout/AppEditBtn';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppTitle from '../../../components/Layout/AppTitle';
-import {Route} from '../../../types/routes';
+import AppButton from '../../../components/layout/AppButton';
+import AppEditBtn from '../../../components/layout/AppEditBtn';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppTitle from '../../../components/layout/AppTitle';
+import {Truck} from '../../../types/routes';
 
 interface Props {
   route: any;
 }
 
 const RouteDetailsScreen: React.FC<Props> = ({route}) => {
-  const model: Route = route.params.model;
+  const model: Truck = route.params.model;
 
   //#region Use State Variables
   const navigation = useNavigation();
 
   // Toggles
   const [inspectionsToggle, setInspectionsToggle] = useState(false);
-  const [stopsToggle, setStopsToggle] = useState(false);
   //#endregion
 
   return (
     <View>
-      <AppTitle title='Route Detail' />
+      <AppTitle title='Truck Detail' />
 
       <ScrollView
         style={styles.scrollView}
@@ -45,42 +44,48 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={model} modal='UpdateRouteModal' />
+            <AppEditBtn item={model} modal='UpdateTruckModal' />
           </View>
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
           <Text>_id: {model._id}</Text>
-          <Text>driver: {model.driver_id}</Text>
+          <Text>body_subtype: {model.body_subtype}</Text>
+          <Text>body_type: {model.body_type}</Text>
+          <Text>color: {model.color}</Text>
+          <Text>documents: {model.documents}</Text>
           <Text>group_id: {model.group_id}</Text>
+          <Text>hours: {model.hours}</Text>
           <Text>is_active: {model.is_active}</Text>
-          <Text>route_stage: {model.route_stage}</Text>
-          <Text>notes: {model.notes}</Text>
-          <Text>service_stop: {model.service_stop}</Text>
-          <Text>start_location: {model.start_location}</Text>
-          <Text>time: {model.time}</Text>
-          <Text>truck_id: {model.truck_id}</Text>
-          <Text>truck_vin: {model.truck_vin}</Text>
+          <Text>license_number: {model.license_number}</Text>
+          <Text>msrp: {model.msrp}</Text>
+          <Text>name: {model.name}</Text>
+          <Text>odo: {model.odo}</Text>
+          <Text>operator: {model.operator}</Text>
+          <Text>ownership: {model.ownership}</Text>
+          <Text>pictures: {model.pictures}</Text>
+          <Text>service_history: {model.service_history}</Text>
+          <Text>service_status: {model.service_status}</Text>
+          <Text>trim: {model.trim}</Text>
+          <Text>registration: {model.registration}</Text>
+          <Text>vehicle_make: {model.vehicle_make}</Text>
+          <Text>vehicle_model: {model.vehicle_model}</Text>
+          <Text>vehicle_type: {model.vehicle_type}</Text>
+          <Text>vin: {model.vin}</Text>
+          <Text>year: {model.year}</Text>
         </View>
 
         <TouchableOpacity
+          style={{marginBottom: 5}}
           onPress={() => setInspectionsToggle(!inspectionsToggle)}>
           <AppTitle title='Inspections' />
         </TouchableOpacity>
         {!inspectionsToggle ? null : (
-          <View style={{paddingLeft: 10}}>
+          <View style={{paddingLeft: 10, marginBottom: 50}}>
             <Text>Hello World!</Text>
           </View>
         )}
-
-        <TouchableOpacity onPress={() => setStopsToggle(!stopsToggle)}>
-          <AppTitle title='Stops' />
-        </TouchableOpacity>
-        {!stopsToggle ? null : (
-          <View style={{paddingLeft: 10}}>
-            <Text>Hello stops!</Text>
-          </View>
-        )}
+        <View style={{marginBottom: 50}}></View>
       </ScrollView>
     </View>
   );

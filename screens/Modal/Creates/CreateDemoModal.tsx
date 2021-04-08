@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, SegmentedControlIOSComponent } from 'react-native';
 
 import { Account } from '../../../types/crm';
-import { Demo } from '../../../types/service';
+import { Demo } from '../../../types/orders';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import Configs from '../../../constants/Configs';
 import { getRequestHeadersAsync } from '../../../utils/Helpers';

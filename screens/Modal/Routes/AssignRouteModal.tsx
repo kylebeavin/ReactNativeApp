@@ -22,11 +22,11 @@ import {
   getDateStringsFromDate,
   isSuccessStatusCode,
 } from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import {TextInputMask} from 'react-native-masked-text';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import {Calendar} from 'react-native-calendars';
 
 interface Props {

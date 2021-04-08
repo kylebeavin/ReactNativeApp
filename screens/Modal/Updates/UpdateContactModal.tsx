@@ -10,7 +10,7 @@ import {Contact} from '../../../types/crm';
 import ModalButtons from '../ModalButtons';
 import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {isEmail, isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';

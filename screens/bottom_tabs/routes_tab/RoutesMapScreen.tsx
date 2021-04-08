@@ -7,9 +7,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppButton from '../../../components/layout/AppButton';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppTitle from '../../../components/layout/AppTitle';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 
 import {PermissionContext} from '../../../providers/PermissionContext';
@@ -21,7 +21,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {Route} from '../../../types/routes';
 import Colors from '../../../constants/Colors';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 

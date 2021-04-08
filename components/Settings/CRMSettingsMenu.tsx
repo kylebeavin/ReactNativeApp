@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import Colors from '../../constants/Colors';
-import AppTitle from '../Layout/AppTitle';
+import AppTitle from '../layout/AppTitle';
 
 interface Props {
   title: string;

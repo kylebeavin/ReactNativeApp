@@ -11,15 +11,15 @@ import {
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import {Order} from '../../../types/service';
+import {Order} from '../../../types/orders';
 import {DriverRouteState, Route} from '../../../types/routes';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavDetailGrp from '../../../components/Layout/AppNavDetailGrp';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavDetailGrp from '../../../components/layout/AppNavDetailGrp';
 import AppMapbox from '../../../components/map/AppMapbox';
 import AppContext from '../../../providers/AppContext';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import {ToastContext} from '../../../providers/ToastProvider';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import DriverNavigationMap from '../../../components/map/DriverNavigationMap';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { useNavigation } from '@react-navigation/native';
@@ -32,16 +32,16 @@ import Geolocation from '@react-native-community/geolocation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PermissionContext} from '../../../providers/PermissionContext';
 import Layout from '../../../constants/Layout';
-import ModalButtons from '../../Modal/ModalButtons';
-import AppTextInput from '../../../components/Layout/AppTextInput';
-import AppCheckBox from '../../../components/Layout/AppCheckBox';
+import ModalButtons from '../../modal/ModalButtons';
+import AppTextInput from '../../../components/layout/AppTextInput';
+import AppCheckBox from '../../../components/layout/AppCheckBox';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { isRequired } from '../../../utils/Validators';
 import { CameraContext } from '../../../providers/CameraProvider';
 import useForm from '../../../hooks/useForm';
 import RNFetchBlob from 'rn-fetch-blob';
-import CreatePreTripInspectionModal from '../../Modal/Creates/CreatePreTripInspectionModal';
-import CreatePostTripInspectionModal from '../../Modal/Creates/CreatePostTripInspectionModal';
+import CreatePreTripInspectionModal from '../../modal/creates/CreatePreTripInspectionModal';
+import CreatePostTripInspectionModal from '../../modal/creates/CreatePostTripInspectionModal';
 
 
 interface Props {

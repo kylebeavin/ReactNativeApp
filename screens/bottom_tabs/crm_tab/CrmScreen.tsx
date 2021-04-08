@@ -13,20 +13,20 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import {Account, Contact} from '../../../types/crm';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppAddNew from '../../../components/Layout/AppAddNew';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppCard from '../../../components/Layout/AppCard';
-import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
-import AppButton from '../../../components/Layout/AppButton';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppAddNew from '../../../components/layout/AppAddNew';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppCard from '../../../components/layout/AppCard';
+import AppEmptyCard from '../../../components/layout/AppEmptyCard';
+import AppButton from '../../../components/layout/AppButton';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {getDateStringsFromDate} from '../../../utils/Helpers';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 interface Props {}
 
-const AccountScreen: React.FC<Props> = () => {
+const CrmScreen: React.FC<Props> = () => {
   //#region State Variables
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -70,9 +70,9 @@ const AccountScreen: React.FC<Props> = () => {
 
         <AppNavGroup
           add={{title: 'Account', modal: 'CreateAccountModal'}}
-          list='AccountsScreen'
-          schedule='MeetingsScreen'
-          map='MapScreen'
+          list='CrmScreen'
+          schedule='CrmCalendarScreen'
+          map='CrmMapScreen'
           focused='List'
         />
 
@@ -151,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountScreen;
+export default CrmScreen;

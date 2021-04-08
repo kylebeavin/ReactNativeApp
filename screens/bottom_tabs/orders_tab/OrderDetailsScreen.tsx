@@ -9,13 +9,13 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
-import AppEditBtn from '../../../components/Layout/AppEditBtn';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppOrderStatusIndicator from '../../../components/Layout/AppOrderStatusIndicator';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppButton from '../../../components/layout/AppButton';
+import AppEditBtn from '../../../components/layout/AppEditBtn';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppOrderStatusIndicator from '../../../components/layout/AppOrderStatusIndicator';
+import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
-import {Order} from '../../../types/service';
+import {Order} from '../../../types/orders';
 import {getDateStringsFromDate} from '../../../utils/Helpers';
 
 interface Props {
@@ -67,7 +67,7 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
           <Text>Monthly Rate: {model.monthly_rate}</Text>
           <Text>Demand Rate: {model.demand_rate}</Text>
           <Text>
-            Service Date: {getDateStringsFromDate(model.service_date).date}
+            Order Date: {getDateStringsFromDate(model.service_date).date}
           </Text>
 
           {model.order_status === 'completed' ? (

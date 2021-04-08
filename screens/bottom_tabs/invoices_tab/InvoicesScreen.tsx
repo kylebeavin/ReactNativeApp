@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import { ToastContext } from '../../../providers/ToastProvider';
 import { CameraContext } from '../../../providers/CameraProvider';
 import useTest from '../../../hooks/useTest';

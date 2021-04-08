@@ -8,11 +8,11 @@ import {
   Text,
   Linking,
 } from 'react-native';
-import AppAddNew from '../../../components/Layout/AppAddNew';
-import AppButton from '../../../components/Layout/AppButton';
-import AppEditBtn from '../../../components/Layout/AppEditBtn';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppAddNew from '../../../components/layout/AppAddNew';
+import AppButton from '../../../components/layout/AppButton';
+import AppEditBtn from '../../../components/layout/AppEditBtn';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';

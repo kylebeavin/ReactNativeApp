@@ -12,7 +12,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import Configs from '../../../constants/Configs';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 
@@ -118,13 +118,14 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
   const getFormData = async () => {
     const updatedRoute: Route = {
       _id: '',
+      route_id: route.route_id,
       group_id: grpId,
       truck_id: values.truck_id,
       inspection_id: route.inspection_id,
       is_active: values.is_active,
       route_stage: 'unassigned',
       start_location: values.start_location,
-      driver: values.driver,
+      driver_id: values.driver,
       truck_vin: truckVin,
       service_stop: values.service_stop,
       time: new Date(values.time),

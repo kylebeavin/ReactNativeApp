@@ -5,10 +5,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import {RootStackParamList} from '../types/navigation';
 import BottomTabNavigator from './BottomTabNavigator';
-import HeaderContainer from '../components/Header/HeaderContainer';
+import HeaderContainer from '../components/header/HeaderContainer';
 import Colors from '../constants/Colors';
 import {View, StatusBar} from 'react-native';
-import Modal from '../screens/Modal/Modal';
+import Modal from '../screens/modal/Modal';
 
 const Stack = createStackNavigator<RootStackParamList>();
 

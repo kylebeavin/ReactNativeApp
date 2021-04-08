@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 import { Months } from '../../types/enums';
-import AppTitle from '../Layout/AppTitle';
+import AppTitle from '../layout/AppTitle';
 
 const AdminDashboard = () => {
   //#region Use State Variables

@@ -24,14 +24,14 @@ export type SettingsParamList = {
 };
 
 export type CRM_ParamList = {
-  AccountsScreen: undefined;
-  MeetingsScreen: undefined;
-  MapScreen: undefined;
+  CrmScreen: undefined;
+  CrmCalendarScreen: undefined;
+  CrmMapScreen: undefined;
   AccountDetailsScreen: undefined;
   MeetingDetailsScreen: undefined;
 };
 
-export type ServicesParamList = {
+export type OrdersParamList = {
   OrdersScreen: undefined;
   OrdersCalendarScreen: undefined;
   OrdersMapScreen: undefined;

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Colors from '../../constants/Colors';
-import SettingsList from '../../components/Settings/SettingsList';
+import SettingsList from '../../components/settings/SettingsList';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 import {useNavigation} from '@react-navigation/native';
 import AppContext from '../../providers/AppContext';

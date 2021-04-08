@@ -10,7 +10,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../../constants/Colors';
-import AppTitle from '../Layout/AppTitle';
+import AppTitle from '../layout/AppTitle';
 
 interface Props {
   title: string;
@@ -56,7 +56,7 @@ const SettingsMenu: React.FC<Props> = (props) => {
             />
           </View>
           <View style={styles.col2}>
-            <Text style={styles.settingsItemText}>Service Settings</Text>
+            <Text style={styles.settingsItemText}>Order Settings</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingsItem}>

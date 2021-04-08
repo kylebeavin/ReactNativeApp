@@ -3,7 +3,7 @@ import React, {useContext} from 'react';
 import Configs from "../constants/Configs";
 import AppContext from "../providers/AppContext";
 import { Route } from '../types/routes';
-import { Order } from '../types/service';
+import { Order } from '../types/orders';
 import { isSuccessStatusCode } from '../utils/Helpers';
 
 const useTest = () => {

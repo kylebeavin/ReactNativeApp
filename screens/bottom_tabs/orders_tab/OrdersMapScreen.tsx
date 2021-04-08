@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 
 import Configs from '../../../constants/Configs';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Colors from '../../../constants/Colors';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
-import {Order} from '../../../types/service';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
+import {Order} from '../../../types/orders';
 import {useNavigation} from '@react-navigation/native';
 import {getDateStringsFromDate} from '../../../utils/Helpers';
 import AppContext from '../../../providers/AppContext';
@@ -21,13 +21,13 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import { PermissionContext } from '../../../providers/PermissionContext';
 import Geolocation from '@react-native-community/geolocation';
 import useDates from '../../../hooks/useDates';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 interface Props {
   navigation: any;
 }
 
-const ServicesScreen: React.FC<Props> = () => {
+const OrdersScreen: React.FC<Props> = () => {
   //#region
   const {grpId, token} = useContext(AppContext);
   const {show} = useContext(ToastContext);
@@ -66,7 +66,7 @@ const ServicesScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Service" />
+      <AppTitle title="Orders" />
 
       <ScrollView
         style={styles.scrollView}
@@ -213,4 +213,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServicesScreen;
+export default OrdersScreen;

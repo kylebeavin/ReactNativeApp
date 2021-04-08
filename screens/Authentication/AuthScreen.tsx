@@ -2,7 +2,7 @@ import React, {useContext, useRef, useState} from 'react';
 import {StyleSheet, View, Text, Image, TextInput} from 'react-native';
 
 import Colors from '../../constants/Colors';
-import AppButton from '../../components/Layout/AppButton';
+import AppButton from '../../components/layout/AppButton';
 import Configs from '../../constants/Configs';
 import Layout from '../../constants/Layout';
 import Ionicons from 'react-native-vector-icons/Ionicons';

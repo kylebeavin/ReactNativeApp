@@ -15,13 +15,13 @@ import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
-import AppButton from '../../../components/Layout/AppButton';
-import AppTitle from '../../../components/Layout/AppTitle';
-import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import AppButton from '../../../components/layout/AppButton';
+import AppTitle from '../../../components/layout/AppTitle';
+import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
-import {Order} from '../../../types/service';
+import {Order} from '../../../types/orders';
 import useDates from '../../../hooks/useDates';
-import AppNavGroup from '../../../components/Layout/AppNavGroup';
+import AppNavGroup from '../../../components/layout/AppNavGroup';
 
 interface IMarkedDays {
   [key: string]: {

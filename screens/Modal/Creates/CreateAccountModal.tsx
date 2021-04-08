@@ -10,7 +10,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {Account} from '../../../types/crm';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import ModalButtons from '../ModalButtons';
 import {isRequired, isEmail} from '../../../utils/Validators';
 

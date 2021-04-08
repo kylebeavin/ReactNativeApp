@@ -2,14 +2,14 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {ButtonGroup} from 'react-native-elements';
-import AppTitle from '../../../components/Layout/AppTitle';
+import AppTitle from '../../../components/layout/AppTitle';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
-import {Order} from '../../../types/service';
+import {Order} from '../../../types/orders';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 

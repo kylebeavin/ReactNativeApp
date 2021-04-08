@@ -10,9 +10,9 @@ import AppContext from '../../providers/AppContext';
 import {ToastContext} from '../../providers/ToastProvider';
 import {DriverRouteState, Route} from '../../types/routes';
 import {getDateStringsFromDate, isSuccessStatusCode} from '../../utils/Helpers';
-import AppButton from '../Layout/AppButton';
-import AppEmptyCard from '../Layout/AppEmptyCard';
-import AppTitle from '../Layout/AppTitle';
+import AppButton from '../layout/AppButton';
+import AppEmptyCard from '../layout/AppEmptyCard';
+import AppTitle from '../layout/AppTitle';
 import useAsyncStorage from '../../hooks/useAsyncStorage';
 
 const DriverDashboard = () => {

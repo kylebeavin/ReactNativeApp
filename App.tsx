@@ -5,9 +5,9 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
 import Navigation from './navigation';
-import AuthScreen from './screens/Authentication/AuthScreen';
+import AuthScreen from './screens/authentication/AuthScreen';
 import ToastProvider from './providers/ToastProvider';
-import AppToast from './components/Layout/AppToast';
+import AppToast from './components/layout/AppToast';
 import CameraProvider from './providers/CameraProvider';
 import AppCamera from './components/AppCamera';
 import AppContext from './providers/AppContext';

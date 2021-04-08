@@ -17,15 +17,15 @@ import Configs from '../../../constants/Configs';
 import {Account} from '../../../types/crm';
 import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
-import AppButton from '../../../components/Layout/AppButton';
+import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
-import {Order} from '../../../types/service';
+import {Order} from '../../../types/orders';
 import {Days, Services, ServicesPer} from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 
 interface Props {}
 

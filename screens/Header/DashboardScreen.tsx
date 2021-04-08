@@ -1,28 +1,16 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {
   StyleSheet,
-  View,
-  Text,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 
-import AppTitle from '../../components/Layout/AppTitle';
-import AdminDashboard from '../../components/Dashboard/AdminDashboard';
+import AdminDashboard from '../../components/dashboard/AdminDashboard';
 import AppContext from '../../providers/AppContext';
-import DriverDashboard from '../../components/Dashboard/DriverDashboard';
-import RoutesStatus from '../../components/Dashboard/RoutesStatus';
+import DriverDashboard from '../../components/dashboard/DriverDashboard';
 
 const DashboardScreen = () => {
   //#region Use State Variables
   const {role} = useContext(AppContext);
-
-  // Toggles
-  const [dashboardToggle, setDashboardToggle] = useState(role === 'admin' ? true : false);
-  const [crmToggle, setCrmToggle] = useState(role === '');
-  const [servicesToggle, setServicesToggle] = useState(false);
-  const [routesToggle, setRoutesToggle] = useState(role === 'driver' ? true : false);
-  const [invoicesToggle, setInvoicesToggle] = useState(false);
   //#endregion
 
   const renderDashboard = () => {

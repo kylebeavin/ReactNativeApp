@@ -12,7 +12,7 @@ import Layout from '../../../constants/Layout';
 import AppContext from '../../../providers/AppContext';
 import {isRequired, isEmail} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
-import AppTextInput from '../../../components/Layout/AppTextInput';
+import AppTextInput from '../../../components/layout/AppTextInput';
 import useForm from '../../../hooks/useForm';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 
