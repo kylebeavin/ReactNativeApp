@@ -20,6 +20,7 @@ import {useContext} from 'react';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { getDateStringsFromDate } from '../../../utils/Helpers';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 const ServicesScreen = () => {
   //#region Use State Variables
@@ -53,39 +54,26 @@ const ServicesScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title='Service' />
+      <AppTitle title='Orders' />
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <AppButton
-            title='ORDERS'
-            onPress={() => navigation.navigate('OrdersScreen')}
-            outlined={false}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <View style={{paddingHorizontal: 10}}>
+          <AppNavGroup
+            add={{title: 'Order', modal: 'CreateOrderModal'}}
+            list='OrdersScreen'
+            schedule='OrdersCalendarScreen'
+            map='OrdersMapScreen'
+            focused='List'
           />
-          <AppButton
-            title='CALENDAR'
-            onPress={() => navigation.navigate('OrdersCalendarScreen')}
-            outlined={true}
-          />
-          <View style={{marginRight: -10}}>
-            <AppButton
-              title='MAP'
-              onPress={() => navigation.navigate('OrdersMapScreen')}
-              outlined={true}
-            />
-          </View>
-        </AppNavBtnGrp>
-
-        {orders.length === 0 ? null : (
-          <AppAddNew title='ORDER' modal='CreateOrderModal' />
-        )}
+        </View>
 
         {isLoading ? (
           <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />
         ) : (
-          <View>
+          <View style={{paddingHorizontal: 10}}>
             {/* Orders List */}
             {orders.length === 0 ? (
               <AppEmptyCard entity='orders' modal='CreateOrderModal' />
@@ -148,7 +136,6 @@ const styles = StyleSheet.create({
   scrollView: {
     height: '100%',
     width: '100%',
-    paddingHorizontal: 10,
   },
 });
 

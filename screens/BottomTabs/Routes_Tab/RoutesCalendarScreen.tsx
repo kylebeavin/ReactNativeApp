@@ -21,6 +21,7 @@ import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 import useDates from '../../../hooks/useDates';
 import { Route } from '../../../types/routes';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 interface IMarkedDays {
   [key: string]: {
@@ -164,103 +165,84 @@ const RoutesCalendarScreen = () => {
 
   return (
     <>
-      <AppTitle title='Calendar' />
+      <AppTitle title="Routes" />
 
-      <ScrollView
-        style={styles.scrollView}>
+      <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
-          <AppNavBtnGrp>
-            <View style={{marginRight: 60, marginTop: 16}}>
-              <AppButton
-                title='Back'
-                onPress={() => navigation.goBack()}
-                outlined={true}
-                icon={{type: 'MaterialIcons', name: 'arrow-back'}}
-              />
-            </View>
-            <View style={{marginRight: -10}}>
-              <View style={{flex: 1}}>
-                <Text style={{fontSize: 12}}>List View</Text>
-                <View style={styles.picker}>
-                  <Picker
-                    style={{height: 30}}
-                    selectedValue={sortItem}
-                    mode='dropdown'
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSortItem(itemValue.toString())
-                    }>
-                    {Object.values(RouteEvents).map((item, index) => {
-                      return (
-                        <Picker.Item
-                          key={item.toString()}
-                          label={item.toString()}
-                          value={item.toString()}
-                        />
-                      );
-                    })}
-                  </Picker>
-                </View>
-              </View>
-            </View>
-          </AppNavBtnGrp>
-        </View>
-
-        <View style={styles.calendarContainer}>
-          <Calendar
-            markedDates={selectedDates}
-            onDayPress={onDayPress}
-            onMonthChange={onMonthChange}
-            theme={{
-              'stylesheet.calendar.header': {
-                header: {
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  marginTop: 6,
-                  alignItems: 'center',
-                },
-                monthText: {
-                  fontSize: 30,
-                  fontWeight: 'bold',
-                  color: Colors.Dark,
-                },
-                arrow: {},
-                arrowImage: {
-                  tintColor: '#ffffff',
-                  backgroundColor: Colors.SMT_Secondary_2_Dark_1,
-                  height: 30,
-                  width: 30,
-                  borderRadius: 30 / 2,
-                  marginRight: 10,
-                },
-                dayHeader: {
-                  color: 'black',
-                },
-              },
-              'stylesheet.day.basic': {
-                base: {
-                  borderColor: Colors.SMT_Secondary_1_Light_1,
-                  borderWidth: 1,
-                  //height: 50,
-                  width: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: -15,
-                },
-                selected: {
-                  backgroundColor: Colors.SMT_Secondary_2_Light_1,
-                  borderRadius: 0,
-                },
-                today: {},
-                todayText: {},
-              },
-            }}
+          <AppNavGroup
+            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            list="RoutesScreen"
+            schedule="RoutesCalendarScreen"
+            map="RoutesMapScreen"
+            focused="Schedule"
           />
         </View>
 
+        <View style={{paddingHorizontal: 10}}>
+          <View
+            style={[
+              styles.calendarContainer,
+              {paddingLeft: 1, marginRight: -0, paddingBottom: 7},
+            ]}>
+            <Calendar
+              // ToDo: Modified the Calendars style sheets here C:\Users\kyleb\Desktop\Code\Smash-app-native\node_modules\react-native-calendars\src\calendar\style.js
+              // This is bad practice to modify a dependency directly will need to revisit when i make calendar component.
+              markedDates={selectedDates}
+              onDayPress={onDayPress}
+              onMonthChange={onMonthChange}
+              theme={{
+                calendarBackground: '#ffffff00',
+                'stylesheet.calendar.header': {
+                  header: {
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginTop: 6,
+                    alignItems: 'center',
+                  },
+                  monthText: {
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                    color: Colors.Dark,
+                  },
+                  arrow: {},
+                  arrowImage: {
+                    tintColor: '#ffffff',
+                    backgroundColor: Colors.SMT_Secondary_2_Dark_1,
+                    height: 30,
+                    width: 30,
+                    borderRadius: 30 / 2,
+                    marginRight: 10,
+                  },
+                  dayHeader: {
+                    color: 'black',
+                  },
+                },
+                'stylesheet.day.basic': {
+                  base: {
+                    borderColor: Colors.SMT_Secondary_1_Light_1,
+                    borderWidth: 1,
+                    //height: 50,
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: -15,
+                  },
+                  selected: {
+                    backgroundColor: Colors.SMT_Secondary_2_Light_1,
+                    borderRadius: 0,
+                  },
+                  today: {},
+                  todayText: {},
+                },
+              }}
+            />
+          </View>
+        </View>
+
         <View style={{marginBottom: 10}}>
-          <AppTitle title='Route Events' />
+          <AppTitle title="Route Events" />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
@@ -269,7 +251,9 @@ const RoutesCalendarScreen = () => {
               <TouchableOpacity
                 style={styles.card}
                 key={u._id}
-                onPress={() => navigation.navigate('RouteDetailsScreen', {model: u})}>
+                onPress={() =>
+                  navigation.navigate('RouteDetailsScreen', {model: u})
+                }>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{flex: 1}}>
                     <Text numberOfLines={1} style={styles.titleText}>
@@ -306,9 +290,15 @@ const RoutesCalendarScreen = () => {
 
 const styles = StyleSheet.create({
   calendarContainer: {
-    marginBottom: 10,
-    marginTop: -10,
-    paddingHorizontal: 10
+    //marginBottom: 10,
+    //marginTop: -10,
+    //paddingHorizontal: 10,
+    paddingRight: 1,
+    borderWidth: 2,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
+    borderRadius: 5,
+    //elevation: 1,
+    //overflow: 'hidden'
   },
   container: {
     flexDirection: 'row',

@@ -21,6 +21,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {Route} from '../../../types/routes';
 import Colors from '../../../constants/Colors';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 
@@ -72,30 +73,20 @@ const RoutesMapScreen = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
-          <AppNavBtnGrp>
-            <AppButton
-              title='ROUTES'
-              onPress={() => navigation.navigate('RoutesScreen')}
-              outlined={true}
-            />
-            <AppButton
-              title='CALENDAR'
-              onPress={() => navigation.navigate('RoutesCalendarScreen')}
-              outlined={true}
-            />
-            <View style={{marginRight: -10}}>
-              <AppButton
-                title='MAP'
-                onPress={() => navigation.navigate('MapScreen')}
-                outlined={false}
-              />
-            </View>
-          </AppNavBtnGrp>
+          <AppNavGroup
+            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            list="RoutesScreen"
+            schedule="RoutesCalendarScreen"
+            map="RoutesMapScreen"
+            focused="Map"
+          />
+        </View>
 
+        <View style={{paddingHorizontal: 10}}>
           {/* Map Card */}
           <View
             style={{
-              borderColor: Colors.SMT_Secondary_1,
+              borderColor: Colors.SMT_Secondary_1_Light_1,
               marginBottom: 10,
               borderRadius: 3,
               backgroundColor: Colors.SMT_Secondary_1_Light_1,

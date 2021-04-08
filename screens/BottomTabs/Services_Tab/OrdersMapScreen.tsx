@@ -21,6 +21,7 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import { PermissionContext } from '../../../providers/PermissionContext';
 import Geolocation from '@react-native-community/geolocation';
 import useDates from '../../../hooks/useDates';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 interface Props {
   navigation: any;
@@ -65,35 +66,25 @@ const ServicesScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title='Service' />
+      <AppTitle title="Service" />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        <View style={{paddingHorizontal: 10}}>
-          <AppNavBtnGrp>
-            <AppButton
-              title='ORDERS'
-              onPress={() => navigation.navigate('OrdersScreen')}
-              outlined={true}
+          <View style={{paddingHorizontal: 10}}>
+            <AppNavGroup
+              add={{title: 'Order', modal: 'CreateOrderModal'}}
+              list="OrdersScreen"
+              schedule="OrdersCalendarScreen"
+              map="OrdersMapScreen"
+              focused="Map"
             />
-            <AppButton
-              title='CALENDAR'
-              onPress={() => navigation.navigate('OrdersCalendarScreen')}
-              outlined={true}
-            />
-            <View style={{marginRight: -10}}>
-              <AppButton
-                title='MAP'
-                onPress={() => navigation.navigate('OrdersMapScreen')}
-                outlined={false}
-              />
-            </View>
-          </AppNavBtnGrp>
+          </View>
 
+        <View style={{paddingHorizontal: 10}}>
           <View
             style={{
-              borderColor: Colors.SMT_Secondary_1,
+              borderColor: Colors.SMT_Secondary_1_Light_1,
               marginBottom: 10,
               borderRadius: 3,
               backgroundColor: Colors.SMT_Secondary_1_Light_1,
@@ -105,7 +96,7 @@ const ServicesScreen: React.FC<Props> = () => {
               <MapboxGL.MapView
                 style={styles.map}
                 styleURL={MapboxGL.StyleURL.Street}>
-                <MapboxGL.UserLocation androidRenderMode='gps' visible={true} />
+                <MapboxGL.UserLocation androidRenderMode="gps" visible={true} />
 
                 <MapboxGL.Camera
                   zoomLevel={8}
@@ -115,45 +106,47 @@ const ServicesScreen: React.FC<Props> = () => {
             </View>
           </View>
         </View>
-        
+
         <View style={{marginBottom: 10}}>
-        <AppTitle title={`Orders: ${new Date().toLocaleDateString()}`} />
+          <AppTitle title={`Orders: ${new Date().toLocaleDateString()}`} />
         </View>
-          
+
         <View style={{paddingHorizontal: 10}}>
           {orders.map((u: Order, i: number) => {
             return (
               <TouchableOpacity
-              style={styles.card}
-              key={i}
-              onPress={() =>
-                navigation.navigate('OrderDetailsScreen', {model: u})
-              }>
-              <View style={{flexDirection: 'row', flex: 1}}>
-                <View>
-                  <Text style={styles.titleText}>{u.account_id.account_name}</Text>
-                  <Text>Demo: {u.is_demo ? 'Yes' : 'No'}</Text>
+                style={styles.card}
+                key={i}
+                onPress={() =>
+                  navigation.navigate('OrderDetailsScreen', {model: u})
+                }>
+                <View style={{flexDirection: 'row', flex: 1}}>
+                  <View>
+                    <Text style={styles.titleText}>
+                      {u.account_id.account_name}
+                    </Text>
+                    <Text>Demo: {u.is_demo ? 'Yes' : 'No'}</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text
+                      style={{
+                        color: Colors.SMT_Primary_1,
+                        textAlign: 'right',
+                      }}>
+                      {getDateStringsFromDate(u.service_date).date}
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        color: Colors.SMT_Secondary_2_Light_1,
+                        textAlign: 'right',
+                      }}>
+                      {getDateStringsFromDate(u.service_date).time}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{flex: 1}}>
-                  <Text
-                    style={{
-                      color: Colors.SMT_Primary_1,
-                      textAlign: 'right',
-                    }}>
-                    {getDateStringsFromDate(u.service_date).date}
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      color: Colors.SMT_Secondary_2_Light_1,
-                      textAlign: 'right',
-                    }}>
-                    {getDateStringsFromDate(u.service_date).time}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-            )
+              </TouchableOpacity>
+            );
           })}
         </View>
       </ScrollView>

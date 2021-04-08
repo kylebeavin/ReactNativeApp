@@ -10,6 +10,7 @@ import {
 import AppAddNew from '../../../components/Layout/AppAddNew';
 import AppButton from '../../../components/Layout/AppButton';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 import AppRouteStageIndicator from '../../../components/Layout/AppRouteStageIndicator';
 import AppTitle from '../../../components/Layout/AppTitle';
 import Colors from '../../../constants/Colors';
@@ -179,25 +180,13 @@ const RoutesScreen = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
-          <AppNavBtnGrp>
-            <AppButton
-              title="ROUTES"
-              onPress={() => navigation.navigate('RoutesScreen')}
-              outlined={false}
-            />
-            <AppButton
-              title="CALENDAR"
-              onPress={() => navigation.navigate('RoutesCalendarScreen')}
-              outlined={true}
-            />
-            <View style={{marginRight: -10}}>
-              <AppButton
-                title="MAP"
-                onPress={() => navigation.navigate('RoutesMapScreen')}
-                outlined={true}
-              />
-            </View>
-          </AppNavBtnGrp>
+          <AppNavGroup
+            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            list="RoutesScreen"
+            schedule="RoutesCalendarScreen"
+            map="RoutesMapScreen"
+            focused="List"
+          />
         </View>
 
         <TouchableOpacity
