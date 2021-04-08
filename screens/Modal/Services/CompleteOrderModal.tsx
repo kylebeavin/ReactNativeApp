@@ -107,7 +107,6 @@ const CompleteOrderModal: React.FC<Props> = ({order}) => {
           show({message: json.message});
           navigation.navigate('OrdersScreen');
         } else {
-          console.log(json)
           show({message: json.message});
         }
       })

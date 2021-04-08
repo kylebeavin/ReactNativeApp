@@ -109,7 +109,6 @@ const RouteNavigationScreen: React.FC<Props> = ({route}) => {
   const [showCompletePostTripPopup, setShowCompletePostTripPopup] = useState(false);
   //#endregion
 
-    console.log('hi')
   useEffect(() => {
     getStops();
     getCachedState();

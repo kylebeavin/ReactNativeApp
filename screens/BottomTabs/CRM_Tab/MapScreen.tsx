@@ -21,6 +21,7 @@ import AppButton from '../../../components/Layout/AppButton';
 import AppTitle from '../../../components/Layout/AppTitle';
 import AppNavBtnGrp from '../../../components/Layout/AppNavBtnGrp';
 import AppEmptyCard from '../../../components/Layout/AppEmptyCard';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
 
@@ -93,25 +94,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
-          <AppNavBtnGrp>
-            <AppButton
-              title='CLIENTS'
-              onPress={() => navigation.navigate('AccountsScreen')}
-              outlined={true}
-            />
-            <AppButton
-              title='CALENDAR'
-              onPress={() => navigation.navigate('MeetingsScreen')}
-              outlined={true}
-            />
-            <View style={{marginRight: -10}}>
-              <AppButton
-                title='MAP'
-                onPress={() => navigation.navigate('MapScreen')}
-                outlined={false}
-              />
-            </View>
-          </AppNavBtnGrp>
+          <AppNavGroup add={{title: 'Account', modal: 'CreateAccountModal'}} list='AccountsScreen' schedule='MeetingsScreen' map='MapScreen' focused='Map' />
         </View>
 
         <View style={{paddingHorizontal: 10}}>
@@ -119,7 +102,7 @@ const MapScreen: React.FC<Props> = ({navigation}) => {
           {accounts.length === 0 ? null : (
             <View
               style={{
-                borderColor: Colors.SMT_Secondary_1,
+                borderColor: Colors.SMT_Secondary_1_Light_1,
                 marginBottom: 10,
                 borderRadius: 3,
                 backgroundColor: Colors.SMT_Secondary_1_Light_1,

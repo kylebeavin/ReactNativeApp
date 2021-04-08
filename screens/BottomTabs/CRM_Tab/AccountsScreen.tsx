@@ -22,6 +22,7 @@ import AppButton from '../../../components/Layout/AppButton';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {getDateStringsFromDate} from '../../../utils/Helpers';
+import AppNavGroup from '../../../components/Layout/AppNavGroup';
 
 interface Props {}
 
@@ -66,29 +67,14 @@ const AccountScreen: React.FC<Props> = () => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        <AppNavBtnGrp>
-          <AppButton
-            title='CLIENTS'
-            onPress={() => navigation.navigate('AccountsScreen')}
-            outlined={false}
-          />
-          <AppButton
-            title='CALENDAR'
-            onPress={() => navigation.navigate('MeetingsScreen')}
-            outlined={true}
-          />
-          <View style={{marginRight: -10}}>
-            <AppButton
-              title='MAP'
-              onPress={() => navigation.navigate('MapScreen')}
-              outlined={true}
-            />
-          </View>
-        </AppNavBtnGrp>
 
-        {accounts.length === 0 ? null : (
-          <AppAddNew title='ACCOUNT' modal='CreateAccountModal' />
-        )}
+        <AppNavGroup
+          add={{title: 'Account', modal: 'CreateAccountModal'}}
+          list='AccountsScreen'
+          schedule='MeetingsScreen'
+          map='MapScreen'
+          focused='List'
+        />
 
         {isLoading ? (
           <ActivityIndicator color={Colors.SMT_Primary_2} animating={true} />

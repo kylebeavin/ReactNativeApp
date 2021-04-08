@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
     borderBottomWidth: 3,
-    borderBottomColor: Colors.SMT_Secondary_1_Light_1,
+    borderBottomColor: Colors.SMT_Secondary_1,
   },
   titleView: {
     marginLeft: 10,

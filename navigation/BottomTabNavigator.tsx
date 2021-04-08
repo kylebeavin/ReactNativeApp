@@ -49,7 +49,7 @@ export default function BottomTabNavigator() {
       <BottomTab.Screen name='Dashboard' component={DashboardNavigator} />
       <BottomTab.Screen name='Settings' component={SettingsNavigator} />
       <BottomTab.Screen name='CRM' component={CRM_Navigator} />
-      <BottomTab.Screen name='Services' component={ServicesNavigator} />
+      <BottomTab.Screen name='Orders' component={OrdersNavigator} />
       <BottomTab.Screen name='Routes' component={RoutesNavigator} />
       <BottomTab.Screen name='Invoices' component={InvoicesNavigator} />
       <BottomTab.Screen name='Reports' component={ReportsNavigator} />
@@ -104,7 +104,7 @@ function CRM_Navigator() {
   );
 }
 
-function ServicesNavigator() {
+function OrdersNavigator() {
   return (
     <ServicesStack.Navigator
       screenOptions={{
@@ -132,7 +132,7 @@ function RoutesNavigator() {
       <RoutesStack.Screen name='RoutesCalendarScreen' component={RoutesCalendarScreen} />
       <RoutesStack.Screen name='RoutesMapScreen' component={RoutesMapScreen} />
       <RoutesStack.Screen name='RouteDetailsScreen' component={RouteDetailsScreen} />
-      <RoutesStack.Screen name='TruckDetailsScreen' component={TruckDetailsScreen}/>
+      <RoutesStack.Screen name='TruckDetailsScreen' component={TruckDetailsScreen} />
     </RoutesStack.Navigator>
   );
 }

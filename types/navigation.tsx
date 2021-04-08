@@ -8,7 +8,7 @@ export type BottomTabParamList = {
   Dashboard: undefined;
   Settings: undefined;
   CRM: undefined;
-  Services: undefined;
+  Orders: undefined;
   Routes: undefined;
   Invoices: undefined;
   Reports: undefined;
