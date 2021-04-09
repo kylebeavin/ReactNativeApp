@@ -6,10 +6,6 @@ import { CameraContext } from '../../../providers/CameraProvider';
 import useTest from '../../../hooks/useTest';
 import AppBtnGrp from '../../../components/layout/AppBtnGrp';
 
-interface Props {
-  
-}
-
 const InvoicesScreen = () => {
   const {show} = useContext(ToastContext);
   const {showCamera} = useContext(CameraContext);

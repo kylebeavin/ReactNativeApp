@@ -8,13 +8,10 @@ import {
 } from 'react-native';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Configs from '../../../constants/Configs';
-import AppButton from '../../../components/layout/AppButton';
 import Colors from '../../../constants/Colors';
 import AppTitle from '../../../components/layout/AppTitle';
-import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
 import {Order} from '../../../types/orders';
 import AppEmptyCard from '../../../components/layout/AppEmptyCard';
-import AppAddNew from '../../../components/layout/AppAddNew';
 import AppContext from '../../../providers/AppContext';
 import {useContext} from 'react';
 import {ToastContext} from '../../../providers/ToastProvider';
@@ -62,7 +59,7 @@ const OrdersScreen = () => {
       >
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Order', modal: 'CreateOrderModal'}}
+            add={{title: 'Order', modal: 'ModalPopup', modals: ['CreateAgreementModal', 'CreateOrderModal']}}
             list='OrdersScreen'
             schedule='OrdersCalendarScreen'
             map='OrdersMapScreen'

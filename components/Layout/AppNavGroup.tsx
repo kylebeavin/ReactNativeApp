@@ -9,6 +9,7 @@ interface Props {
     add: {
         title: string;
         modal: string;
+        modals?: string[];
     };
     list: string;
     schedule: string;
@@ -20,11 +21,11 @@ const AppNavGroup: React.FC<Props> = ({add, list, schedule, map, focused}) => {
     const navigation = useNavigation();
 
     return (
-      <View>
+      <>
         <View style={styles.container}>
           <TouchableOpacity
             style={[styles.buttonContainer, styles.addButton]}
-            onPress={() => navigation.navigate('Modal', {modal: add.modal})}
+            onPress={() => navigation.navigate('Modal', {modal: add.modal, item: add.modals ? add.modals : null})}
             >
                 <MaterialIcons style={[styles.text, {color: Colors.SMT_Tertiary_1}]} name="add-box" size={24} />
                 <Text style={[styles.text, {color: Colors.SMT_Tertiary_1}]}>Add</Text>
@@ -51,7 +52,7 @@ const AppNavGroup: React.FC<Props> = ({add, list, schedule, map, focused}) => {
                 <Text style={[styles.text, focused === 'Map' && styles.focusedText]}>Map</Text>
             </TouchableOpacity>
         </View>
-      </View>
+      </>
     );
 }
 

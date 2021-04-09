@@ -27,6 +27,7 @@ import StartOrderModal from './orders/StartOrderModal';
 import CompleteOrderModal from './orders/CompleteOrderModal';
 import AssignDriverModal from './routes/AssignDriverModal';
 import AssignTruckModal from './routes/AssignTruckModal';
+import ModalPopup from './ModalPopup';
 
 interface Props {
     navigation: any;
@@ -36,6 +37,8 @@ interface Props {
 const Modal: React.FC<Props> = ({ route, navigation }) => {
   const renderSwitch = (modal: string, item: any) => {
     switch (modal) {
+      case 'ModalPopup':
+        return <ModalPopup modals={item} />;
       //=== Create Modals ===//
       case 'CreateAccountModal':
         return <CreateAccountModal />;

@@ -8,8 +8,6 @@ import {
   Text,
 } from 'react-native';
 import AppAddNew from '../../../components/layout/AppAddNew';
-import AppButton from '../../../components/layout/AppButton';
-import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
 import AppNavGroup from '../../../components/layout/AppNavGroup';
 import AppRouteStageIndicator from '../../../components/layout/AppRouteStageIndicator';
 import AppTitle from '../../../components/layout/AppTitle';
@@ -46,8 +44,6 @@ const RoutesScreen = () => {
   const [unassignedToggle, setUnassignedToggle] = useState(false);
   const [assignedToggle, setAssignedToggle] = useState(false);
   //#endregion
-
-  useEffect(() => {}, []);
 
   const getTrucks = async () => {
     if (!truckToggle) {
@@ -181,7 +177,7 @@ const RoutesScreen = () => {
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            add={{title: 'Route', modal: 'ModalPopup', modals: ['CreateTruckModal', 'CreateRouteModal', 'CreateUserModal', 'CreatePreTripInspectionModal']}}
             list="RoutesScreen"
             schedule="RoutesCalendarScreen"
             map="RoutesMapScreen"

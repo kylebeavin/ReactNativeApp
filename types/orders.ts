@@ -9,7 +9,7 @@ export type Agreement = {
   service_frequency: string;
   service_per: string;
   service_days: string;
-  monthly_rate: string;
+  recurring_rate: string;
   demand_rate: string;
   term_date: string;
   start_date: string;
