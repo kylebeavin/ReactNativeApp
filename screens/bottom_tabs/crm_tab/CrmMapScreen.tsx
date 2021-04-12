@@ -95,7 +95,7 @@ const CrmMapScreen: React.FC<Props> = ({navigation}) => {
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Account', modal: 'CreateAccountModal'}}
+            add={{title: 'Account', modal: 'ModalPopup', modals: ['CreateAccountModal', 'CreateContactModal', 'CreateMeetingModal']}}
             list='CrmScreen'
             schedule='CrmCalendarScreen'
             map='CrmMapScreen'

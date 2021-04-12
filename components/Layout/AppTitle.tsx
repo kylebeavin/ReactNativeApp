@@ -34,9 +34,9 @@ const AppTitle: React.FC<Props> = (props) => {
         )}
 
         {search && (
-          <View style={styles.titleSearchContainer}>
+          <TouchableOpacity style={styles.titleSearchContainer}>
             <Ionicons style={styles.titleSearchIcon} name="ios-search" />
-          </View>
+          </TouchableOpacity>
         )}
       </View>
 
@@ -81,9 +81,10 @@ const styles = StyleSheet.create({
     paddingBottom: 1,
   },
   titleSearchIcon: {
-    paddingLeft: 4,
+    paddingTop: 6,
+    paddingLeft: 6,
     width: 32,
-    fontSize: 30,
+    fontSize: 20,
     color: Colors.TCMC_Navy,
     backgroundColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 150,

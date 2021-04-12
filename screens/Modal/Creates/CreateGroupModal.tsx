@@ -41,7 +41,7 @@ const CreateGroupModal = () => {
     region: '',
     signing_date: '',
     tax_rate: '',
-    territory_zips: [],
+    territory_zips: '',
     time_zone: '',
     webpage: '',
   };

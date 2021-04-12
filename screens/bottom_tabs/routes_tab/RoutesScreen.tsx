@@ -177,7 +177,7 @@ const RoutesScreen = () => {
         contentContainerStyle={styles.contentContainer}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Route', modal: 'ModalPopup', modals: ['CreateTruckModal', 'CreateRouteModal', 'CreateUserModal', 'CreatePreTripInspectionModal']}}
+            add={{title: 'Route', modal: 'ModalPopup', modals: ['CreateTruckModal', 'CreateRouteModal', 'CreatePreTripInspectionModal']}}
             list="RoutesScreen"
             schedule="RoutesCalendarScreen"
             map="RoutesMapScreen"
@@ -194,7 +194,6 @@ const RoutesScreen = () => {
         </TouchableOpacity>
         {!truckToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="TRUCK" modal="CreateTruckModal" />
             {trucks.map((u: Truck) => {
               return (
                 <TouchableOpacity
@@ -208,7 +207,7 @@ const RoutesScreen = () => {
                       <Text numberOfLines={1} style={styles.titleText}>
                         {u.name}
                       </Text>
-                      <Text>{u.service_status}</Text>
+                      <Text>Condition: {u.service_status}</Text>
                     </View>
                     <View style={{flex: 1}}>
                       <Text
@@ -224,7 +223,7 @@ const RoutesScreen = () => {
                           color: Colors.SMT_Secondary_2_Light_1,
                           textAlign: 'right',
                         }}>
-                        {u.year}
+                        {u.vehicle_make + ' ' + u.vehicle_model + ' ' + u.year}
                       </Text>
                     </View>
                   </View>
@@ -243,7 +242,6 @@ const RoutesScreen = () => {
         </TouchableOpacity>
         {!routeToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew title="ROUTE" modal="CreateRouteModal" />
             {routes.map((u, i) => {
               return (
                 <TouchableOpacity
@@ -257,59 +255,12 @@ const RoutesScreen = () => {
                       <Text numberOfLines={1} style={{fontWeight: 'bold'}}>
                         {u.route_id}
                       </Text>
+                    </View>
+                    <View >
                       <Text style={{color: Colors.SMT_Primary_1}}>
                         {getDateStringsFromDate(u.time).date}
                       </Text>
-                    </View>
-                    <AppRouteStageIndicator route={u} />
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        )}
-
-        <TouchableOpacity
-          onPress={() => {
-            getUsers();
-            setUserToggle(!userToggle);
-          }}>
-          <AppTitle title="Users" />
-        </TouchableOpacity>
-        {!userToggle ? null : (
-          <View style={styles.subList}>
-            <AppAddNew title="USER" modal="CreateUserModal" />
-            {users.map((u: SMT_User) => {
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  key={u._id}
-                  onPress={() =>
-                    navigation.navigate('UserDetailsScreen', {model: u})
-                  }>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={styles.titleText}>
-                        {u.first_name} {u.last_name}
-                      </Text>
-                      <Text numberOfLines={1}>{u.email}</Text>
-                    </View>
-                    <View style={{flex: 1}}>
-                      <Text
-                        style={{
-                          color: Colors.SMT_Primary_1,
-                          textAlign: 'right',
-                        }}>
-                        Active: {u.is_active ? 'Yes' : 'No'}
-                      </Text>
-                      <Text
-                        style={{
-                          fontWeight: 'bold',
-                          color: Colors.SMT_Secondary_2_Light_1,
-                          textAlign: 'right',
-                        }}>
-                        {u.role}
-                      </Text>
+                      <Text style={{color: Colors.SMT_Secondary_2_Light_1}}>{u.route_stage}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -327,10 +278,6 @@ const RoutesScreen = () => {
         </TouchableOpacity>
         {!inspectionsToggle ? null : (
           <View style={styles.subList}>
-            <AppAddNew
-              title="INSPECTION"
-              modal="CreatePreTripInspectionModal"
-            />
             {inspections.map((u, i) => {
               return (
                 <TouchableOpacity
@@ -343,20 +290,10 @@ const RoutesScreen = () => {
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
-                      <Text numberOfLines={1} style={styles.titleText}>
-                        {u._id}
-                      </Text>
-                      <Text>Pre-Trip</Text>
+                      <Text>{u.inspection_id}</Text>
+                      <Text>PreTrip</Text>
                     </View>
                     <View style={{flex: 1}}>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: Colors.SMT_Primary_1,
-                          textAlign: 'right',
-                        }}>
-                        {u.truck_id}
-                      </Text>
                       <Text
                         style={{
                           fontWeight: 'bold',

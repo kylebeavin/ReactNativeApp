@@ -24,7 +24,6 @@ const CreateUserModal = () => {
     email: '',
     password: '',
     token: '',
-    image: '',
     role: SMT_Roles.corporate.toString(),
     group_id: '',
     created: '',
@@ -36,7 +35,6 @@ const CreateUserModal = () => {
     email: [],
     password: [],
     token: [],
-    image: [],
     role: [],
     group_id: [],
     created: [],
@@ -48,7 +46,6 @@ const CreateUserModal = () => {
     email: [isRequired, isEmail],
     password: [isRequired],
     token: [],
-    image: [],
     role: [isRequired],
     group_id: [],
     created: [],
@@ -76,7 +73,7 @@ const CreateUserModal = () => {
       email: values.email,
       password: values.password,
       token: '',
-      image: values.image,
+      image: '',
       role: values.role,
       group_id: grpId,
       created: values.created,
@@ -148,17 +145,6 @@ const CreateUserModal = () => {
           onChange={(val) => handleChange('password', val)}
           validations={[isRequired]}
           errors={errors.password}
-          setErrors={setErrors}
-        />
-
-        {/* Image URL */}
-        <AppTextInput
-          label='Image URL'
-          name='image'
-          value={values.image}
-          onChange={(val) => handleChange('image', val)}
-          validations={[isRequired]}
-          errors={errors.image}
           setErrors={setErrors}
         />
 

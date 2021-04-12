@@ -52,7 +52,7 @@ const AppMapbox: React.FC<Props> = ({children, zoomLevel}) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderColor: Colors.SMT_Secondary_1,
+    borderColor: Colors.SMT_Secondary_1_Light_1,
     marginBottom: 10,
     borderRadius: 3,
     backgroundColor: Colors.SMT_Secondary_1_Light_1,

@@ -27,6 +27,7 @@ import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/layout/AppTextInput';
+import AppTitle from '../../../components/layout/AppTitle';
 
 interface Props {
   meeting: Meeting;
@@ -195,195 +196,183 @@ const UpdateMeetingModal: React.FC<Props> = ({meeting}) => {
   return (
     <View>
       <ScrollView style={styles.form}>
-        {/* Name */}
-        <AppTextInput
-          label='Name'
-          name='name'
-          value={values.name}
-          onChange={(val) => handleChange('name', val)}
-          validations={[isRequired]}
-          errors={errors.name}
-          setErrors={setErrors}
-        />
+        <AppTitle title="Meeting Details" />
 
-        {/* Account */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Account</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.account}
-              onValueChange={(itemValue, ItemIndex) => {
-                handleChange('account', itemValue.toString());
-                getContactList(itemValue.toString());
-              }}>
-              {accountList?.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.account_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Contact */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Contact</Text>
-          <View style={styles.picker}>
-            <Picker
-              enabled={contactList.length === 0 ? false : true}
-              selectedValue={values.contact}
-              onValueChange={(itemValue, ItemIndex) => {
-                itemValue === null
-                  ? handleChange('contact', '')
-                  : handleChange('contact', itemValue.toString());
-              }}>
-              {contactList?.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.first_name + ' ' + item.last_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Date */}
-        <View style={styles.fieldContainer}>
-          <View style={styles.columnContainer}>
-            <View style={styles.column}>
-              <Text style={styles.text}>Date</Text>
-              <View style={styles.textInput}>
-                <TextInputMask
-                  type={'datetime'}
-                  options={{
-                    format: 'MM/DD/YYYY',
-                  }}
-                  value={values.date}
-                  onChangeText={(text) => handleChange('date', text)}
-                />
-              </View>
-            </View>
-            <View style={[styles.column, styles.calendarButton]}>
-              <AppButton
-                title='Calendar'
-                onPress={() => openCalendar(true)}
-                icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
-                backgroundColor={Colors.SMT_Secondary_2}
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* Time */}
-        <View style={styles.fieldContainer}>
-          <View style={styles.columnContainer}>
-            <View style={styles.column}>
-              <Text style={styles.text}>Start Time</Text>
-              <View style={styles.textInput}>
-                <TextInputMask
-                  type={'datetime'}
-                  options={{
-                    format: 'HH:mm',
-                  }}
-                  value={values.startTime}
-                  onChangeText={(text) => handleChange('startTime', text)}
-                />
-              </View>
-            </View>
-            <View
-              style={[
-                styles.column,
-                {
-                  flex: 0,
-                  justifyContent: 'center',
-                  marginTop: 20,
-                  marginHorizontal: 20,
-                },
-              ]}>
-              <Text
-                style={{textAlign: 'center', fontWeight: 'bold', fontSize: 18}}>
-                To:
-              </Text>
-            </View>
-            <View style={styles.column}>
-              <Text style={styles.text}>End Time</Text>
-              <View style={styles.textInput}>
-                <TextInputMask
-                  type={'datetime'}
-                  options={{
-                    format: 'HH:mm',
-                  }}
-                  value={values.endTime}
-                  onChangeText={(text) => handleChange('endTime', text)}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Street */}
-        <AppTextInput
-          label='Street'
-          name='street'
-          value={values.street}
-          onChange={(val) => handleChange('street', val)}
-          validations={[isRequired]}
-          errors={errors.street}
-          setErrors={setErrors}
-        />
-
-        {/* City */}
-        <AppTextInput
-          label='City'
-          name='city'
-          value={values.city}
-          onChange={(val) => handleChange('city', val)}
-          validations={[isRequired]}
-          errors={errors.city}
-          setErrors={setErrors}
-        />
-
-        {/* State */}
-        <AppTextInput
-          label='State'
-          name='state'
-          value={values.state}
-          onChange={(val) => handleChange('state', val)}
-          validations={[isRequired]}
-          errors={errors.state}
-          setErrors={setErrors}
-        />
-
-        {/* Zip */}
-        <AppTextInput
-          label='Zip'
-          name='zip'
-          value={values.zip}
-          onChange={(val) => handleChange('zip', val)}
-          validations={[isRequired]}
-          errors={errors.zip}
-          setErrors={setErrors}
-        />
-
-        {/* Notes */}
-        <View style={{marginBottom: 40}}>
+        <View style={{paddingHorizontal: 10, paddingTop: 10}}>
+          {/* Name */}
           <AppTextInput
-            label='Notes'
-            name='notes'
-            value={values.notes}
-            onChange={(val) => handleChange('notes', val)}
-            validations={[]}
-            errors={errors.notes}
+            label="Name"
+            name="name"
+            value={values.name}
+            onChange={(val) => handleChange('name', val)}
+            validations={[isRequired]}
+            errors={errors.name}
             setErrors={setErrors}
-            multiline
           />
+
+          {/* Account */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.text}>Account</Text>
+            <View style={styles.picker}>
+              <Picker
+                selectedValue={values.account}
+                onValueChange={(itemValue, ItemIndex) => handleChange('account', itemValue.toString())}>
+                {accountList?.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={item._id}
+                      label={item.account_name}
+                      value={item._id}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
+          </View>
+        </View>
+
+        <AppTitle title="Date and Time" />
+
+        <View style={{paddingHorizontal: 10, paddingTop: 10}}>
+          {/* Date */}
+          <View style={styles.fieldContainer}>
+            <View style={styles.columnContainer}>
+              <View style={styles.column}>
+                <Text style={styles.text}>Date</Text>
+                <View style={styles.textInput}>
+                  <TextInputMask
+                    type={'datetime'}
+                    options={{
+                      format: 'MM/DD/YYYY',
+                    }}
+                    value={values.date}
+                    onChangeText={(text) => handleChange('date', text)}
+                  />
+                </View>
+              </View>
+              <View style={[styles.column, styles.calendarButton]}>
+                <AppButton
+                  title="Calendar"
+                  onPress={() => openCalendar(true)}
+                  icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
+                  backgroundColor={Colors.SMT_Secondary_2}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Time */}
+          <View style={styles.fieldContainer}>
+            <View style={styles.columnContainer}>
+              <View style={styles.column}>
+                <Text style={styles.text}>Start Time</Text>
+                <View style={styles.textInput}>
+                  <TextInputMask
+                    type={'datetime'}
+                    options={{
+                      format: 'HH:mm',
+                    }}
+                    value={values.startTime}
+                    onChangeText={(text) => handleChange('startTime', text)}
+                  />
+                </View>
+              </View>
+              <View
+                style={[
+                  styles.column,
+                  {
+                    flex: 0,
+                    justifyContent: 'center',
+                    marginTop: 20,
+                    marginHorizontal: 20,
+                  },
+                ]}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                  }}>
+                  To:
+                </Text>
+              </View>
+              <View style={styles.column}>
+                <Text style={styles.text}>End Time</Text>
+                <View style={styles.textInput}>
+                  <TextInputMask
+                    type={'datetime'}
+                    options={{
+                      format: 'HH:mm',
+                    }}
+                    value={values.endTime}
+                    onChangeText={(text) => handleChange('endTime', text)}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <AppTitle title="Location" />
+
+        <View style={{paddingHorizontal: 10, paddingTop: 10}}>
+          {/* Street */}
+          <AppTextInput
+            label="Street"
+            name="street"
+            value={values.street}
+            onChange={(val) => handleChange('street', val)}
+            validations={[isRequired]}
+            errors={errors.street}
+            setErrors={setErrors}
+          />
+
+          {/* City */}
+          <AppTextInput
+            label="City"
+            name="city"
+            value={values.city}
+            onChange={(val) => handleChange('city', val)}
+            validations={[isRequired]}
+            errors={errors.city}
+            setErrors={setErrors}
+          />
+
+          {/* State */}
+          <AppTextInput
+            label="State"
+            name="state"
+            value={values.state}
+            onChange={(val) => handleChange('state', val)}
+            validations={[isRequired]}
+            errors={errors.state}
+            setErrors={setErrors}
+          />
+
+          {/* Zip */}
+          <AppTextInput
+            label="Zip"
+            name="zip"
+            value={values.zip}
+            onChange={(val) => handleChange('zip', val)}
+            validations={[isRequired]}
+            errors={errors.zip}
+            setErrors={setErrors}
+          />
+
+          {/* Notes */}
+          <View style={{marginBottom: 10}}>
+            <AppTextInput
+              label="Notes"
+              name="notes"
+              value={values.notes}
+              onChange={(val) => handleChange('notes', val)}
+              validations={[]}
+              errors={errors.notes}
+              setErrors={setErrors}
+              multiline
+            />
+          </View>
         </View>
       </ScrollView>
 

@@ -49,9 +49,6 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
         <View style={{paddingLeft: 10}}>
           <Text style={{fontWeight: 'bold'}}>{model.title}</Text>
           <Text>Account: {model.account_id.account_name}</Text>
-          <Text>Group: {model.group_id}</Text>
-          <Text>Contact: {model.contact_id}</Text>
-          <Text>Owner: {model.owner_id}</Text>
           <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
           <Text>Address: {model.address_street}</Text>
           <Text>City: {model.address_city}</Text>
@@ -61,8 +58,6 @@ const MeetingDetailsScreen: React.FC<Props> = ({route}) => {
             Meeting Date: {getDateStringsFromDate(model.meeting_time).date}
           </Text>
           <Text>Meeting Time: {getDateStringsFromDate(model.meeting_time).time}</Text>
-          <Text>Created On: {getDateStringsFromDate(model.createdAt).date} {getDateStringsFromDate(model.createdAt).time}</Text>
-          <Text>Updated On: {getDateStringsFromDate(model.updatedAt).date} {getDateStringsFromDate(model.updatedAt).time}</Text>
         </View>
       </ScrollView>
     </View>

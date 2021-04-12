@@ -170,7 +170,7 @@ const RoutesCalendarScreen = () => {
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Route', modal: 'CreateRouteModal'}}
+            add={{title: 'Route', modal: 'ModalPopup', modals: ['CreateTruckModal', 'CreateRouteModal', 'CreatePreTripInspectionModal']}}
             list="RoutesScreen"
             schedule="RoutesCalendarScreen"
             map="RoutesMapScreen"

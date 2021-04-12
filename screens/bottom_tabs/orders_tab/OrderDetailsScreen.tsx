@@ -6,8 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Text,
-  Image,
-  Linking,
 } from 'react-native';
 import AppButton from '../../../components/layout/AppButton';
 import AppEditBtn from '../../../components/layout/AppEditBtn';
@@ -30,12 +28,11 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
 
   // Toggles
   const [statusToggle, setStatusToggle] = useState(false);
-  const [urlToggle, setUrlToggle] = useState(false);
   const [notesToggle, setNotesToggle] = useState(false);
   //#endregion
   return (
     <View style={{marginBottom: 50}}>
-      <AppTitle title='Order Detail' />
+      <AppTitle title="Order Detail" />
 
       <ScrollView
         style={styles.scrollView}
@@ -43,14 +40,14 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
         <AppNavBtnGrp>
           <View style={{marginRight: 60, marginTop: 12, paddingLeft: 10}}>
             <AppButton
-              title='Back'
+              title="Back"
               onPress={() => navigation.goBack()}
               outlined={true}
               icon={{type: 'MaterialIcons', name: 'arrow-back'}}
             />
           </View>
           <View style={{paddingTop: 5}}>
-            <AppEditBtn item={model} modal='UpdateOrderModal' />
+            <AppEditBtn item={model} modal="UpdateOrderModal" />
           </View>
         </AppNavBtnGrp>
 
@@ -58,69 +55,15 @@ const OrderDetailsScreen: React.FC<Props> = ({route}) => {
           <Text style={{fontWeight: 'bold'}}>{model.order_id}</Text>
           <Text>Account: {model.account_id.account_name}</Text>
           <Text>Agreement: {model.agreement_id ? 'Yes' : 'No'}</Text>
-          <Text>Group: {model.group_id}</Text>
           <Text>Recurring: {model.is_recurring ? 'Yes' : 'No'}</Text>
-          <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
           <Text>Demo: {model.is_demo ? 'Yes' : 'No'}</Text>
-          <Text>Services: {model.services.toString()}</Text>
-          <Text>Days: {model.service_day}</Text>
-          <Text>Monthly Rate: {model.monthly_rate}</Text>
-          <Text>Demand Rate: {model.demand_rate}</Text>
-          <Text>
-            Order Date: {getDateStringsFromDate(model.service_date).date}
-          </Text>
-
-          {model.order_status === 'completed' ? (
-            <View>
-            <View style={{marginTop: 10}}>
-              <Text style={{ fontWeight: 'bold'}}>Completed:</Text>
-              </View>
-            <View style={{marginLeft: 20}}>
-              <Text>Containers Smashed: {model.containers_serviced}</Text>
-              <Text>Coords: {model.completed_geo_location}</Text>
-              <Text>Time: {getDateStringsFromDate(model.completed_time).date}{' '}{getDateStringsFromDate(model.completed_time).time}</Text>
-            </View>
-            </View>
-          ) : null}
+          <Text>Order Date: {getDateStringsFromDate(model.service_date).date}</Text>
+          <Text>Order Status: {model.order_status}</Text>
+          <Text>Containers Smashed: {model.containers_serviced}</Text>
         </View>
 
-        <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
-          <AppTitle title='Status' />
-        </TouchableOpacity>
-        {!statusToggle ? null : (
-          <View style={{paddingLeft: 10}}>
-            <AppOrderStatusIndicator
-              id={model._id}
-              currentStatus={model.order_status}
-            />
-          </View>
-        )}
-
-        <TouchableOpacity onPress={() => setUrlToggle(!urlToggle)}>
-          <AppTitle title='Url' />
-        </TouchableOpacity>
-        {!urlToggle ? null : (
-          <View style={{paddingLeft: 10, paddingTop: 10, alignItems: 'center'}}>
-            {model.url.map((item: string) => {
-              return (
-                <View style={{marginBottom: 10}} key={item}>
-                  <Text
-                    style={styles.link}
-                    onPress={() => Linking.openURL(item)}>
-                    {item}
-                  </Text>
-                  {/* <Image
-                    source={{uri: item}}
-                    style={styles.thumbnail}
-                  /> */}
-                </View>
-              );
-            })}
-          </View>
-        )}
-
         <TouchableOpacity onPress={() => setNotesToggle(!notesToggle)}>
-          <AppTitle title='Notes' />
+          <AppTitle title="Notes" />
         </TouchableOpacity>
         {!notesToggle ? null : (
           <View style={{paddingLeft: 10}}>

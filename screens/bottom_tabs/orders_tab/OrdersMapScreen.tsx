@@ -73,7 +73,7 @@ const OrdersScreen: React.FC<Props> = () => {
         contentContainerStyle={styles.contentContainer}>
           <View style={{paddingHorizontal: 10}}>
             <AppNavGroup
-              add={{title: 'Order', modal: 'CreateOrderModal'}}
+              add={{title: 'Order', modal: 'ModalPopup', modals: ['CreateAgreementModal', 'CreateOrderModal']}}
               list="OrdersScreen"
               schedule="OrdersCalendarScreen"
               map="OrdersMapScreen"

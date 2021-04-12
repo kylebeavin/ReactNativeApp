@@ -13,7 +13,7 @@ export type Group = {
   region: string;
   signing_date: string;
   tax_rate: string;
-  territory_zips: string[];
+  territory_zips: string;
   time_zone: string;
   webpage: string;
 };

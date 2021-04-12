@@ -16,7 +16,7 @@ import AppTextInput from '../../../components/layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/layout/AppCheckBox';
-import {RouteStages} from '../../../types/enums';
+import {FuelPercentage, RouteStages} from '../../../types/enums';
 
 interface Props {
   route?: Route
@@ -35,7 +35,7 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
     // Truck Checklist
     odometer_reading: '',
-    fuel_level: '',
+    fuel_level: FuelPercentage.hundred,
     seat_belts: false,
     pto_switch: false,
     engine_fluids: false,
@@ -363,16 +363,24 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
           </View>
           <View style={{flex: 1}}>
             {/* Fuel Level */}
-            <AppTextInput
-              label='Fuel Level'
-              name='fuel_level'
-              value={values.fuel_level}
-              onChange={(val) => handleChange('fuel_level', val)}
-              validations={[isRequired]}
-              errors={errors.fuel_level}
-              setErrors={setErrors}
-              keyboardType='number-pad'
-            />
+          <View style={styles.fieldContainer}>
+            <Text style={styles.text}>Fuel Level</Text>
+            <View style={[styles.picker, {height: 42, marginRight: 15}]}>
+              <Picker
+                selectedValue={values.fuel_level}
+                onValueChange={(itemValue, itemIndex) => handleChange('fuel_level', itemValue.toString())}>
+                {Object.values(FuelPercentage).map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={item}
+                      label={item}
+                      value={item}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
+          </View>
           </View>
         </View>
 

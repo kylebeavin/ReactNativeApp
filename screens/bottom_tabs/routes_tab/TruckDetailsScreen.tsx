@@ -49,19 +49,13 @@ const RouteDetailsScreen: React.FC<Props> = ({route}) => {
         </AppNavBtnGrp>
 
         <View style={{paddingLeft: 10}}>
-          <Text>_id: {model._id}</Text>
-          <Text>body_subtype: {model.body_subtype}</Text>
           <Text>body_type: {model.body_type}</Text>
           <Text>color: {model.color}</Text>
-          <Text>documents: {model.documents}</Text>
-          <Text>group_id: {model.group_id}</Text>
           <Text>hours: {model.hours}</Text>
-          <Text>is_active: {model.is_active}</Text>
           <Text>license_number: {model.license_number}</Text>
           <Text>msrp: {model.msrp}</Text>
           <Text>name: {model.name}</Text>
           <Text>odo: {model.odo}</Text>
-          <Text>operator: {model.operator}</Text>
           <Text>ownership: {model.ownership}</Text>
           <Text>pictures: {model.pictures}</Text>
           <Text>service_history: {model.service_history}</Text>

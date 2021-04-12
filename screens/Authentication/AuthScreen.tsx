@@ -144,24 +144,6 @@ const AuthScreen: React.FC<Props> = () => {
           </View>
         </View>
       </View>
-
-      {/* Need Help? */}
-      <View style={styles.needHelpContainer}>
-        <Text style={{marginLeft: 15}}>
-          Need Help?{' '}
-          <Text
-            style={{
-              color: Colors.SMT_Secondary_2_Light_1,
-              borderBottomColor: Colors.SMT_Secondary_2_Light_1,
-              textDecorationLine: 'underline',
-            }}>
-            Contact Us
-          </Text>
-        </Text>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
-          <Ionicons style={styles.helpIcon} name='ios-help-circle' />
-        </View>
-      </View>
     
     </View>
   );
@@ -226,7 +208,6 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingVertical: 5,
     borderColor: Colors.SMT_Secondary_1_Light_1,
-    //borderWidth: 2,
     borderRadius: 3,
     backgroundColor: Colors.SMT_Tertiary_1,
     elevation: 1,

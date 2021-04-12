@@ -33,6 +33,7 @@ import OrderDetailsScreen from '../screens/bottom_tabs/orders_tab/OrderDetailsSc
 import MeetingDetailsScreen from '../screens/bottom_tabs/crm_tab/MeetingDetailsScreen';
 import AccountDetailsScreen from '../screens/bottom_tabs/crm_tab/AccountDetailsScreen';
 import RouteNavigationScreen from '../screens/bottom_tabs/routes_tab/RouteNavigationScreen';
+import PreTripInspectionDetailsScreen from '../screens/bottom_tabs/routes_tab/PreTripInspectionDetailsScreen';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -133,6 +134,7 @@ function RoutesNavigator() {
       <RoutesStack.Screen name='RoutesMapScreen' component={RoutesMapScreen} />
       <RoutesStack.Screen name='RouteDetailsScreen' component={RouteDetailsScreen} />
       <RoutesStack.Screen name='TruckDetailsScreen' component={TruckDetailsScreen} />
+      <RoutesStack.Screen name='PreTripInspectionDetailsScreen' component={PreTripInspectionDetailsScreen} />
     </RoutesStack.Navigator>
   );
 }

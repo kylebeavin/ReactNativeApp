@@ -8,10 +8,8 @@ import CheckBox from '@react-native-community/checkbox';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
-import {SMT_User} from '../../../types/index';
 import {Account} from '../../../types/crm';
-import {formatDateString, getRequestHeadersAsync} from '../../../utils/Helpers';
+import {formatDateString} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
@@ -19,22 +17,23 @@ import { Agreement } from '../../../types/orders';
 import { Days, Services, ServicesPer } from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import { ToastContext } from '../../../providers/ToastProvider';
+import AppBtnGrp from '../../../components/layout/AppBtnGrp';
 
 interface Props {
 }
 
 const CreateAgreementModal: React.FC<Props> = () => {
+  //#region === Use State Variables ===//
     const navigation = useNavigation();
     const {grpId, token} = useContext(AppContext);
     const {show} = useContext(ToastContext);
-    //#region === Use State Variables ===//
     const [account, setAccount] = useState('');
-    const [group, setGroup] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
     const [services, setServices] = useState('');
     const [serviceFrequency, setServiceFrequency] = useState('');
     const [servicePer, setServicePer] = useState(ServicesPer.day.toString());
     const [serviceDays, setServiceDays] = useState(Days.sun.toString());
+    const [btnObj, setBtnObj] = useState<{[index: string]: boolean}>({['SU']: false, ['M']: false, ['T']: false, ['W']: false, ['TH']: false, ['F']: false, ['S']: false});
     const [monthlyRate, setMonthlyRate] = useState('');
     const [demandRate, setDemandRate] = useState('');
     const [termDate, setTermDate] = useState('');
@@ -49,23 +48,9 @@ const CreateAgreementModal: React.FC<Props> = () => {
     // Popups
     const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
     const [showEndDateCalendar, setShowEndDateCalendar] = useState(false);
-
-    //#endregion
-
-    //#region === Mutable Ref Variables ===//
-    const nameRef = useRef<TextInput>(null);
-    const accountRef = useRef<Picker>(null);
-    const dateRef = useRef<TextInput>(null);
-    const streetRef = useRef<TextInput>(null);
-    const cityRef = useRef<TextInput>(null);
-    const stateRef = useRef<TextInput>(null);
-    const zipRef = useRef<TextInput>(null);
     //#endregion
 
     useEffect(() => {
-      // Set State
-
-      // Fetch Accounts by group id
       getAccountsDropDown()
         .then((data) => {
           setAccountList(data);
@@ -98,7 +83,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
         service_frequency: serviceFrequency,
         service_per: servicePer,
         service_days: serviceDays,
-        monthly_rate: monthlyRate,
+        recurring_rate: monthlyRate,
         demand_rate: demandRate,
         term_date: termDate,
         start_date: startDate,
@@ -224,7 +209,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
           {/* Service Days */}
           <View style={styles.fieldContainer}>
             <Text style={styles.text}>Days</Text>
-            <View style={styles.picker}>
+            {/* <View style={styles.picker}>
               <Picker
                 selectedValue={serviceDays}
                 onValueChange={(itemValue, ItemIndex) =>
@@ -240,7 +225,8 @@ const CreateAgreementModal: React.FC<Props> = () => {
                   );
                 })}
               </Picker>
-            </View>
+            </View> */}
+            <AppBtnGrp state={{btnObj, setBtnObj}} />
           </View>
 
           {/* Monthly Rate */}

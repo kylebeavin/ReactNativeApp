@@ -28,6 +28,7 @@ import CompleteOrderModal from './orders/CompleteOrderModal';
 import AssignDriverModal from './routes/AssignDriverModal';
 import AssignTruckModal from './routes/AssignTruckModal';
 import ModalPopup from './ModalPopup';
+import UpdateTruckModal from './updates/UpdateTruckModal';
 
 interface Props {
     navigation: any;
@@ -82,6 +83,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <UpdateDemoModal />;
       case 'UpdateRouteModal':
         return <UpdateRouteModal route={item} />;
+      case 'UpdateTruckModal':
+        return <UpdateTruckModal model={item} />;
 
       //=== Route Modals ===//
       case 'AssignRouteModal':

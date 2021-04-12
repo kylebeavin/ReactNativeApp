@@ -37,7 +37,7 @@ const AppCheckBox: React.FC<Props> = ({
   //   };
 
   return (
-    <View style={!containerStyle ? null : containerStyle}>
+    <View style={[styles.container, !containerStyle ? null : containerStyle]}>
       <Text style={styles.text}>{label}</Text>
       <TouchableWithoutFeedback
         onPress={() => {
@@ -63,6 +63,9 @@ const AppCheckBox: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+  },
   text: {
     fontWeight: 'bold',
     color: Colors.SMT_Secondary_1,

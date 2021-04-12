@@ -36,22 +36,35 @@ const AccountSettingsMenu: React.FC<Props> = (props) => {
             <Text style={styles.settingsItemText}>Edit Display Name</Text>
           </View>
           <View style={styles.accountSettingsInput}>
-            <TextInput placeholder='Display Name' />
+            <TextInput placeholder="Display Name" />
           </View>
         </View>
 
         {role !== 'admin' ? null : (
-          <TouchableOpacity
-            style={styles.settingsItem}
-            onPress={() =>
-              navigation.navigate('Modal', {modal: 'CreateGroupModal'})
-            }>
-            <View style={styles.accountSettingsLabel}>
-              <Text style={styles.settingsItemText}>
-                Create New Franchise Group
-              </Text>
-            </View>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              style={styles.settingsItem}
+              onPress={() =>
+                navigation.navigate('Modal', {modal: 'CreateGroupModal'})
+              }>
+              <View style={styles.accountSettingsLabel}>
+                <Text style={styles.settingsItemText}>
+                  Create New Franchise Group
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.settingsItem}
+              onPress={() =>
+                navigation.navigate('Modal', {modal: 'CreateUserModal'})
+              }>
+              <View style={styles.accountSettingsLabel}>
+                <Text style={styles.settingsItemText}>
+                  Create New Franchise User
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </>
         )}
 
         <TouchableOpacity

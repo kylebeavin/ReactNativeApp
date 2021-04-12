@@ -78,36 +78,17 @@ const AccountDetailsScreen: React.FC<Props> = ({route}) => {
 
         <View style={{paddingLeft: 10}}>
           <Text style={{fontWeight: 'bold'}}>{model.account_name}</Text>
-          <Text>Group: {model.group_id}</Text>
-          <Text>Coords: {model.geo_location}</Text>
           <Text>Email: {model.email}</Text>
-          <Text>Stage: {model.stage.toString()}</Text>
+          <Text>Status: {model.stage.toString()}</Text>
           <Text>Owner: {model.owner_name}</Text>
-          <Text>Owner Id: {model.owner_id}</Text>
           <Text>Active: {model.is_active ? 'Yes' : 'No'}</Text>
           <Text>Demo: {model.demo ? 'Yes' : 'No'}</Text>
-          <Text>National: {model.national ? 'Yes' : 'No'}</Text>
           <Text>Referral: {model.referral ? 'Yes' : 'No'}</Text>
-          <Text>Referral Group Id: {model.referral_group_id}</Text>
-          <Text>Hauling: {model.hauling_contract ? 'Yes' : 'No'}</Text>
-          <Text>Hauling Expiry: {model.hauling_expiration}</Text>
           <Text>Address: {model.address_street}</Text>
           <Text>City: {model.address_city}</Text>
           <Text>State: {model.address_state}</Text>
           <Text>Zip: {model.address_zip}</Text>
-          <Text>Conversion: {getDateStringsFromDate(model.conversion).date}</Text>
-          <Text>Created On: {getDateStringsFromDate(model.createdAt).date} {getDateStringsFromDate(model.createdAt).time}</Text>
-          <Text>Updated On: {getDateStringsFromDate(model.updatedAt).date} {getDateStringsFromDate(model.updatedAt).time}</Text>
         </View>
-
-        <TouchableOpacity onPress={() => setStatusToggle(!statusToggle)}>
-          <AppTitle title='Status' />
-        </TouchableOpacity>
-        {!statusToggle ? null : (
-          <View style={{paddingLeft: 10}}>
-              <Text>Hello World!</Text>
-          </View>
-        )}
 
         <TouchableOpacity onPress={() => setContactToggle(!contactToggle)}>
           <AppTitle title='Contacts' />

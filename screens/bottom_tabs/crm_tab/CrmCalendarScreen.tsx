@@ -7,29 +7,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Picker} from '@react-native-picker/picker';
 import {Calendar} from 'react-native-calendars';
 
-import {Services} from '../../../types/enums';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
-import AppButton from '../../../components/layout/AppButton';
 import AppTitle from '../../../components/layout/AppTitle';
-import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
 import {formatDate, getDateStringsFromDate} from '../../../utils/Helpers';
 import useDates from '../../../hooks/useDates';
 import {Meeting} from '../../../types/crm';
-import AppAddNew from '../../../components/layout/AppAddNew';
 import AppNavGroup from '../../../components/layout/AppNavGroup';
-
-interface IMarkedDays {
-  [key: string]: {
-    selected: boolean;
-    selectedColor: string;
-  };
-}
 
 const CrmCalendarScreen = () => {
   //#region Use State Variables
@@ -167,7 +155,7 @@ const CrmCalendarScreen = () => {
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Meeting', modal: 'CreateMeetingModal'}}
+            add={{title: 'Meeting', modal: 'ModalPopup', modals: ['CreateAccountModal', 'CreateContactModal', 'CreateMeetingModal']}}
             list="CrmScreen"
             schedule="CrmCalendarScreen"
             map="CrmMapScreen"
@@ -278,15 +266,10 @@ const CrmCalendarScreen = () => {
 
 const styles = StyleSheet.create({
   calendarContainer: {
-    //marginBottom: 10,
-    //marginTop: -10,
-    //paddingHorizontal: 10,
     paddingRight: 1,
     borderWidth: 2,
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderRadius: 5,
-    //elevation: 1,
-    //overflow: 'hidden'
   },
   container: {
     flexDirection: 'row',

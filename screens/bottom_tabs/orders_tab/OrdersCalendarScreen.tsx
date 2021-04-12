@@ -154,7 +154,7 @@ const OrdersCalendarScreen = () => {
       <ScrollView style={styles.scrollView}>
         <View style={{paddingHorizontal: 10}}>
           <AppNavGroup
-            add={{title: 'Order', modal: 'CreateOrderModal'}}
+            add={{title: 'Order', modal: 'ModalPopup', modals: ['CreateAgreementModal', 'CreateOrderModal']}}
             list="OrdersScreen"
             schedule="OrdersCalendarScreen"
             map="OrdersMapScreen"

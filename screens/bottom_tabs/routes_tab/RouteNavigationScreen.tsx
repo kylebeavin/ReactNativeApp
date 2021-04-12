@@ -20,12 +20,10 @@ import AppContext from '../../../providers/AppContext';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
 import {ToastContext} from '../../../providers/ToastProvider';
 import AppButton from '../../../components/layout/AppButton';
-import DriverNavigationMap from '../../../components/map/DriverNavigationMap';
 import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import useMapbox from '../../../hooks/useMapbox';
-import MapboxGL from '@react-native-mapbox-gl/maps';
-import { MapboxGeometry, MapboxPoint } from '../../../types/mapbox';
+import { MapboxPoint } from '../../../types/mapbox';
 import AppMapboxPoint from '../../../components/map/AppMapboxPoint';
 import AppMapboxLines from '../../../components/map/AppMapboxLines';
 import Geolocation from '@react-native-community/geolocation';
@@ -40,7 +38,6 @@ import { isRequired } from '../../../utils/Validators';
 import { CameraContext } from '../../../providers/CameraProvider';
 import useForm from '../../../hooks/useForm';
 import RNFetchBlob from 'rn-fetch-blob';
-import CreatePreTripInspectionModal from '../../modal/creates/CreatePreTripInspectionModal';
 import CreatePostTripInspectionModal from '../../modal/creates/CreatePostTripInspectionModal';
 
 

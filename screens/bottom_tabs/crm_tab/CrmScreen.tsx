@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
-  FlatList,
   ScrollView,
   TouchableOpacity,
   Text,
@@ -12,13 +11,9 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
-import {Account, Contact} from '../../../types/crm';
+import {Account} from '../../../types/crm';
 import AppTitle from '../../../components/layout/AppTitle';
-import AppAddNew from '../../../components/layout/AppAddNew';
-import AppNavBtnGrp from '../../../components/layout/AppNavBtnGrp';
-import AppCard from '../../../components/layout/AppCard';
 import AppEmptyCard from '../../../components/layout/AppEmptyCard';
-import AppButton from '../../../components/layout/AppButton';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
 import {getDateStringsFromDate} from '../../../utils/Helpers';

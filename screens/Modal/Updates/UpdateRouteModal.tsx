@@ -27,9 +27,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
     is_active: true,
     start_location: '',
     driver: '',
-    truck_vin: '',
     service_stop: [],
-    time: new Date().toString(),
     notes: '',
   };
   const formErrors = {
@@ -37,9 +35,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
     is_active: [],
     start_location: [],
     driver: [],
-    truck_vin: [],
     service_stop: [],
-    time: [],
     notes: [],
   };
   const formValidations = {
@@ -47,9 +43,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
     is_active: [],
     start_location: [isRequired],
     driver: [isRequired],
-    truck_vin: [],
     service_stop: [],
-    time: [isRequired],
     notes: [],
   };
   //#endregion
@@ -92,7 +86,6 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       .then((data) => {
         if (isSuccessStatusCode(data.status)) {
           setTrucksList(data.data);
-          setTruckVin(data.data[0].vin);
         } else {
           show({message: data.message});
         }
@@ -126,9 +119,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       route_stage: 'unassigned',
       start_location: values.start_location,
       driver_id: values.driver,
-      truck_vin: truckVin,
       service_stop: values.service_stop,
-      time: new Date(values.time),
       notes: values.notes,
     };
     return updatedRoute;
@@ -173,10 +164,7 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
           <View style={styles.picker}>
             <Picker
               selectedValue={values.truck_id}
-              onValueChange={(itemValue, itemIndex) => {
-                handleChange('truck_id', itemValue.toString());
-                setTruckVin(trucksList[itemIndex].vin);
-              }}>
+              onValueChange={(itemValue, itemIndex) => handleChange('truck_id', itemValue.toString())}>
               {trucksList.map((item, index) => {
                 return (
                   <Picker.Item
@@ -189,17 +177,6 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
             </Picker>
           </View>
         </View>
-
-        {/* Truck VIN */}
-        <AppTextInput
-          label='Truck VIN'
-          name='truck_vin'
-          value={truckVin}
-          onChange={(val) => setTruckVin(val)}
-          validations={[isRequired]}
-          errors={errors.truck_vin}
-          setErrors={setErrors}
-        />
 
         {/* Driver */}
         <View style={styles.fieldContainer}>
@@ -222,17 +199,6 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
             </Picker>
           </View>
         </View>
-
-        {/* Time */}
-        <AppTextInput
-          label='Time'
-          name='time'
-          value={values.time}
-          onChange={(val) => handleChange('time', val)}
-          validations={[isRequired]}
-          errors={errors.time}
-          setErrors={setErrors}
-        />
 
         {/* Notes */}
         <AppTextInput
