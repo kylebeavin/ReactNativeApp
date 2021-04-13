@@ -9,7 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import {Account} from '../../../types/crm';
-import {formatDateString} from '../../../utils/Helpers';
+import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
@@ -18,6 +18,8 @@ import { Days, Services, ServicesPer } from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import { ToastContext } from '../../../providers/ToastProvider';
 import AppBtnGrp from '../../../components/layout/AppBtnGrp';
+import AppCheckBox from '../../../components/layout/AppCheckBox';
+import AppTextInput from '../../../components/layout/AppTextInput';
 
 interface Props {
 }
@@ -25,22 +27,20 @@ interface Props {
 const CreateAgreementModal: React.FC<Props> = () => {
   //#region === Use State Variables ===//
     const navigation = useNavigation();
-    const {grpId, token} = useContext(AppContext);
+    const {id, grpId, token} = useContext(AppContext);
     const {show} = useContext(ToastContext);
     const [account, setAccount] = useState('');
     const [isRecurring, setIsRecurring] = useState(false);
-    const [services, setServices] = useState('');
-    const [serviceFrequency, setServiceFrequency] = useState('');
     const [servicePer, setServicePer] = useState(ServicesPer.day.toString());
-    const [serviceDays, setServiceDays] = useState(Days.sun.toString());
     const [btnObj, setBtnObj] = useState<{[index: string]: boolean}>({['SU']: false, ['M']: false, ['T']: false, ['W']: false, ['TH']: false, ['F']: false, ['S']: false});
-    const [monthlyRate, setMonthlyRate] = useState('');
+    const [recurringRate, setRecurringRate] = useState('');
     const [demandRate, setDemandRate] = useState('');
-    const [termDate, setTermDate] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [notes, setNotes] = useState('');
     const [fileUploadUrl, setFileUploadUrl] = useState('');
+    const [containerQty, setContainerQty] = useState('0');
+    const [location, setLocation] = useState('');
 
     // DropDowns
     const [accountList, setAccountList] = useState<Account[]>();
@@ -72,43 +72,79 @@ const CreateAgreementModal: React.FC<Props> = () => {
         .catch((err) => show({message: err.message}));
       return accountsList;
     };
-
+    
     const getFormData = async () => {
       const agreement: Agreement = {
         _id: '',
         account_id: account, 
-        group_id: grpId,
-        is_recurring: isRecurring,
-        services: services.toString(),
-        service_frequency: serviceFrequency,
-        service_per: servicePer,
-        service_days: serviceDays,
-        recurring_rate: monthlyRate,
+        container_qty: containerQty,
         demand_rate: demandRate,
-        term_date: termDate,
-        start_date: startDate,
         end_date: endDate,
-        created: '',
+        group_id: grpId,
         is_active: true,
+        is_recurring: isRecurring,
+        location: location,
         notes: notes,
+        owner_id: id,
+        recurring_rate: recurringRate,
+        services: 'smash',
+        service_days: getBtnGrpValues(),
+        service_frequency: servicePer,
+        start_date: startDate,
         url: fileUploadUrl,
       }
       return agreement;
     }
+
+    const getBtnGrpValues = () : string[] => {
+      let strArr: string[] = [];
+
+      Object.entries(btnObj).map((u,i) => {
+        if (u[1]){
+          
+          switch (u[0]) {
+            case 'SU':
+              return strArr.push('sun');
+            case 'M':
+              return strArr.push('mon');
+            case 'T':
+              return strArr.push('tue');
+            case 'W':
+              return strArr.push('wed');
+            case 'TH':
+              return strArr.push('thu');
+            case 'F':
+              return strArr.push('fri');
+            case 'S':
+              return strArr.push('sat');
+            default: 
+              return null;
+          }
+        }
+      })
+
+      return strArr;
+    };
     
     const postNewAgreement = async () => {
       const agreement: Agreement = await getFormData();
-
+      console.log(JSON.stringify(agreement))
       await fetch(`${Configs.TCMC_URI}/api/agreements`, {
         method: 'POST',
         body: JSON.stringify(agreement),
         headers: {'Content-Type': 'application/json','x-access-token': token},
         })
         .then((res) => res.json())
-        .then((data) => data)
+        .then(json => {
+          if (isSuccessStatusCode(json.status)) {
+            show({message: json.message});
+            navigation.navigate('OrdersScreen')
+          } else {
+            console.log(json)
+            show({message: json.message});
+          }
+        })
         .catch((err) => show({message: err.message}));
-    
-      navigation.navigate('ServicesScreen');
     };
 
     const openStartDateCalendar = (show: boolean) => {
@@ -142,51 +178,22 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </Picker>
             </View>
           </View>
+          
+          {/* Container Qty */}
+          <AppTextInput 
+            label='Container Qty'
+            name='container_qty'
+            value={containerQty}
+            onChange={(val) => setContainerQty(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+          />
 
-          {/* isRecurring */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Is Recurring</Text>
-            <CheckBox
-              disabled={false}
-              value={isRecurring}
-              onValueChange={(newValue) => setIsRecurring(!isRecurring)}
-            />
-          </View>
-
-          {/* Services */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Service</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={services}
-                onValueChange={(itemValue, ItemIndex) => setServices(itemValue.toString())}
-              >
-                {Object.values(Services).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
-
-          {/* Service Frequency */}
+          {/* Frequency */}
           <View style={styles.fieldContainer}>
             <Text style={styles.text}>Frequency</Text>
-            <TextInput
-              style={styles.textInput}
-              value={serviceFrequency}
-              onChange={(text) => setServiceFrequency(text.nativeEvent.text)}
-            />
-          </View>
-
-          {/* Services Per */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Per</Text>
             <View style={styles.picker}>
               <Picker
                 selectedValue={servicePer}
@@ -209,39 +216,22 @@ const CreateAgreementModal: React.FC<Props> = () => {
           {/* Service Days */}
           <View style={styles.fieldContainer}>
             <Text style={styles.text}>Days</Text>
-            {/* <View style={styles.picker}>
-              <Picker
-                selectedValue={serviceDays}
-                onValueChange={(itemValue, ItemIndex) =>
-                  setServiceDays(itemValue.toString())
-                }>
-                {Object.values(Days).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View> */}
             <AppBtnGrp state={{btnObj, setBtnObj}} />
           </View>
 
-          {/* Monthly Rate */}
+          {/* Recurring Rate */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Monthly Rate</Text>
+            <Text style={styles.text}>Recurring Rate</Text>
             <TextInput
               style={styles.textInput}
-              value={monthlyRate}
-              onChange={(text) => setMonthlyRate(text.nativeEvent.text)}
+              value={recurringRate}
+              onChange={(text) => setRecurringRate(text.nativeEvent.text)}
             />
           </View>
 
-          {/* Demand Rate */}
+          {/* On Demand Rate */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Demand Rate</Text>
+            <Text style={styles.text}>On Demand Rate</Text>
             <TextInput
               style={styles.textInput}
               value={demandRate}
@@ -249,15 +239,16 @@ const CreateAgreementModal: React.FC<Props> = () => {
             />
           </View>
 
-          {/* Term Date */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Term Date</Text>
-            <TextInput
-              style={styles.textInput}
-              value={termDate}
-              onChange={(text) => setTermDate(text.nativeEvent.text)}
-            />
-          </View>
+          {/* Location */}
+          <AppTextInput
+            label='Location'
+            name='location'
+            value={location}
+            onChange={val => setLocation(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* Start Date */}
           <View style={styles.fieldContainer}>
@@ -277,7 +268,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </View>
               <View style={[styles.column, styles.calendarButton]}>
                 <AppButton
-                  title='Calendar'
+                  title="Calendar"
                   onPress={() => openStartDateCalendar(true)}
                   icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
@@ -304,7 +295,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </View>
               <View style={[styles.column, styles.calendarButton]}>
                 <AppButton
-                  title='Calendar'
+                  title="Calendar"
                   onPress={() => openEndDateCalendar(true)}
                   icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                   backgroundColor={Colors.SMT_Secondary_2}
@@ -312,6 +303,18 @@ const CreateAgreementModal: React.FC<Props> = () => {
               </View>
             </View>
           </View>
+
+          {/* isRecurring */}
+            <AppCheckBox
+              containerStyle={{marginRight: 15}}
+              label='Is Recurring'
+              name='is_recurring'
+              value={isRecurring}
+              onChange={(newValue) => setIsRecurring(!isRecurring)}
+              validations={[]}
+              errors={[]}
+              setErrors={null}
+            />
 
           {/* File Upload URL */}
           <View style={styles.fieldContainer}>

@@ -76,7 +76,7 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
       case 'UpdateMeetingModal': 
         return <UpdateMeetingModal meeting={item} />;
       case 'UpdateAgreementModal':
-        return <UpdateAgreementModal />;
+        return <UpdateAgreementModal model={item} />;
       case 'UpdateOrderModal':
         return <UpdateOrderModal order={item} />;
       case 'UpdateDemoModal':
