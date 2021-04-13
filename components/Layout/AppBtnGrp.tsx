@@ -4,17 +4,10 @@ import {
   TouchableOpacity,
   View,
   Text,
-  GestureResponderEvent,
-  TextInput,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
 } from 'react-native';
 import Colors from '../../constants/Colors';
 
 interface Props {
-  // btnArr: string[];
-  // btnObj: {[index: string]: boolean};
-  // handleChange: any;
   state: any
 }
 
@@ -40,14 +33,17 @@ const AppBtnGrp: React.FC<Props> = ({state}) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  setBtnMap({...btnMap, ...{[u]: !btnMap[u]}});
+                  // setBtnMap({...btnMap, ...{[u]: !btnMap[u]}});
                   updateBtn(u);
                 }}
                 style={[
                   styles.button,
                   first && {borderTopLeftRadius: 5, borderBottomLeftRadius: 5},
                   last && {borderTopRightRadius: 5, borderBottomRightRadius: 5},
-                  btnMap[u] && {
+                  // btnMap[u] && {
+                  //   backgroundColor: Colors.SMT_Secondary_2_Light_1,
+                  // },
+                  state.btnObj[u] && {
                     backgroundColor: Colors.SMT_Secondary_2_Light_1,
                   },
                 ]}
@@ -55,7 +51,10 @@ const AppBtnGrp: React.FC<Props> = ({state}) => {
                 <Text
                   style={[
                     styles.btnText,
-                    btnMap[u] && {color: Colors.SMT_Tertiary_1},
+                    // btnMap[u] && {color: Colors.SMT_Tertiary_1},
+                    state.btnObj[u] && {
+                      color: Colors.SMT_Tertiary_1,
+                    },
                   ]}
                   numberOfLines={1}>
                   {u}
@@ -72,6 +71,7 @@ const AppBtnGrp: React.FC<Props> = ({state}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   button: {
     alignItems: 'center',
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.SMT_Secondary_1_Light_1,
     marginBottom: 5,
     height: 40,
-    width: 40,
+    minWidth: 40,
   },
   btnText: {
     color: 'black',

@@ -8,11 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AppTitle from '../../../components/layout/AppTitle';
-import MapboxGL from '@react-native-mapbox-gl/maps';
 
 import {PermissionContext} from '../../../providers/PermissionContext';
-import Geolocation from '@react-native-community/geolocation';
-import RoutesDisplay from '../../../components/map/mapRouteDisplay';
 import {getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
 import Configs from '../../../constants/Configs';
 import AppContext from '../../../providers/AppContext';
@@ -25,8 +22,7 @@ import AppMapboxLines from '../../../components/map/AppMapboxLines';
 import AppMapboxPoint from '../../../components/map/AppMapboxPoint';
 import { MapboxPoint } from '../../../types/mapbox';
 import useMapbox from '../../../hooks/useMapbox';
-
-MapboxGL.setAccessToken(Configs.MAPBOX_ACCESS_TOKEN);
+import RoutesMapFilter from '../../../components/filters/RoutesMapFilter';
 
 const RoutesMapScreen = () => {
   //#region Use State Variables
@@ -39,17 +35,23 @@ const RoutesMapScreen = () => {
   const [routeLine, setRouteLine] = useState<any>();
   const [routesList, setRoutesList] = useState<Route[]>([]);
   const [selected, setSelected] = useState<Route>();
+  const [filter, setFilter] = useState({route_stage: {['Empty']: true, ['Built']: true, ['Routed']: true, ['Assigned']: true, ['Inspected']: true, ['Finalized']: true, ['Completed']: false}, is_active: true});
   //#endregion
 
   useEffect(() => {
     getRoutes();
   }, []);
 
+  useEffect(() => {
+    getRoutes();
+  }, [filter]);
+
   const getRoutes = async () => {
+    let query = {group_id: grpId, is_active: filter.is_active, route_stage: {$in: Object.entries(filter.route_stage).map((u,i) => u[1] && u[0])}};
     await fetch(`${Configs.TCMC_URI}/api/routesBy`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
-      body: JSON.stringify({group_id: grpId}),
+      body: JSON.stringify(query),
     })
       .then((res) => res.json())
       .then((json) => setRoutesList(json.data))
@@ -133,7 +135,7 @@ const RoutesMapScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <AppTitle title="Routes" />
+      <AppTitle title='Routes' filter='RoutesMapFilter' filterInitializer={filter} filterCallback={setFilter} />
 
       <ScrollView
         style={styles.scrollView}
@@ -179,7 +181,7 @@ const RoutesMapScreen = () => {
         </View>
 
         <View style={{paddingHorizontal: 10, paddingBottom: 40}}>
-          {routesList.map((u) => {
+          {routesList && routesList.map((u) => {
             return (
               <TouchableOpacity
                 style={

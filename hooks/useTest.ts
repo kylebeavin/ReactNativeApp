@@ -74,7 +74,7 @@ const useTest = () => {
             route_id: '',
             inspection_id: '',
             is_active: true,
-            route_stage: 'Empty',
+            route_stage: 'Routed',
             start_location: '11708 n college ave, carmel, in 46032',
             truck_vin: 'not important',
             service_stop: stpArr,
