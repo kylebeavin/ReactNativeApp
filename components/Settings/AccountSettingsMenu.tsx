@@ -40,6 +40,18 @@ const AccountSettingsMenu: React.FC<Props> = (props) => {
           </View>
         </View>
 
+        <TouchableOpacity
+          style={styles.settingsItem}
+          onPress={() =>
+            navigation.navigate('Modal', {modal: 'UpdateGroupTruckLocationsModal'})
+          }>
+          <View style={styles.accountSettingsLabel}>
+            <Text style={styles.settingsItemText}>
+              Edit Franchise Group's Truck Locations
+            </Text>
+          </View>
+        </TouchableOpacity>
+
         {role !== 'admin' ? null : (
           <>
             <TouchableOpacity

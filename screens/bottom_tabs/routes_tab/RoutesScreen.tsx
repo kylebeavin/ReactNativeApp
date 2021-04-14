@@ -111,6 +111,7 @@ const RoutesScreen = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data.data[0].owner_id)
         if (isSuccessStatusCode(data.status)) {
           setInspections(data.data);
         } else {
@@ -290,13 +291,13 @@ const RoutesScreen = () => {
                   }>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
-                      <Text>{u.inspection_id}</Text>
-                      <Text>PreTrip</Text>
+                      <Text style={{fontWeight: 'bold'}}>PreTrip</Text>
+                      <Text>{u.owner_id && u.owner_id.first_name + ' ' + u.owner_id.last_name}</Text>
                     </View>
                     <View style={{flex: 1}}>
+                      <Text style={{color: Colors.SMT_Primary_1, textAlign: 'right'}}>{new Date(u.createdAt).toLocaleDateString()}</Text>
                       <Text
                         style={{
-                          fontWeight: 'bold',
                           color: Colors.SMT_Secondary_2_Light_1,
                           textAlign: 'right',
                         }}>

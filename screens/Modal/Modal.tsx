@@ -29,6 +29,7 @@ import AssignDriverModal from './routes/AssignDriverModal';
 import AssignTruckModal from './routes/AssignTruckModal';
 import ModalPopup from './ModalPopup';
 import UpdateTruckModal from './updates/UpdateTruckModal';
+import UpdateGroupTruckLocationsModal from './group/UpdateGroupTruckLocationsModal';
 
 interface Props {
     navigation: any;
@@ -85,6 +86,10 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <UpdateRouteModal route={item} />;
       case 'UpdateTruckModal':
         return <UpdateTruckModal model={item} />;
+
+      //=== Group Modals ===//
+      case 'UpdateGroupTruckLocationsModal':
+        return <UpdateGroupTruckLocationsModal />;
 
       //=== Route Modals ===//
       case 'AssignRouteModal':

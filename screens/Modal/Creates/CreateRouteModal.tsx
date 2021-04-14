@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -12,7 +12,7 @@ import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
 import ModalButtons from '../ModalButtons';
 import useForm from '../../../hooks/useForm';
-import {Route, Truck} from '../../../types/routes';
+import {Route} from '../../../types/routes';
 import {isRequired} from '../../../utils/Validators';
 import AppContext from '../../../providers/AppContext';
 import {ToastContext} from '../../../providers/ToastProvider';
@@ -22,10 +22,10 @@ import {
   isSuccessStatusCode,
 } from '../../../utils/Helpers';
 import AppTextInput from '../../../components/layout/AppTextInput';
-import {SMT_User} from '../../../types';
 import {TextInputMask} from 'react-native-masked-text';
 import AppButton from '../../../components/layout/AppButton';
 import {Calendar} from 'react-native-calendars';
+import { Picker } from '@react-native-picker/picker';
 
 const CreateRouteModal = () => {
   //#region Form Initializers
@@ -58,13 +58,32 @@ const CreateRouteModal = () => {
   );
 
   // State
-  const [truckVin, setTruckVin] = useState('');
   const [showCalendar, setShowCalendar] = useState(false);
 
   // Drop Down
-  const [trucksList, setTrucksList] = useState<Truck[]>([]);
-  const [ownersList, setOwnersList] = useState<SMT_User[]>([]);
+  const [locationsList, setLocationsList] = useState<string[]>([]);
   //#endregion
+
+  useEffect(() => {
+    getTruckLocations();
+  }, []);
+
+  const getTruckLocations = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/groupsBy`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify({_id: grpId})
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (isSuccessStatusCode(json.status)) {
+        setLocationsList(json.data[0].truck_location);
+      } else {
+        show({message: json.message});
+      }
+    })
+    .catch(err => show({message: err.message}));
+  };
 
   const getFormData = async () => {
     const route: Route = {
@@ -75,8 +94,6 @@ const CreateRouteModal = () => {
       is_active: true,
       route_stage: 'unassigned',
       start_location: values.start_location,
-      //driver_id: '',
-      //truck_id: '',
       truck_vin: '_',
       service_stop: [],
       time: new Date(values.time),
@@ -112,15 +129,20 @@ const CreateRouteModal = () => {
     <View>
       <ScrollView style={styles.form}>
         {/* Start Location */}
-        <AppTextInput
-          label='Start Location'
-          name='start_location'
-          value={values.start_location}
-          onChange={(val) => handleChange('start_location', val)}
-          validations={[isRequired]}
-          errors={errors.start_location}
-          setErrors={setErrors}
-        />
+        <View style={styles.fieldContainer}>
+          <Text style={styles.text}>Start Location</Text>
+          <View style={styles.picker}>
+            <Picker
+              selectedValue={values.start_location}
+              onValueChange={(itemValue, ItemIndex) =>
+                handleChange('start_location', itemValue.toString())
+              }>
+              {locationsList?.map((item, index) => {
+                return <Picker.Item key={item} label={item} value={item} />;
+              })}
+            </Picker>
+          </View>
+        </View>
 
         {/* Time */}
         <View style={styles.fieldContainer}>
@@ -140,7 +162,7 @@ const CreateRouteModal = () => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title='Calendar'
+                title="Calendar"
                 onPress={() => openCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -151,8 +173,8 @@ const CreateRouteModal = () => {
 
         {/* Notes */}
         <AppTextInput
-          label='Notes'
-          name='notes'
+          label="Notes"
+          name="notes"
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
           validations={[isRequired]}
