@@ -4,12 +4,11 @@ import { StyleSheet, View, Text, TextInput, ScrollView, TouchableOpacity } from 
 import {Picker} from '@react-native-picker/picker';
 import {Calendar} from 'react-native-calendars';
 import { TextInputMask } from 'react-native-masked-text';
-import CheckBox from '@react-native-community/checkbox';
 
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
 import {Account} from '../../../types/crm';
-import {formatDateString, isSuccessStatusCode} from '../../../utils/Helpers';
+import {formatDateString, getDateStringsFromDate, isSuccessStatusCode} from '../../../utils/Helpers';
 import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
@@ -33,13 +32,13 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
     const [account, setAccount] = useState(model.account_id);
     const [isRecurring, setIsRecurring] = useState(model.is_recurring);
     const [servicePer, setServicePer] = useState(model.service_frequency);
-    const [btnObj, setBtnObj] = useState<{[index: string]: boolean}>({['SU']: false, ['M']: false, ['T']: false, ['W']: false, ['TH']: false, ['F']: false, ['S']: false});
-    const [recurringRate, setRecurringRate] = useState(model.recurring_rate);
-    const [demandRate, setDemandRate] = useState(model.demand_rate);
-    const [startDate, setStartDate] = useState(model.start_date);
-    const [endDate, setEndDate] = useState(model.end_date);
+    const [btnObj, setBtnObj] = useState<{[index: string]: boolean}>(getBtnGrpDictionary());
+    const [recurringRate, setRecurringRate] = useState(model.recurring_rate.toString());
+    const [demandRate, setDemandRate] = useState(model.demand_rate.toString());
+    const [startDate, setStartDate] = useState(getDateStringsFromDate(model.start_date).date);
+    const [endDate, setEndDate] = useState(getDateStringsFromDate(model.end_date).date);
     const [notes, setNotes] = useState(model.notes[0]);
-    const [fileUploadUrl, setFileUploadUrl] = useState(model.url);
+    const [fileUploadUrl, setFileUploadUrl] = useState(model.url[0]);
     const [containerQty, setContainerQty] = useState(model.container_qty.toString());
     const [location, setLocation] = useState(model.location);
 
@@ -76,7 +75,7 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
     
     const getFormData = async () => {
       const agreement: Agreement = {
-        _id: '',
+        _id: model._id,
         account_id: account, 
         container_qty: containerQty,
         demand_rate: demandRate,
@@ -127,11 +126,46 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
       return strArr;
     };
     
-    const postNewAgreement = async () => {
+    function getBtnGrpDictionary() : {[index: string]: boolean} {
+      let btnGrpObj : {[index: string]: boolean} = {
+        'SU': false,
+        'M': false,
+        'T': false,
+        'W': false,
+        'TH': false,
+        'F': false,
+        'S': false
+      };
+      
+      model.service_days.map(u => {
+        switch (u) {
+          case 'sun':
+            return btnGrpObj['SU'] = true;
+          case 'mon':
+            return btnGrpObj['M'] = true;
+          case 'tue':
+            return btnGrpObj['T'] = true;
+          case 'wed':
+            return btnGrpObj['W'] = true;
+          case 'thu':
+            return btnGrpObj['TH'] = true;
+          case 'fri':
+            return btnGrpObj['F'] = true;
+          case 'sat':
+            return btnGrpObj['S'] = true;
+          default: 
+            return null;
+        }
+      })
+      
+      return btnGrpObj;
+    };
+
+    const updateAgreement = async () => {
       const agreement: Agreement = await getFormData();
       console.log(JSON.stringify(agreement))
       await fetch(`${Configs.TCMC_URI}/api/agreements`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(agreement),
         headers: {'Content-Type': 'application/json','x-access-token': token},
         })
@@ -338,7 +372,7 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
           </View>
         </ScrollView>
 
-        <ModalButtons navigation={navigation} save={() => postNewAgreement()} />
+        <ModalButtons navigation={navigation} save={() => updateAgreement()} />
 
         {showStartDateCalendar ? (
           <TouchableOpacity
@@ -360,7 +394,7 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
             <Calendar
               style={{borderRadius: 4}}
               onDayPress={(day) => {
-                setEndDate(formatDateString(day.dateString));
+                setEndDate(day.dateString);
                 setShowEndDateCalendar(false);
               }}
             />
