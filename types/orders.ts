@@ -7,6 +7,7 @@ export type Agreement = {
   demand_rate: string;
   end_date: string;
   group_id: string;
+  agreement_id: string;
   is_active: boolean;
   is_recurring: boolean;
   location: string;

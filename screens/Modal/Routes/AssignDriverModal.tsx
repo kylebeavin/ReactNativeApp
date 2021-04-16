@@ -2,6 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import AppPicker from '../../../components/layout/AppPicker';
 import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -88,24 +89,16 @@ const AssignDriverModal: React.FC<Props> = ({id}) => {
         <AppTitle title='Assign Driver' />
         <View style={styles.container}>
           {/* Route */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Route</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={route}
-                onValueChange={(itemValue) => setRoute(itemValue.toString())}>
-                {routesList.map((item: Route) => {
-                  return (
-                    <Picker.Item
-                      key={item._id}
-                      label={item.route_id}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+        <AppPicker
+          label='Route'
+          name='route'
+          value={route}
+          list={routesList.map(u => {return {_id: u._id, label: u.route_id, value: u._id}})}
+          onChange={(itemValue) => setRoute(itemValue.toString())}
+          validations={[]}
+          errors={[]}
+          setErrors={() => null}
+        />
         </View>
       </View>
       <ModalButtons navigation={navigation} save={assignDriverToRoute} />

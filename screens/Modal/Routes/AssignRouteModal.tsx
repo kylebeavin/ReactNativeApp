@@ -28,6 +28,7 @@ import {SMT_User} from '../../../types';
 import {TextInputMask} from 'react-native-masked-text';
 import AppButton from '../../../components/layout/AppButton';
 import {Calendar} from 'react-native-calendars';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   route: Route;
@@ -40,7 +41,7 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
     is_active: route.is_active,
     start_location: route.start_location,
     route_stage: route.route_stage,
-    driver: route.driver,
+    driver: route.driver_id,
     truck_vin: route.truck_vin,
     service_stop: route.service_stop,
     time: getDateStringsFromDate(route.time).date,
@@ -86,9 +87,11 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
   // Drop Down
   const [trucksList, setTrucksList] = useState<Truck[]>([]);
   const [ownersList, setOwnersList] = useState<SMT_User[]>([]);
+  const [locationsList, setLocationsList] = useState<string[]>([]);
   //#endregion
 
   useEffect(() => {
+    getTruckLocations();
     getTrucksDropDown();
     getOwnersDropDown()
       .then((data) => {
@@ -114,6 +117,23 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
       .catch((err) => show({message: err.message}));
   };
 
+  const getTruckLocations = async () => {
+    await fetch(`${Configs.TCMC_URI}/api/groupsBy`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify({_id: grpId})
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (isSuccessStatusCode(json.status)) {
+        setLocationsList(json.data[0].truck_location);
+      } else {
+        show({message: json.message});
+      }
+    })
+    .catch(err => show({message: err.message}));
+  };
+
   const getOwnersDropDown = async (): Promise<SMT_User[]> => {
     let userList: SMT_User[] = [];
 
@@ -132,13 +152,14 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
   const getFormData = async () => {
     const reassignedRoute: Route = {
       _id: route._id,
+      route_id: route.route_id,
       group_id: route.group_id,
       truck_id: values.truck_id,
       inspection_id: route.inspection_id,
       is_active: values.is_active,
       route_stage: 'assigned',
       start_location: values.start_location,
-      driver: values.driver,
+      driver_id: values.driver,
       truck_vin: route.truck_vin,
       service_stop: values.service_stop,
       time: new Date(values.time),
@@ -174,59 +195,40 @@ const AssignRouteModal: React.FC<Props> = ({route}) => {
     <View>
       <ScrollView style={styles.form}>
         {/* Start Location */}
-        <AppTextInput
+        <AppPicker
           label='Start Location'
           name='start_location'
           value={values.start_location}
-          onChange={(val) => handleChange('start_location', val)}
-          validations={[isRequired]}
+          list={locationsList.map(u => {return {_id: u, label: u, value: u}})}
+          onChange={(itemValue) => handleChange('start_location', itemValue.toString())}
+          validations={[]}
           errors={errors.start_location}
           setErrors={setErrors}
         />
 
         {/* Truck */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Truck</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.truck_id}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('truck_id', itemValue.toString())
-              }>
-              {trucksList.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item.vin}
-                    label={item.license_number}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label='Truck'
+          name='truck'
+          value={values.truck_id!}
+          list={trucksList.map(u => {return {_id: u._id, label: u.name, value: u._id}})}
+          onChange={(itemValue) => handleChange('truck', itemValue.toString())}
+          validations={[]}
+          errors={errors.truck_id}
+          setErrors={setErrors}
+        />
 
         {/* Driver */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Driver</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.driver}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('driver', itemValue.toString())
-              }>
-              {ownersList.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.first_name + ' ' + item.last_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label='Driver'
+          name='driver'
+          value={values.driver!}
+          list={ownersList.map(u => {return {_id: u._id, label: u.first_name + ' ' + u.last_name, value: u._id}})}
+          onChange={(itemValue) => handleChange('driver', itemValue.toString())}
+          validations={[]}
+          errors={errors.driver}
+          setErrors={setErrors}
+        />
 
         {/* Time */}
         <View style={styles.fieldContainer}>

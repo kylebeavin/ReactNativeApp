@@ -20,6 +20,8 @@ import { ToastContext } from '../../../providers/ToastProvider';
 import AppBtnGrp from '../../../components/layout/AppBtnGrp';
 import AppCheckBox from '../../../components/layout/AppCheckBox';
 import AppTextInput from '../../../components/layout/AppTextInput';
+import AppPicker from '../../../components/layout/AppPicker';
+import { acc } from 'react-native-reanimated';
 
 interface Props {
 }
@@ -43,7 +45,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const [location, setLocation] = useState('');
 
     // DropDowns
-    const [accountList, setAccountList] = useState<Account[]>();
+    const [accountList, setAccountList] = useState<Account[]>([]);
 
     // Popups
     const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
@@ -158,60 +160,44 @@ const CreateAgreementModal: React.FC<Props> = () => {
       <View>
         <ScrollView style={styles.form}>
           {/* Account Id */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Account</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={account}
-                onValueChange={(itemValue, ItemIndex) =>
-                  setAccount(itemValue.toString())
-                }>
-                {accountList?.map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item._id}
-                      label={item.account_name}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
-          
+          <AppPicker
+            label="Account"
+            name="account"
+            value={account}
+            list={accountList.map((u) => {
+              return {_id: u._id, label: u.account_name, value: u._id};
+            })}
+            onChange={(itemValue) => setAccount(itemValue.toString())}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
+
           {/* Container Qty */}
-          <AppTextInput 
-            label='Container Qty'
-            name='container_qty'
+          <AppTextInput
+            label="Container Qty"
+            name="container_qty"
             value={containerQty}
             onChange={(val) => setContainerQty(val)}
             validations={[]}
             errors={[]}
             setErrors={() => null}
-            keyboardType='number-pad'
+            keyboardType="number-pad"
           />
 
           {/* Frequency */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Frequency</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={servicePer}
-                onValueChange={(itemValue, ItemIndex) =>
-                  setServicePer(itemValue.toString())
-                }>
-                {Object.values(ServicesPer).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+          <AppPicker
+            label="Frequency"
+            name="frequency"
+            value={servicePer}
+            list={Object.values(ServicesPer).map((u) => {
+              return {_id: u, label: u, value: u};
+            })}
+            onChange={(itemValue) => setServicePer(itemValue.toString())}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* Service Days */}
           <View style={styles.fieldContainer}>
@@ -241,10 +227,10 @@ const CreateAgreementModal: React.FC<Props> = () => {
 
           {/* Location */}
           <AppTextInput
-            label='Location'
-            name='location'
+            label="Location"
+            name="location"
             value={location}
-            onChange={val => setLocation(val)}
+            onChange={(val) => setLocation(val)}
             validations={[]}
             errors={[]}
             setErrors={() => null}
@@ -305,16 +291,16 @@ const CreateAgreementModal: React.FC<Props> = () => {
           </View>
 
           {/* isRecurring */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='Is Recurring'
-              name='is_recurring'
-              value={isRecurring}
-              onChange={(newValue) => setIsRecurring(!isRecurring)}
-              validations={[]}
-              errors={[]}
-              setErrors={null}
-            />
+          <AppCheckBox
+            containerStyle={{marginRight: 15}}
+            label="Is Recurring"
+            name="is_recurring"
+            value={isRecurring}
+            onChange={(newValue) => setIsRecurring(!isRecurring)}
+            validations={[]}
+            errors={[]}
+            setErrors={null}
+          />
 
           {/* File Upload URL */}
           <View style={styles.fieldContainer}>

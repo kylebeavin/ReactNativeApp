@@ -26,6 +26,7 @@ import {TextInputMask} from 'react-native-masked-text';
 import AppButton from '../../../components/layout/AppButton';
 import {Calendar} from 'react-native-calendars';
 import { Picker } from '@react-native-picker/picker';
+import AppPicker from '../../../components/layout/AppPicker';
 
 const CreateRouteModal = () => {
   //#region Form Initializers
@@ -129,20 +130,16 @@ const CreateRouteModal = () => {
     <View>
       <ScrollView style={styles.form}>
         {/* Start Location */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Start Location</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.start_location}
-              onValueChange={(itemValue, ItemIndex) =>
-                handleChange('start_location', itemValue.toString())
-              }>
-              {locationsList?.map((item, index) => {
-                return <Picker.Item key={item} label={item} value={item} />;
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label='Start Location'
+          name='start_location'
+          value={values.start_location}
+          list={locationsList.map(u => {return {_id: u, label: u, value: u}})}
+          onChange={(itemValue) => handleChange('start_location', itemValue.toString())}
+          validations={[]}
+          errors={errors.start_location}
+          setErrors={setErrors}
+        />
 
         {/* Time */}
         <View style={styles.fieldContainer}>

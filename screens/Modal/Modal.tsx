@@ -30,6 +30,8 @@ import AssignTruckModal from './routes/AssignTruckModal';
 import ModalPopup from './ModalPopup';
 import UpdateTruckModal from './updates/UpdateTruckModal';
 import UpdateGroupTruckLocationsModal from './group/UpdateGroupTruckLocationsModal';
+import UpdateInvoiceModal from './invoices/UpdateInvoiceModal';
+import CreateInvoiceModal from './invoices/CreateInvoiceModal';
 
 interface Props {
     navigation: any;
@@ -66,6 +68,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <CreatePreTripInspectionModal route={item} />;
       case 'CreateGroupModal':
         return <CreateGroupModal />;
+      case 'CreateInvoiceModal':
+        return <CreateInvoiceModal />;
 
       //=== Update Modals ===//
       case 'UpdateAccountModal':
@@ -86,6 +90,8 @@ const Modal: React.FC<Props> = ({ route, navigation }) => {
         return <UpdateRouteModal route={item} />;
       case 'UpdateTruckModal':
         return <UpdateTruckModal model={item} />;
+      case 'UpdateInvoiceModal': 
+        return <UpdateInvoiceModal model={item} />
 
       //=== Group Modals ===//
       case 'UpdateGroupTruckLocationsModal':

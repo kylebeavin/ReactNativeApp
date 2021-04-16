@@ -19,6 +19,7 @@ import { ToastContext } from '../../../providers/ToastProvider';
 import AppBtnGrp from '../../../components/layout/AppBtnGrp';
 import AppCheckBox from '../../../components/layout/AppCheckBox';
 import AppTextInput from '../../../components/layout/AppTextInput';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
     model: Agreement;
@@ -43,7 +44,7 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
     const [location, setLocation] = useState(model.location);
 
     // DropDowns
-    const [accountList, setAccountList] = useState<Account[]>();
+    const [accountList, setAccountList] = useState<Account[]>([]);
 
     // Popups
     const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
@@ -76,6 +77,7 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
     const getFormData = async () => {
       const agreement: Agreement = {
         _id: model._id,
+        agreement_id: model.agreement_id,
         account_id: account, 
         container_qty: containerQty,
         demand_rate: demandRate,
@@ -193,26 +195,16 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
       <View>
         <ScrollView style={styles.form}>
           {/* Account Id */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Account</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={account}
-                onValueChange={(itemValue, ItemIndex) =>
-                  setAccount(itemValue.toString())
-                }>
-                {accountList?.map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item._id}
-                      label={item.account_name}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+        <AppPicker
+          label='Account'
+          name='account'
+          value={account}
+          list={accountList.map(u => {return {_id: u._id, label: u.account_name, value: u._id}})}
+          onChange={(itemValue) => setAccount(itemValue.toString())}
+          validations={[]}
+          errors={[]}
+          setErrors={() => null}
+        />
           
           {/* Container Qty */}
           <AppTextInput 
@@ -227,26 +219,16 @@ const UpdateAgreementModal: React.FC<Props> = ({model}) => {
           />
 
           {/* Frequency */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Frequency</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={servicePer}
-                onValueChange={(itemValue, ItemIndex) =>
-                  setServicePer(itemValue.toString())
-                }>
-                {Object.values(ServicesPer).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+          <AppPicker
+            label='Frequency'
+            name='frequency'
+            value={servicePer}
+            list={Object.values(ServicesPer).map(u => {return {_id: u, label: u, value: u}})}
+            onChange={(itemValue) => setServicePer(itemValue.toString())}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* Service Days */}
           <View style={styles.fieldContainer}>

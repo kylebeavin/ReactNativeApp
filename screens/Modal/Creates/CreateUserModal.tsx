@@ -15,6 +15,7 @@ import AppTextInput from '../../../components/layout/AppTextInput';
 import {SMT_Roles} from '../../../types/enums';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
+import AppPicker from '../../../components/layout/AppPicker';
 
 const CreateUserModal = () => {
   //#region Form Initializers
@@ -149,26 +150,16 @@ const CreateUserModal = () => {
         />
 
         {/* Role */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>ROLE</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.role}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('role', itemValue.toString())
-              }>
-              {Object.values(SMT_Roles).map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label='Role'
+          name='role'
+          value={values.role}
+          list={Object.values(SMT_Roles).map(u => {return {_id: u, label: u, value: u}})}
+          onChange={(itemValue) => handleChange('role', itemValue.toString())}
+          validations={[]}
+          errors={errors.role}
+          setErrors={setErrors}
+        />
       </ScrollView>
 
       <ModalButtons navigation={navigation} save={handleSubmit} />

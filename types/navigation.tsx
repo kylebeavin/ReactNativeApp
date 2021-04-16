@@ -50,6 +50,9 @@ export type RoutesParamList = {
 
 export type InvoicesParamList = {
   InvoicesScreen: undefined;
+  InvoicesCalendarScreen: undefined;
+  InvoicesMapScreen: undefined;
+  InvoiceDetailsScreen: undefined;
 };
 
 export type ReportsParamList = {

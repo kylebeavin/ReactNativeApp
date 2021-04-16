@@ -26,6 +26,7 @@ import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/layout/AppTextInput';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   order: Order;
@@ -77,7 +78,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
   const [isDemo, setIsDemo] = useState(false);
 
   // DropDowns
-  const [accountList, setAccountList] = useState<Account[]>();
+  const [accountList, setAccountList] = useState<Account[]>([]);
   const [services, setServices] = useState(order.services);
   const [serviceDays, setServiceDays] = useState(order.service_day);
 
@@ -166,26 +167,20 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
     <View>
       <ScrollView style={styles.form}>
         {/* Account */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Account</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.account}
-              onValueChange={(itemValue) => {
-                handleChange('account', itemValue.toString());
-              }}>
-              {accountList?.map((item) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.account_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label="Account"
+          name="account"
+          value={values.account}
+          list={accountList.map((u) => {
+            return {_id: u._id, label: u.account_name, value: u._id};
+          })}
+          onChange={(itemValue) =>
+            handleChange('account', itemValue.toString())
+          }
+          validations={[]}
+          errors={errors.account}
+          setErrors={setErrors}
+        />
 
         {/* isRecurring */}
         <View style={styles.fieldContainer}>
@@ -197,54 +192,24 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
           />
         </View>
 
-        {/* Services */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Service</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={services}
-              onValueChange={(itemValue) =>
-                setServices(itemValue.toString())
-              }>
-              {Object.values(Services).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
         {/* Service Days */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Days</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={serviceDays}
-              onValueChange={(itemValue) =>
-                setServiceDays(itemValue.toString())
-              }>
-              {Object.values(Days).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+            label="Day"
+            name="day"
+            value={serviceDays}
+            list={Object.values(Days).map((u) => {
+              return {_id: u, label: u, value: u};
+            })}
+            onChange={(itemValue) => setServiceDays(itemValue.toString())}
+            validations={[isRequired]}
+            errors={errors.account}
+            setErrors={setErrors}
+          />
 
         {/* Monthly Rate */}
         <AppTextInput
-          label='Monthly Rate'
-          name='monthlyRate'
+          label="Monthly Rate"
+          name="monthlyRate"
           value={values.monthlyRate}
           onChange={(val) => handleChange('monthlyRate', val)}
           validations={[isRequired]}
@@ -254,8 +219,8 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
 
         {/* Demand Rate */}
         <AppTextInput
-          label='Demand Rate'
-          name='demandRate'
+          label="Demand Rate"
+          name="demandRate"
           value={values.demandRate}
           onChange={(val) => handleChange('demandRate', val)}
           validations={[isRequired]}
@@ -281,7 +246,7 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
             </View>
             <View style={[styles.column, styles.calendarButton]}>
               <AppButton
-                title='Calendar'
+                title="Calendar"
                 onPress={() => openStartDateCalendar(true)}
                 icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
                 backgroundColor={Colors.SMT_Secondary_2}
@@ -302,8 +267,8 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
 
         {/* File Upload URL */}
         <AppTextInput
-          label='File Upload URL'
-          name='fileUploadUrl'
+          label="File Upload URL"
+          name="fileUploadUrl"
           value={values.fileUploadUrl}
           onChange={(val) => handleChange('fileUploadUrl', val)}
           validations={[isRequired]}
@@ -314,8 +279,8 @@ const UpdateOrderModal: React.FC<Props> = ({order}) => {
         {/* Notes */}
         <View style={[styles.fieldContainer, {marginBottom: 40}]}>
           <AppTextInput
-            label='Notes'
-            name='notes'
+            label="Notes"
+            name="notes"
             value={values.notes}
             onChange={(val) => handleChange('notes', val)}
             validations={[]}

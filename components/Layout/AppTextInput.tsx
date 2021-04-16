@@ -30,7 +30,7 @@ const AppTextInput: React.FC<Props> = ({
   disabled,
 }) => {
   const [focused, setFocused] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<any>(null);
 
   const validate = (validations: any) => {
     setErrors((prev: any) => ({
@@ -76,7 +76,7 @@ const AppTextInput: React.FC<Props> = ({
       <View style={errors.length > 0 ? styles.errorStyle : null}></View>
 
       <View style={errors.length > 0 ? {opacity: 1} : {opacity: 0}}>
-        <Text style={{color: Colors.SMT_Primary_1}}>{errors.join(', ')}</Text>
+        <Text style={{marginBottom: 6, fontSize: 10, color: Colors.SMT_Primary_1}}>{errors.join(', ')}</Text>
       </View>
     </View>
   );

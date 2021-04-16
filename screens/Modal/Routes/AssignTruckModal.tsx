@@ -2,6 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import AppPicker from '../../../components/layout/AppPicker';
 import AppTitle from '../../../components/layout/AppTitle';
 import Colors from '../../../constants/Colors';
 import Configs from '../../../constants/Configs';
@@ -53,7 +54,7 @@ const AssignTruckModal: React.FC<Props> = ({route}) => {
 
     if (route.service_stop.length > 0) stage = 'Built';
     if (route.time > new Date()) stage = 'Routed';
-    if (route.driver != null || route.driver != '' && route.truck_id != null || route.truck_id != '') stage = 'Assigned';
+    if (route.driver_id != null || route.driver_id != '' && route.truck_id != null || route.truck_id != '') stage = 'Assigned';
     if (route.inspection_id != null || route.inspection_id != '') stage = 'Inspected';
     if (route.route_stage === 'Finalized') stage = 'Finalized';
     if (route.route_stage === 'Completed') stage = 'Completed';
@@ -85,24 +86,16 @@ const AssignTruckModal: React.FC<Props> = ({route}) => {
         <AppTitle title='Assign Truck' />
         <View style={styles.container}>
           {/* Truck */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Truck</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={truck}
-                onValueChange={(itemValue) => setTruck(itemValue.toString())}>
-                {trucksList.map((item: Truck) => {
-                  return (
-                    <Picker.Item
-                      key={item._id}
-                      label={item.name}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+        <AppPicker
+          label='Truck'
+          name='truck'
+          value={truck}
+          list={trucksList.map(u => {return {_id: u._id, label: u.name, value: u._id}})}
+          onChange={(itemValue) => setTruck(itemValue.toString())}
+          validations={[]}
+          errors={[]}
+          setErrors={() => null}
+        />
         </View>
       </View>
       <ModalButtons navigation={navigation} save={assignTruckToRoute} />

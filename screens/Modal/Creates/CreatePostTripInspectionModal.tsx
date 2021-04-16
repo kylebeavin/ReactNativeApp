@@ -18,6 +18,7 @@ import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/layout/AppCheckBox';
 import {FuelPercentage, RouteStages} from '../../../types/enums';
 import AppTitle from '../../../components/layout/AppTitle';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   route: Route;
@@ -260,373 +261,367 @@ const CreatePostTripInspectionModal: React.FC<Props> = ({route, onComplete}) => 
   return (
     <View>
       <View style={styles.form}>
-        <AppTitle title='Post-trip Inspection' />
+        <AppTitle title="Post-trip Inspection" />
         <ScrollView style={styles.container}>
-        <View style={styles.formGroup}>
-          {/* Truck */}
-          <View style={{flex: 1, marginRight: 15}}>
-          <AppTextInput
-            label='Truck'
-            name='truck'
-            value={truck?.name ? truck.name : 'No Truck'}
-            onChange={(val) => null}
-            validations={[]}
-            errors={errors.truck_id}
-            setErrors={setErrors}
-            disabled
-          />
-          </View>
-
-          {/* Type */}
-          <AppTextInput
-            label='Type'
-            name='type'
-            value={truck?.vehicle_type ? truck.vehicle_type.toString() : 'No Type'}
-            onChange={(val) => null}
-            validations={[]}
-            errors={errors.type}
-            setErrors={setErrors}
-            disabled
-          />
-        </View>
-
-        <View style={styles.formGroup}>
-          <View style={{flex: 1, marginRight: 15}}>
-            {/* Odometer */}
-            <AppTextInput
-              label='Odometer'
-              name='odometer_reading'
-              value={values.odometer_reading}
-              onChange={(val) => handleChange('odometer_reading', val)}
-              validations={[isRequired]}
-              errors={errors.odometer_reading}
-              setErrors={setErrors}
-              keyboardType='number-pad'
-            />
-          </View>
-          <View style={{flex: 1}}>
-            {/* Fuel Level */}
-            <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Fuel Level</Text>
-            <View style={[styles.picker, {height: 42, marginRight: 15}]}>
-              <Picker
-                selectedValue={values.fuel_level}
-                onValueChange={(itemValue, itemIndex) => handleChange('fuel_level', itemValue.toString())}>
-                {Object.values(FuelPercentage).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item}
-                      label={item}
-                      value={item}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
-          </View>
-        </View>
-
-        <View style={styles.formGroup}>
-          <View style={{flex: 1, marginRight: 15}}>
-            {/* Machine Hours */}
-            <AppTextInput
-              label='Machine Hours'
-              name='machine_hours'
-              value={values.machine_hours}
-              onChange={(val) => handleChange('machine_hours', val)}
-              validations={[isRequired]}
-              errors={errors.machine_hours}
-              setErrors={setErrors}
-              keyboardType='number-pad'
-            />
-          </View>
-          <View style={{flex: 1}}>
-            {/* Route */}
-            <View style={styles.fieldContainer}>
+          <View style={styles.formGroup}>
+            {/* Truck */}
+            <View style={{flex: 1, marginRight: 15}}>
               <AppTextInput
-                label='Route'
-                name='route_id'
-                value={route.route_id}
+                label="Truck"
+                name="truck"
+                value={truck?.name ? truck.name : 'No Truck'}
                 onChange={(val) => null}
                 validations={[]}
-                errors={errors.route_id}
+                errors={errors.truck_id}
                 setErrors={setErrors}
                 disabled
               />
             </View>
-          </View>
-        </View>
 
-        {/* Checkboxes */}
-        <View style={styles.formGroup}>
-          <View style={{flex: 1}}>
-            {/* seat_belts */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='seat_belts'
-              name='seat_belts'
-              value={values.seat_belts}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.seat_belts}
+            {/* Type */}
+            <AppTextInput
+              label="Type"
+              name="type"
+              value={
+                truck?.vehicle_type ? truck.vehicle_type.toString() : 'No Type'
+              }
+              onChange={(val) => null}
+              validations={[]}
+              errors={errors.type}
               setErrors={setErrors}
-            />
-
-            {/* pto_switch */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='pto_switch'
-              name='pto_switch'
-              value={values.pto_switch}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.pto_switch}
-              setErrors={setErrors}
-            />
-
-            {/* engine_fluids */}
-            <AppCheckBox
-              label='engine_fluids'
-              name='engine_fluids'
-              value={values.engine_fluids}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.engine_fluids}
-              setErrors={setErrors}
-            />
-
-            {/* transmission */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='transmission'
-              name='transmission'
-              value={values.transmission}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.transmission}
-              setErrors={setErrors}
-            />
-
-            {/* steering_mechanism */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='steering_mechanism'
-              name='steering_mechanism'
-              value={values.steering_mechanism}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.steering_mechanism}
-              setErrors={setErrors}
-            />
-
-            {/* horn */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='horn'
-              name='horn'
-              value={values.horn}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.horn}
-              setErrors={setErrors}
-            />
-
-            {/* windshield_wipers */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='windshield_wipers'
-              name='windshield_wipers'
-              value={values.windshield_wipers}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.windshield_wipers}
-              setErrors={setErrors}
-            />
-
-            {/* mirrors */}
-            <AppCheckBox
-              label='mirrors'
-              name='mirrors'
-              value={values.mirrors}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.mirrors}
-              setErrors={setErrors}
-            />
-
-            {/* truck_lights */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='truck_lights'
-              name='truck_lights'
-              value={values.truck_lights}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.truck_lights}
-              setErrors={setErrors}
-            />
-
-            {/* parking_brake */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='parking_brake'
-              name='parking_brake'
-              value={values.parking_brake}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.parking_brake}
-              setErrors={setErrors}
-            />
-
-            {/* service_brake */}
-            <AppCheckBox
-              containerStyle={{marginRight: 15}}
-              label='service_brake'
-              name='service_brake'
-              value={values.service_brake}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.service_brake}
-              setErrors={setErrors}
+              disabled
             />
           </View>
 
-          <View style={{flex: 1}}>
-            {/* tires */}
-            <AppCheckBox
-              label='tires'
-              name='tires'
-              value={values.tires}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.tires}
-              setErrors={setErrors}
-            />
-
-            {/* rims */}
-            <AppCheckBox
-              label='rims'
-              name='rims'
-              value={values.rims}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.rims}
-              setErrors={setErrors}
-            />
-
-            {/* emergency_equipment */}
-            <AppCheckBox
-              label='emergency_equipment'
-              name='emergency_equipment'
-              value={values.emergency_equipment}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.emergency_equipment}
-              setErrors={setErrors}
-            />
-
-            {/* tools_gear */}
-            <AppCheckBox
-              label='tools_gear'
-              name='tools_gear'
-              value={values.tools_gear}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.tools_gear}
-              setErrors={setErrors}
-            />
-
-            {/* chocks_chains */}
-            <AppCheckBox
-              label='chocks_chains'
-              name='chocks_chains'
-              value={values.chocks_chains}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.chocks_chains}
-              setErrors={setErrors}
-            />
-
-            {/* drum_cap */}
-            <AppCheckBox
-              label='drum_cap'
-              name='drum_cap'
-              value={values.drum_cap}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.drum_cap}
-              setErrors={setErrors}
-            />
-
-            {/* grease_distribution */}
-            <AppCheckBox
-              label='grease_distribution'
-              name='grease_distribution'
-              value={values.grease_distribution}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.grease_distribution}
-              setErrors={setErrors}
-            />
-
-            {/* chain_tension */}
-            <AppCheckBox
-              label='chain_tension'
-              name='chain_tension'
-              value={values.chain_tension}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.chain_tension}
-              setErrors={setErrors}
-            />
-
-            {/* machine_lights */}
-            <AppCheckBox
-              label='machine_lights'
-              name='machine_lights'
-              value={values.machine_lights}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.machine_lights}
-              setErrors={setErrors}
-            />
-
-            {/* vehicle_condition */}
-            <AppCheckBox
-              label='vehicle_condition'
-              name='vehicle_condition'
-              value={values.vehicle_condition}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.vehicle_condition}
-              setErrors={setErrors}
-            />
-
-            {/* engine_warning */}
-            <AppCheckBox
-              label='engine_warning'
-              name='engine_warning'
-              value={values.engine_warning}
-              onChange={(name, val) => handleChange(name, val)}
-              validations={[isRequired]}
-              errors={errors.engine_warning}
-              setErrors={setErrors}
-            />
+          <View style={styles.formGroup}>
+            <View style={{flex: 1, marginRight: 15}}>
+              {/* Odometer */}
+              <AppTextInput
+                label="Odometer"
+                name="odometer_reading"
+                value={values.odometer_reading}
+                onChange={(val) => handleChange('odometer_reading', val)}
+                validations={[isRequired]}
+                errors={errors.odometer_reading}
+                setErrors={setErrors}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={{flex: 1}}>
+              {/* Fuel Level */}
+              <AppPicker
+                label='Fuel Level'
+                name='fuel_level'
+                value={values.fuel_level}
+                list={Object.values(FuelPercentage).map(u => {return {_id: u, label: u, value: u}})}
+                onChange={(itemValue) => handleChange('fuel_level', itemValue.toString())}
+                validations={[]}
+                errors={errors.route_id}
+                setErrors={setErrors}
+              />
+            </View>
           </View>
-        </View>
 
-        {/* Drivers Signature */}
-        <AppTextInput
-          containerStyle={{marginBottom: 40}}
-          label='Drivers Signature'
-          name='drivers_signature'
-          value={values.drivers_signature}
-          onChange={(val) => handleChange('drivers_signature', val)}
-          validations={[isRequired]}
-          errors={errors.drivers_signature}
-          setErrors={setErrors}
-        />
+          <View style={styles.formGroup}>
+            <View style={{flex: 1, marginRight: 15}}>
+              {/* Machine Hours */}
+              <AppTextInput
+                label="Machine Hours"
+                name="machine_hours"
+                value={values.machine_hours}
+                onChange={(val) => handleChange('machine_hours', val)}
+                validations={[isRequired]}
+                errors={errors.machine_hours}
+                setErrors={setErrors}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={{flex: 1}}>
+              {/* Route */}
+              <View style={styles.fieldContainer}>
+                <AppTextInput
+                  label="Route"
+                  name="route_id"
+                  value={route.route_id}
+                  onChange={(val) => null}
+                  validations={[]}
+                  errors={errors.route_id}
+                  setErrors={setErrors}
+                  disabled
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Checkboxes */}
+          <View style={styles.formGroup}>
+            <View style={{flex: 1}}>
+              {/* seat_belts */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="seat_belts"
+                name="seat_belts"
+                value={values.seat_belts}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.seat_belts}
+                setErrors={setErrors}
+              />
+
+              {/* pto_switch */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="pto_switch"
+                name="pto_switch"
+                value={values.pto_switch}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.pto_switch}
+                setErrors={setErrors}
+              />
+
+              {/* engine_fluids */}
+              <AppCheckBox
+                label="engine_fluids"
+                name="engine_fluids"
+                value={values.engine_fluids}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.engine_fluids}
+                setErrors={setErrors}
+              />
+
+              {/* transmission */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="transmission"
+                name="transmission"
+                value={values.transmission}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.transmission}
+                setErrors={setErrors}
+              />
+
+              {/* steering_mechanism */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="steering_mechanism"
+                name="steering_mechanism"
+                value={values.steering_mechanism}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.steering_mechanism}
+                setErrors={setErrors}
+              />
+
+              {/* horn */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="horn"
+                name="horn"
+                value={values.horn}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.horn}
+                setErrors={setErrors}
+              />
+
+              {/* windshield_wipers */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="windshield_wipers"
+                name="windshield_wipers"
+                value={values.windshield_wipers}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.windshield_wipers}
+                setErrors={setErrors}
+              />
+
+              {/* mirrors */}
+              <AppCheckBox
+                label="mirrors"
+                name="mirrors"
+                value={values.mirrors}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.mirrors}
+                setErrors={setErrors}
+              />
+
+              {/* truck_lights */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="truck_lights"
+                name="truck_lights"
+                value={values.truck_lights}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.truck_lights}
+                setErrors={setErrors}
+              />
+
+              {/* parking_brake */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="parking_brake"
+                name="parking_brake"
+                value={values.parking_brake}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.parking_brake}
+                setErrors={setErrors}
+              />
+
+              {/* service_brake */}
+              <AppCheckBox
+                containerStyle={{marginRight: 15}}
+                label="service_brake"
+                name="service_brake"
+                value={values.service_brake}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.service_brake}
+                setErrors={setErrors}
+              />
+            </View>
+
+            <View style={{flex: 1}}>
+              {/* tires */}
+              <AppCheckBox
+                label="tires"
+                name="tires"
+                value={values.tires}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.tires}
+                setErrors={setErrors}
+              />
+
+              {/* rims */}
+              <AppCheckBox
+                label="rims"
+                name="rims"
+                value={values.rims}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.rims}
+                setErrors={setErrors}
+              />
+
+              {/* emergency_equipment */}
+              <AppCheckBox
+                label="emergency_equipment"
+                name="emergency_equipment"
+                value={values.emergency_equipment}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.emergency_equipment}
+                setErrors={setErrors}
+              />
+
+              {/* tools_gear */}
+              <AppCheckBox
+                label="tools_gear"
+                name="tools_gear"
+                value={values.tools_gear}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.tools_gear}
+                setErrors={setErrors}
+              />
+
+              {/* chocks_chains */}
+              <AppCheckBox
+                label="chocks_chains"
+                name="chocks_chains"
+                value={values.chocks_chains}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.chocks_chains}
+                setErrors={setErrors}
+              />
+
+              {/* drum_cap */}
+              <AppCheckBox
+                label="drum_cap"
+                name="drum_cap"
+                value={values.drum_cap}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.drum_cap}
+                setErrors={setErrors}
+              />
+
+              {/* grease_distribution */}
+              <AppCheckBox
+                label="grease_distribution"
+                name="grease_distribution"
+                value={values.grease_distribution}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.grease_distribution}
+                setErrors={setErrors}
+              />
+
+              {/* chain_tension */}
+              <AppCheckBox
+                label="chain_tension"
+                name="chain_tension"
+                value={values.chain_tension}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.chain_tension}
+                setErrors={setErrors}
+              />
+
+              {/* machine_lights */}
+              <AppCheckBox
+                label="machine_lights"
+                name="machine_lights"
+                value={values.machine_lights}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.machine_lights}
+                setErrors={setErrors}
+              />
+
+              {/* vehicle_condition */}
+              <AppCheckBox
+                label="vehicle_condition"
+                name="vehicle_condition"
+                value={values.vehicle_condition}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.vehicle_condition}
+                setErrors={setErrors}
+              />
+
+              {/* engine_warning */}
+              <AppCheckBox
+                label="engine_warning"
+                name="engine_warning"
+                value={values.engine_warning}
+                onChange={(name, val) => handleChange(name, val)}
+                validations={[isRequired]}
+                errors={errors.engine_warning}
+                setErrors={setErrors}
+              />
+            </View>
+          </View>
+
+          {/* Drivers Signature */}
+          <AppTextInput
+            containerStyle={{marginBottom: 40}}
+            label="Drivers Signature"
+            name="drivers_signature"
+            value={values.drivers_signature}
+            onChange={(val) => handleChange('drivers_signature', val)}
+            validations={[isRequired]}
+            errors={errors.drivers_signature}
+            setErrors={setErrors}
+          />
         </ScrollView>
       </View>
 

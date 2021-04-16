@@ -136,28 +136,6 @@ const CreateLocationModal: React.FC<Props> = () => {
           setErrors={setErrors}
         />
 
-        {/* Account */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Account</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.account}
-              onValueChange={(itemValue, ItemIndex) =>
-                handleChange('account', itemValue.toString())
-              }>
-              {accountList?.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.account_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
         {/* Street */}
         <AppTextInput
           label='Street'

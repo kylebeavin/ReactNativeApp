@@ -15,6 +15,7 @@ import {isSuccessStatusCode} from '../../../utils/Helpers';
 import AppTextInput from '../../../components/layout/AppTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   route: Route;
@@ -149,8 +150,8 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
       <ScrollView style={styles.form}>
         {/* Start Location */}
         <AppTextInput
-          label='Start Location'
-          name='start_location'
+          label="Start Location"
+          name="start_location"
           value={values.start_location}
           onChange={(val) => handleChange('start_location', val)}
           validations={[isRequired]}
@@ -159,51 +160,39 @@ const UpdateRouteModal: React.FC<Props> = ({route}) => {
         />
 
         {/* Truck */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Truck</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.truck_id}
-              onValueChange={(itemValue, itemIndex) => handleChange('truck_id', itemValue.toString())}>
-              {trucksList.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item.vin}
-                    label={item.license_number}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label="Truck"
+          name="truck"
+          value={values.truck_id}
+          list={trucksList.map((u) => {
+            return {_id: u._id, label: u.name, value: u._id};
+          })}
+          onChange={(itemValue) => handleChange('truck', itemValue.toString())}
+          validations={[]}
+          errors={errors.truck_id}
+          setErrors={setErrors}
+        />
 
         {/* Driver */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Driver</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.driver}
-              onValueChange={(itemValue) =>
-                handleChange('driver', itemValue.toString())
-              }>
-              {ownersList.map((item) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.first_name + ' ' + item.last_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppPicker
+          label="Driver"
+          name="driver"
+          value={values.driver}
+          list={ownersList.map((u) => {
+            return {_id: u._id, label: u.first_name + ' ' + u.last_name, value: u._id};
+          })}
+          onChange={(itemValue) =>
+            handleChange('driver', itemValue.toString())
+          }
+          validations={[]}
+          errors={errors.driver}
+          setErrors={setErrors}
+        />
 
         {/* Notes */}
         <AppTextInput
-          label='Notes'
-          name='notes'
+          label="Notes"
+          name="notes"
           value={values.notes}
           onChange={(val) => handleChange('notes', val)}
           validations={[isRequired]}

@@ -17,6 +17,7 @@ import {Picker} from '@react-native-picker/picker';
 import {SMT_User} from '../../../types';
 import AppCheckBox from '../../../components/layout/AppCheckBox';
 import {FuelPercentage, RouteStages} from '../../../types/enums';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   route?: Route
@@ -312,75 +313,69 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
       <ScrollView style={styles.form}>
         <View style={styles.formGroup}>
           {/* Truck */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Truck</Text>
-            <View style={[styles.picker, {height: 42, marginRight: 15}]}>
-              <Picker
-                selectedValue={values.truck_id}
-                onValueChange={(itemValue, itemIndex) => {
-                  handleChange('truck_id', itemValue.toString());
-                  setType(trucksList[itemIndex].vehicle_type);
-                }}>
-                {trucksList.map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item.vin}
-                      label={item.license_number}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
+          <View style={{flex: 1, marginRight: 15}}>
+            <AppPicker
+              label='Truck'
+              name='truck_id'
+              value={values.truck_id}
+              list={trucksList.map((u) => {
+                return {_id: u._id, label: u.name, value: u._id};
+              })}
+              onChange={(itemValue) => {
+                handleChange('truck_id', itemValue.toString());
+                setType(trucksList.filter(u => u._id === itemValue)[0].vehicle_type);
+              }}
+              validations={[isRequired]}
+              errors={errors.fuel_level}
+              setErrors={setErrors}
+            />
           </View>
 
-          {/* Type */}
-          <AppTextInput
-            label='Type'
-            name='type'
-            value={type.toString()}
-            onChange={(val) => null}
-            validations={[]}
-            errors={errors.type}
-            setErrors={setErrors}
-            disabled
-          />
+          <View style={{flex: 1}}>
+            {/* Type */}
+            <AppTextInput
+              label='Type'
+              name='type'
+              value={type.toString()}
+              onChange={(val) => null}
+              validations={[]}
+              errors={errors.type}
+              setErrors={setErrors}
+              disabled
+            />
+          </View>
         </View>
 
         <View style={styles.formGroup}>
           <View style={{flex: 1, marginRight: 15}}>
             {/* Odometer */}
             <AppTextInput
-              label='Odometer'
-              name='odometer_reading'
+              label="Odometer"
+              name="odometer_reading"
               value={values.odometer_reading}
               onChange={(val) => handleChange('odometer_reading', val)}
               validations={[isRequired]}
               errors={errors.odometer_reading}
               setErrors={setErrors}
-              keyboardType='number-pad'
+              keyboardType="number-pad"
             />
           </View>
           <View style={{flex: 1}}>
             {/* Fuel Level */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Fuel Level</Text>
-            <View style={[styles.picker, {height: 42, marginRight: 15}]}>
-              <Picker
-                selectedValue={values.fuel_level}
-                onValueChange={(itemValue, itemIndex) => handleChange('fuel_level', itemValue.toString())}>
-                {Object.values(FuelPercentage).map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item}
-                      label={item}
-                      value={item}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+            <AppPicker
+              label="Fuel Level"
+              name="fuel_level"
+              value={values.fuel_level}
+              list={Object.values(FuelPercentage).map((u) => {
+                return {_id: u, label: u, value: u};
+              })}
+              onChange={(itemValue) =>
+                handleChange('fuel_level', itemValue.toString())
+              }
+              validations={[isRequired]}
+              errors={errors.fuel_level}
+              setErrors={setErrors}
+            />
           </View>
         </View>
 
@@ -388,52 +383,42 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
           <View style={{flex: 1, marginRight: 15}}>
             {/* Machine Hours */}
             <AppTextInput
-              label='Machine Hours'
-              name='machine_hours'
+              label="Machine Hours"
+              name="machine_hours"
               value={values.machine_hours}
               onChange={(val) => handleChange('machine_hours', val)}
               validations={[isRequired]}
               errors={errors.machine_hours}
               setErrors={setErrors}
-              keyboardType='number-pad'
+              keyboardType="number-pad"
             />
           </View>
           <View style={{flex: 1}}>
             {/* Route */}
             <View style={styles.fieldContainer}>
-              {route ? 
-              <AppTextInput
-                label='Route'
-                name='route_id'
-                value={route.route_id}
-                onChange={(val) => null}
-                validations={[]}
-                errors={errors.route_id}
-                setErrors={setErrors}
-                disabled
-              />
-               :
-               <>
-              <Text style={styles.text}>Route</Text>
-              <View style={[styles.picker, {height: 42}]}>
-                <Picker
-                  selectedValue={values.route_id}
-                  onValueChange={(itemValue, itemIndex) => 
-                    handleChange('route_id', itemValue.toString())
-                  }>
-                  {routesList.map((item, index) => {
-                    return (
-                      <Picker.Item
-                        key={item._id}
-                        label={item.route_id}
-                        value={item._id}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
-              </>
-              }
+              {route ? (
+                <AppTextInput
+                  label="Route"
+                  name="route_id"
+                  value={route.route_id}
+                  onChange={(val) => null}
+                  validations={[]}
+                  errors={errors.route_id}
+                  setErrors={setErrors}
+                  disabled
+                />
+              ) : (
+                  <AppPicker
+                    label='Route'
+                    name='route_id'
+                    value={values.route_id}
+                    list={routesList.map(u => {return {_id: u._id, label: u.route_id, value: u._id}})}
+                    onChange={(itemValue) => handleChange('route_id', itemValue.toString())}
+                    validations={[]}
+                    errors={errors.route_id}
+                    setErrors={setErrors}
+                  />
+              )}
             </View>
           </View>
         </View>
@@ -444,8 +429,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* seat_belts */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='seat_belts'
-              name='seat_belts'
+              label="seat_belts"
+              name="seat_belts"
               value={values.seat_belts}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -456,8 +441,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* pto_switch */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='pto_switch'
-              name='pto_switch'
+              label="pto_switch"
+              name="pto_switch"
               value={values.pto_switch}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -467,8 +452,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* engine_fluids */}
             <AppCheckBox
-              label='engine_fluids'
-              name='engine_fluids'
+              label="engine_fluids"
+              name="engine_fluids"
               value={values.engine_fluids}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -479,8 +464,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* transmission */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='transmission'
-              name='transmission'
+              label="transmission"
+              name="transmission"
               value={values.transmission}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -491,8 +476,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* steering_mechanism */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='steering_mechanism'
-              name='steering_mechanism'
+              label="steering_mechanism"
+              name="steering_mechanism"
               value={values.steering_mechanism}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -503,8 +488,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* horn */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='horn'
-              name='horn'
+              label="horn"
+              name="horn"
               value={values.horn}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -515,8 +500,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* windshield_wipers */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='windshield_wipers'
-              name='windshield_wipers'
+              label="windshield_wipers"
+              name="windshield_wipers"
               value={values.windshield_wipers}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -526,8 +511,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* mirrors */}
             <AppCheckBox
-              label='mirrors'
-              name='mirrors'
+              label="mirrors"
+              name="mirrors"
               value={values.mirrors}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -538,8 +523,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* truck_lights */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='truck_lights'
-              name='truck_lights'
+              label="truck_lights"
+              name="truck_lights"
               value={values.truck_lights}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -550,8 +535,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* parking_brake */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='parking_brake'
-              name='parking_brake'
+              label="parking_brake"
+              name="parking_brake"
               value={values.parking_brake}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -562,8 +547,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
             {/* service_brake */}
             <AppCheckBox
               containerStyle={{marginRight: 15}}
-              label='service_brake'
-              name='service_brake'
+              label="service_brake"
+              name="service_brake"
               value={values.service_brake}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -575,8 +560,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
           <View style={{flex: 1}}>
             {/* tires */}
             <AppCheckBox
-              label='tires'
-              name='tires'
+              label="tires"
+              name="tires"
               value={values.tires}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -586,8 +571,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* rims */}
             <AppCheckBox
-              label='rims'
-              name='rims'
+              label="rims"
+              name="rims"
               value={values.rims}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -597,8 +582,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* emergency_equipment */}
             <AppCheckBox
-              label='emergency_equipment'
-              name='emergency_equipment'
+              label="emergency_equipment"
+              name="emergency_equipment"
               value={values.emergency_equipment}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -608,8 +593,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* tools_gear */}
             <AppCheckBox
-              label='tools_gear'
-              name='tools_gear'
+              label="tools_gear"
+              name="tools_gear"
               value={values.tools_gear}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -619,8 +604,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* chocks_chains */}
             <AppCheckBox
-              label='chocks_chains'
-              name='chocks_chains'
+              label="chocks_chains"
+              name="chocks_chains"
               value={values.chocks_chains}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -630,8 +615,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* drum_cap */}
             <AppCheckBox
-              label='drum_cap'
-              name='drum_cap'
+              label="drum_cap"
+              name="drum_cap"
               value={values.drum_cap}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -641,8 +626,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* grease_distribution */}
             <AppCheckBox
-              label='grease_distribution'
-              name='grease_distribution'
+              label="grease_distribution"
+              name="grease_distribution"
               value={values.grease_distribution}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -652,8 +637,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* chain_tension */}
             <AppCheckBox
-              label='chain_tension'
-              name='chain_tension'
+              label="chain_tension"
+              name="chain_tension"
               value={values.chain_tension}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -663,8 +648,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* machine_lights */}
             <AppCheckBox
-              label='machine_lights'
-              name='machine_lights'
+              label="machine_lights"
+              name="machine_lights"
               value={values.machine_lights}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -674,8 +659,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* vehicle_condition */}
             <AppCheckBox
-              label='vehicle_condition'
-              name='vehicle_condition'
+              label="vehicle_condition"
+              name="vehicle_condition"
               value={values.vehicle_condition}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -685,8 +670,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
 
             {/* engine_warning */}
             <AppCheckBox
-              label='engine_warning'
-              name='engine_warning'
+              label="engine_warning"
+              name="engine_warning"
               value={values.engine_warning}
               onChange={(name, val) => handleChange(name, val)}
               validations={[isRequired]}
@@ -699,8 +684,8 @@ const CreatePreTripInspectionModal: React.FC<Props> = ({route}) => {
         {/* Drivers Signature */}
         <AppTextInput
           containerStyle={{marginBottom: 40}}
-          label='Drivers Signature'
-          name='drivers_signature'
+          label="Drivers Signature"
+          name="drivers_signature"
           value={values.drivers_signature}
           onChange={(val) => handleChange('drivers_signature', val)}
           validations={[isRequired]}
@@ -738,6 +723,8 @@ const styles = StyleSheet.create({
   formGroup: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: -10,
+
   },
 });
 

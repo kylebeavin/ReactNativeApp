@@ -4,6 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 import { Months } from '../../types/enums';
+import AppPicker from '../layout/AppPicker';
 import AppTitle from '../layout/AppTitle';
 
 const AdminDashboard = () => {
@@ -69,48 +70,32 @@ const AdminDashboard = () => {
         {/* Date Picker */}
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1, marginRight: 20}}>
-            <Text style={{fontSize: 12}}>Month</Text>
-            <View style={styles.picker}>
-              <Picker
-                style={{height: 30}}
-                selectedValue={monthPicker}
-                mode='dropdown'
-                onValueChange={(itemValue) =>
-                  setMonthPicker(itemValue.toString())
-                }>
-                {Object.values(Months).map((item) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
+            <AppPicker 
+              label='Month'
+              labelStyle={{fontSize: 12, fontWeight: 'normal', color: 'black'}}
+              name='month'
+              value={monthPicker}
+              list={Object.values(Months).map((u => {return {_id: u, label: u, value: u}}))}
+              onChange={(itemValue) => setMonthPicker(itemValue.toString())}
+              validations={[]}
+              errors={[]}
+              setErrors={() => null}
+              mode='dropdown'
+            />
           </View>
           <View style={{flex: 1}}>
-            <Text style={{fontSize: 12}}>Year</Text>
-            <View style={styles.picker}>
-              <Picker
-                style={{height: 30}}
-                selectedValue={yearPicker}
-                mode='dropdown'
-                onValueChange={(itemValue) =>
-                  setYearPicker(itemValue.toString())
-                }>
-                {yearPickerArr.map((item: Number) => {
-                  return (
-                    <Picker.Item
-                      key={item.toString()}
-                      label={item.toString()}
-                      value={item.toString()}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
+            <AppPicker 
+              label='Year'
+              labelStyle={{fontSize: 12, fontWeight: 'normal', color: 'black'}}
+              name='year'
+              value={yearPicker}
+              list={yearPickerArr.map((u => {return {_id: u.toString(), label: u.toString(), value: u.toString()}}))}
+              onChange={(itemValue) => setYearPicker(itemValue.toString())}
+              validations={[]}
+              errors={[]}
+              setErrors={() => null}
+              mode='dropdown'
+            />
           </View>
         </View>
       </View>

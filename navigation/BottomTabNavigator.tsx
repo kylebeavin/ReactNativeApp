@@ -35,6 +35,9 @@ import AccountDetailsScreen from '../screens/bottom_tabs/crm_tab/AccountDetailsS
 import RouteNavigationScreen from '../screens/bottom_tabs/routes_tab/RouteNavigationScreen';
 import PreTripInspectionDetailsScreen from '../screens/bottom_tabs/routes_tab/PreTripInspectionDetailsScreen';
 import AgreementDetailsScreen from '../screens/bottom_tabs/orders_tab/AgreementDetailsScreen';
+import InvoicesCalendarScreen from '../screens/bottom_tabs/invoices_tab/InvoicesCalendarScreen';
+import InvoicesMapScreen from '../screens/bottom_tabs/invoices_tab/InvoicesMapScreen';
+import InvoiceDetailsScreen from '../screens/bottom_tabs/invoices_tab/InvoiceDetailsScreen';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DashboardStack = createStackNavigator<DashboardParamList>();
@@ -150,6 +153,9 @@ function InvoicesNavigator() {
       }}
     >
       <InvoicesStack.Screen name='InvoicesScreen' component={InvoiceScreen} />
+      <InvoicesStack.Screen name='InvoicesCalendarScreen' component={InvoicesCalendarScreen} />
+      <InvoicesStack.Screen name='InvoicesMapScreen' component={InvoicesMapScreen} />
+      <InvoicesStack.Screen name='InvoiceDetailsScreen' component={InvoiceDetailsScreen} />
     </InvoicesStack.Navigator>
   );
 }

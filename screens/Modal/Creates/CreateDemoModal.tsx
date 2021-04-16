@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, SegmentedControlIOSComponent } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 import { Account } from '../../../types/crm';
 import { Demo } from '../../../types/orders';
-import useAsyncStorage from '../../../hooks/useAsyncStorage';
 import Configs from '../../../constants/Configs';
-import { getRequestHeadersAsync } from '../../../utils/Helpers';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import Colors from '../../../constants/Colors';
 import { Picker } from '@react-native-picker/picker';
 import ModalButtons from '../ModalButtons';
@@ -88,27 +86,6 @@ const CreateDemoModal = () => {
                       value={demo}
                       onChange={(text) => setDemo(text.nativeEvent.text)}
                     />
-                </View>
-
-                {/* Account */}
-                <View style={styles.fieldContainer}>
-                    <Text style={styles.text}>Account</Text>
-                    <View style={styles.picker}>
-                      <Picker
-                        selectedValue={account}
-                        onValueChange={(itemValue, itemIndex) => setAccount(itemValue.toString())}
-                      >
-                          {accountList?.map((item, index) => {
-                              return (
-                                  <Picker.Item
-                                    key={item._id}
-                                    label={item.account_name}
-                                    value={item._id}
-                                  />
-                              );
-                          })}
-                      </Picker>
-                    </View>
                 </View>
             </ScrollView>
             <ModalButtons navigation={navigation} save={() => postNewDemo()} />

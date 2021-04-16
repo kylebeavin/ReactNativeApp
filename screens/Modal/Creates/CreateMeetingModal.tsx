@@ -24,6 +24,7 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/layout/AppTextInput';
 import AppTitle from '../../../components/layout/AppTitle';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {}
 
@@ -87,7 +88,7 @@ const CreateMeetingModal: React.FC<Props> = () => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   // Drop downs
-  const [accountList, setAccountList] = useState<Account[]>();
+  const [accountList, setAccountList] = useState<Account[]>([]);
   const [contactList, setContactList] = useState<Contact[]>([]);
   //#endregion
 
@@ -194,24 +195,18 @@ const CreateMeetingModal: React.FC<Props> = () => {
           />
 
           {/* Account */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Account</Text>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={values.account}
-                onValueChange={(itemValue, ItemIndex) => handleChange('account', itemValue.toString())}>
-                {accountList?.map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={item._id}
-                      label={item.account_name}
-                      value={item._id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
+          <AppPicker
+            label='Account'
+            name='account'
+            value={values.account}
+            list={accountList.map((u) => {
+              return {_id: u._id, label: u.account_name, value: u._id};
+            })}
+            onChange={(itemValue) => handleChange('role', itemValue.toString())}
+            validations={[isRequired]}
+            errors={errors.account}
+            setErrors={setErrors}
+          />
         </View>
 
         <AppTitle title="Date and Time" />

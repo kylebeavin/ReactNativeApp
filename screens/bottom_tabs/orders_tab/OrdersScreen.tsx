@@ -114,9 +114,9 @@ const OrdersScreen = () => {
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                       <Text numberOfLines={1} style={{fontWeight: 'bold'}}>
-                        {u._id}
+                        {u.inspection_id ? u.inspection_id : 'Inspection-00'}
                       </Text>
-                      <Text numberOfLines={1}>{u.owner_id}</Text>
+                      <Text numberOfLines={1}>{u.owner_id ? u.owner_id.first_name + ' ' + u.owner_id.last_name : 'No One'}</Text>
                     </View>
                     <View >
                       <Text style={{color: Colors.SMT_Primary_1}}>

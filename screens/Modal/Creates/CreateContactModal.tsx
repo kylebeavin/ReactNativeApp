@@ -15,6 +15,7 @@ import {ToastContext} from '../../../providers/ToastProvider';
 import AppTextInput from '../../../components/layout/AppTextInput';
 import useForm from '../../../hooks/useForm';
 import {isSuccessStatusCode} from '../../../utils/Helpers';
+import AppPicker from '../../../components/layout/AppPicker';
 
 interface Props {
   navigation: any;
@@ -69,7 +70,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
   const {show} = useContext(ToastContext);
 
   // Drop downs
-  const [ownerList, setOwnerList] = useState<SMT_User[]>();
+  const [ownerList, setOwnerList] = useState<SMT_User[]>([]);
   //#endregion
 
   useEffect(() => {
@@ -94,7 +95,7 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
       email: values.email,
       owner_id: values.owner,
       createdAt: '',
-      is_active: values.status === 'Active' ? true : false,
+      is_active: true,
       method: 'email',
     };
 
@@ -162,26 +163,18 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         />
 
         {/* Role */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>ROLE</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.role}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('role', itemValue.toString())
-              }>
-              {Object.values(ContactType).map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+          <AppPicker
+            label="Role"
+            name="role"
+            value={values.role}
+            list={Object.values(ContactType).map((u) => {
+              return {_id: u, label: u, value: u};
+            })}
+            onChange={(itemValue) => handleChange('role', itemValue.toString())}
+            validations={[isRequired]}
+            errors={errors.role}
+            setErrors={() => null}
+          />
 
         {/* Phone */}
         <AppTextInput
@@ -206,47 +199,18 @@ const CreateContactModal: React.FC<Props> = ({navigation, account}) => {
         />
 
         {/* Owner */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>CONTACT OWNER</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.owner}
-              onValueChange={(itemValue, ItemIndex) =>
-                handleChange('owner', itemValue.toString())
-              }>
-              {ownerList?.map((item, index) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.first_name + ' ' + item.last_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Status */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>CONTACT STATUS</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.status}
-              onValueChange={(itemValue, itemIndex) =>
-                handleChange('status', itemValue.toString())
-              }>
-              <Picker.Item
-                label={Status.active}
-                value={Status.active.toString()}
-              />
-              <Picker.Item
-                label={Status.inactive}
-                value={Status.inactive.toString()}
-              />
-            </Picker>
-          </View>
-        </View>
+          <AppPicker
+            label='Owner'
+            name='owner'
+            value={values.owner}
+            list={ownerList.map((u) => {
+              return {_id: u._id, label: u.first_name + ' ' + u.last_name, value: u._id};
+            })}
+            onChange={(itemValue) => handleChange('owner', itemValue.toString())}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
         {/* Notes */}
         <View style={{marginBottom: 40}}>

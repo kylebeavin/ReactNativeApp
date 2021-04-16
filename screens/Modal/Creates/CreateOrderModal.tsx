@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import {Calendar} from 'react-native-calendars';
 import {TextInputMask} from 'react-native-masked-text';
 import CheckBox from '@react-native-community/checkbox';
@@ -20,12 +19,14 @@ import ModalButtons from '../ModalButtons';
 import AppButton from '../../../components/layout/AppButton';
 import Layout from '../../../constants/Layout';
 import {Order} from '../../../types/orders';
-import {Days, Services, ServicesPer} from '../../../types/enums';
+import {Days} from '../../../types/enums';
 import AppContext from '../../../providers/AppContext';
 import {isRequired} from '../../../utils/Validators';
 import {ToastContext} from '../../../providers/ToastProvider';
 import useForm from '../../../hooks/useForm';
 import AppTextInput from '../../../components/layout/AppTextInput';
+import AppPicker from '../../../components/layout/AppPicker';
+import AppCheckBox from '../../../components/layout/AppCheckBox';
 
 interface Props {}
 
@@ -81,10 +82,8 @@ const CreateOrderModal: React.FC<Props> = () => {
   const [isDemo, setIsDemo] = useState(false);
 
   // DropDowns
-  const [accountList, setAccountList] = useState<Account[]>();
-  const [services, setServices] = useState(Services.smash.toString());
+  const [accountList, setAccountList] = useState<Account[]>([]);
   const [serviceDays, setServiceDays] = useState(Days.sun.toString());
-  const [servicePer, setServicePer] = useState(ServicesPer.day.toString())
 
   // Popups
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
@@ -100,7 +99,7 @@ const CreateOrderModal: React.FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    if (accountList) {
+    if (accountList.length > 0) {
       setLocation(
         `${accountList![0].address_street}, ${accountList![0].address_city}, ${
           accountList![0].address_state
@@ -140,10 +139,9 @@ const CreateOrderModal: React.FC<Props> = () => {
       notes: [values.notes],
       order_id: '',
       order_status: 'not started',
-      services: services,
+      services: 'smash',
       service_date: values.serviceDate,
       service_day: serviceDays,
-      service_frequency: servicePer,
       url: [values.fileUploadUrl],
 
       account_name: '',
@@ -179,33 +177,26 @@ const CreateOrderModal: React.FC<Props> = () => {
     <View>
       <ScrollView style={styles.form}>
         {/* Account */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Account</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={values.account}
-              onValueChange={(itemValue, itemIndex) => {
-                handleChange('account', itemValue.toString());
-                setLocation(
-                  `${accountList![itemIndex].address_street}, ${
-                    accountList![itemIndex].address_city
-                  }, ${accountList![itemIndex].address_state} ${
-                    accountList![itemIndex].address_zip
-                  }`,
-                );
-              }}>
-              {accountList?.map((item) => {
-                return (
-                  <Picker.Item
-                    key={item._id}
-                    label={item.account_name}
-                    value={item._id}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+          <AppPicker
+            label="Account"
+            name="account"
+            value={values.account}
+            list={accountList.map((u) => {
+              return {_id: u._id, label: u.account_name, value: u.account_name};
+            })}
+            onChange={(itemValue) => {
+              handleChange('account', itemValue.toString());
+              setLocation(
+                `${accountList!.filter(u => u._id === itemValue)[0].address_street}, ${
+                  accountList.filter(u => u._id === itemValue)[0].address_city
+                }, ${accountList.filter(u => u._id === itemValue)[0].address_state} ${
+                  accountList.filter(u => u._id === itemValue)[0].address_zip
+                }`)
+            }}
+            validations={[isRequired]}
+            errors={errors.account}
+            setErrors={setErrors}
+          />
 
         {/* Location */}
         <AppTextInput
@@ -220,78 +211,40 @@ const CreateOrderModal: React.FC<Props> = () => {
         />
 
         {/* isRecurring */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Is Recurring</Text>
-          <CheckBox
-            disabled={false}
-            value={isRecurring}
-            onValueChange={(newValue) => setIsRecurring(!isRecurring)}
-          />
-        </View>
-
-        {/* Services */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Service</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={services}
-              onValueChange={(itemValue) => setServices(itemValue.toString())}>
-              {Object.values(Services).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+        <AppCheckBox
+          label='Is Recurring'
+          name='is_recurring'
+          value={isRecurring}
+          onChange={(name, val) => setIsRecurring(val)}
+          validations={[]}
+          errors={[]}
+          setErrors={() => null}
+        />
+        
+        {/* isDemo */}
+        <AppCheckBox
+          label='Is Demo'
+          name='is_demo'
+          value={isDemo}
+          onChange={(name, val) => setIsDemo(val)}
+          validations={[]}
+          errors={[]}
+          setErrors={() => null}
+        />
 
         {/* Service Days */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Days</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={serviceDays}
-              onValueChange={(itemValue) =>
-                setServiceDays(itemValue.toString())
-              }>
-              {Object.values(Days).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Service Frequency */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Frequency</Text>
-          <View style={styles.picker}>
-            <Picker
-              selectedValue={servicePer}
-              onValueChange={(itemValue) =>
-                setServicePer(itemValue.toString())
-              }>
-              {Object.values(ServicesPer).map((item) => {
-                return (
-                  <Picker.Item
-                    key={item.toString()}
-                    label={item.toString()}
-                    value={item.toString()}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
-        </View>
+          <AppPicker
+            label="Day"
+            name="day"
+            value={serviceDays}
+            list={Object.values(Days).map((u) => {
+              return {_id: u, label: u, value: u};
+            })}
+            onChange={(itemValue) => setServiceDays(itemValue.toString())}
+            validations={[isRequired]}
+            errors={errors.account}
+            setErrors={setErrors}
+          />
 
         {/* Monthly Rate */}
         <AppTextInput
@@ -342,16 +295,6 @@ const CreateOrderModal: React.FC<Props> = () => {
               />
             </View>
           </View>
-        </View>
-
-        {/* isDemo */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.text}>Is Demo</Text>
-          <CheckBox
-            disabled={false}
-            value={isDemo}
-            onValueChange={() => setIsDemo(!isDemo)}
-          />
         </View>
 
         {/* File Upload URL */}
