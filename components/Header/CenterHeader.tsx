@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Configs from '../../constants/Configs';
 import { ToastContext } from '../../providers/ToastProvider';
 import { Group } from '../../types';
+import { isSuccessStatusCode } from '../../utils/Helpers';
 
 interface Props {
     text: string;
@@ -33,10 +34,17 @@ const CenterHeader: React.FC<Props> = (props) => {
       })
         .then((res) => res.json())
           .then((data) => {
-            setGrpName(data.data.filter((group: Group) => group._id === grpId)[0].name)
-            setGroupsList(data.data);
+            if (isSuccessStatusCode(data.status)) {
+              setGrpName(data.data.filter((group: Group) => group._id === grpId)[0].name)
+              setGroupsList(data.data);
+            } else {
+              show({message: data.message});
+            }
           })
-          .catch((err) => show({message: err.message}));
+          .catch((err) => {
+            console.log('err', err);
+            show({message: err.message});
+          });
     };
     
     return (

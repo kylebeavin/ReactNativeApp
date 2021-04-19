@@ -29,10 +29,6 @@ const UpdateGroupTruckLocationsModal = () => {
     getTruckLocations();
   }, []);
 
-  useEffect(() => {
-    console.log(locations)
-  }, [locations]);
-
   const getTruckLocations = async () => {
     await fetch(`${Configs.TCMC_URI}/api/groupsBy`, {
       method: 'POST',

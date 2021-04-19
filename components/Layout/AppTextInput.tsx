@@ -14,6 +14,7 @@ interface Props {
   keyboardType?: any;
   containerStyle?: {};
   disabled?: boolean;
+  secureTextEntry?: boolean;
 }
 
 const AppTextInput: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const AppTextInput: React.FC<Props> = ({
   keyboardType,
   containerStyle,
   disabled,
+  secureTextEntry
 }) => {
   const [focused, setFocused] = useState(false);
   const ref = useRef<any>(null);
@@ -66,6 +68,7 @@ const AppTextInput: React.FC<Props> = ({
         multiline={!multiline ? false : true}
         keyboardType={!keyboardType ? 'default' : keyboardType}
         editable={disabled ? false : true}
+        secureTextEntry={secureTextEntry ? true : false}
       />
 
       <View
@@ -113,6 +116,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.SMT_Secondary_1_Light_1,
     borderWidth: 2,
     borderRadius: 3,
+    backgroundColor: Colors.SMT_Tertiary_1
   },
 });
 
