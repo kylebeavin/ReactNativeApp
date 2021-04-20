@@ -18,8 +18,8 @@ interface Props {
 const AuthScreen: React.FC<Props> = () => {
     //#region Form Initializers
     const formValues = {
-      email: '',
-      password: '',
+      email: 'kyle.beavin@tcmcllc.com',
+      password: 'password123',
     };
     const formErrors = {
       email: [],

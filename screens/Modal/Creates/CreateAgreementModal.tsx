@@ -22,6 +22,7 @@ import AppCheckBox from '../../../components/layout/AppCheckBox';
 import AppTextInput from '../../../components/layout/AppTextInput';
 import AppPicker from '../../../components/layout/AppPicker';
 import { acc } from 'react-native-reanimated';
+import AppDatePicker from '../../../components/layout/AppDatePicker';
 
 interface Props {
 }
@@ -300,24 +301,26 @@ const CreateAgreementModal: React.FC<Props> = () => {
           />
 
           {/* Recurring Rate */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>Recurring Rate</Text>
-            <TextInput
-              style={styles.textInput}
-              value={recurringRate}
-              onChange={(text) => setRecurringRate(text.nativeEvent.text)}
-            />
-          </View>
+          <AppTextInput 
+            label='Recurring Rate'
+            name='recurring_rate'
+            value={recurringRate}
+            onChange={(val) => setRecurringRate(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* On Demand Rate */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>On Demand Rate</Text>
-            <TextInput
-              style={styles.textInput}
-              value={demandRate}
-              onChange={(text) => setDemandRate(text.nativeEvent.text)}
-            />
-          </View>
+          <AppTextInput 
+            label='On Demand Rate'
+            name='demand_rate'
+            value={demandRate}
+            onChange={(val) => setDemandRate(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* Location */}
           <AppTextInput
@@ -331,58 +334,26 @@ const CreateAgreementModal: React.FC<Props> = () => {
           />
 
           {/* Start Date */}
-          <View style={styles.fieldContainer}>
-            <View style={styles.columnContainer}>
-              <View style={styles.column}>
-                <Text style={styles.text}>Start Date</Text>
-                <View style={styles.textInput}>
-                  <TextInputMask
-                    type={'datetime'}
-                    options={{
-                      format: 'MM/DD/YYYY',
-                    }}
-                    value={startDate}
-                    onChangeText={(text) => setStartDate(text)}
-                  />
-                </View>
-              </View>
-              <View style={[styles.column, styles.calendarButton]}>
-                <AppButton
-                  title="Calendar"
-                  onPress={() => openStartDateCalendar(true)}
-                  icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
-                  backgroundColor={Colors.SMT_Secondary_2}
-                />
-              </View>
-            </View>
-          </View>
+          <AppDatePicker 
+            label='Start Date'
+            name='start_date'
+            value={startDate}
+            onChange={(text) => setStartDate(text)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* End Date */}
-          <View style={styles.fieldContainer}>
-            <View style={styles.columnContainer}>
-              <View style={styles.column}>
-                <Text style={styles.text}>End Date</Text>
-                <View style={styles.textInput}>
-                  <TextInputMask
-                    type={'datetime'}
-                    options={{
-                      format: 'MM/DD/YYYY',
-                    }}
-                    value={endDate}
-                    onChangeText={(text) => setEndDate(text)}
-                  />
-                </View>
-              </View>
-              <View style={[styles.column, styles.calendarButton]}>
-                <AppButton
-                  title="Calendar"
-                  onPress={() => openEndDateCalendar(true)}
-                  icon={{name: 'calendar', type: 'MaterialCommunityIcons'}}
-                  backgroundColor={Colors.SMT_Secondary_2}
-                />
-              </View>
-            </View>
-          </View>
+          <AppDatePicker 
+            label='End Date'
+            name='end_date'
+            value={endDate}
+            onChange={(text) => setEndDate(text)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* isRecurring */}
           <AppCheckBox
@@ -390,61 +361,38 @@ const CreateAgreementModal: React.FC<Props> = () => {
             label="Is Recurring"
             name="is_recurring"
             value={isRecurring}
-            onChange={(newValue) => setIsRecurring(!isRecurring)}
+            onChange={(name, val) => setIsRecurring(val)}
             validations={[]}
             errors={[]}
             setErrors={null}
           />
 
           {/* File Upload URL */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.text}>File Upload URL</Text>
-            <TextInput
-              style={styles.textInput}
-              value={fileUploadUrl}
-              onChange={(text) => setFileUploadUrl(text.nativeEvent.text)}
-            />
-          </View>
+          <AppTextInput 
+            label='File Upload URL'
+            name='url'
+            value={fileUploadUrl}
+            onChange={(val) => setFileUploadUrl(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
 
           {/* Notes */}
           <View style={[styles.fieldContainer, {marginBottom: 40}]}>
-            <Text style={styles.text}>Notes</Text>
-            <TextInput
-              style={styles.textInput}
-              value={notes}
-              onChange={(text) => setNotes(text.nativeEvent.text)}
-            />
+          <AppTextInput 
+            label='Notes'
+            name='notes'
+            value={notes}
+            onChange={(val) => setNotes(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+          />
           </View>
         </ScrollView>
 
         <ModalButtons navigation={navigation} save={() => postNewAgreement()} />
-
-        {showStartDateCalendar ? (
-          <TouchableOpacity
-            style={styles.calendarPopup}
-            onPress={() => setShowStartDateCalendar(false)}>
-            <Calendar
-              style={{borderRadius: 4}}
-              onDayPress={(day) => {
-                setStartDate(formatDateString(day.dateString));
-                setShowStartDateCalendar(false);
-              }}
-            />
-          </TouchableOpacity>
-        ) : null}
-        {showEndDateCalendar ? (
-          <TouchableOpacity
-            style={styles.calendarPopup}
-            onPress={() => setShowEndDateCalendar(false)}>
-            <Calendar
-              style={{borderRadius: 4}}
-              onDayPress={(day) => {
-                setEndDate(formatDateString(day.dateString));
-                setShowEndDateCalendar(false);
-              }}
-            />
-          </TouchableOpacity>
-        ) : null}
       </View>
     );
 }
