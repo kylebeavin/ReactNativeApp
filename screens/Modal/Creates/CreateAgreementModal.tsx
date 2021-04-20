@@ -44,6 +44,16 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const [containerQty, setContainerQty] = useState('0');
     const [location, setLocation] = useState('');
 
+    // Frequency
+    const [sunFreq, setSunFreq] = useState('');
+    const [monFreq, setMonFreq] = useState('');
+    const [tueFreq, setTueFreq] = useState('');
+    const [wedFreq, setWedFreq] = useState('');
+    const [thuFreq, setThuFreq] = useState('');
+    const [friFreq, setFriFreq] = useState('');
+    const [satFreq, setSatFreq] = useState('');
+
+
     // DropDowns
     const [accountList, setAccountList] = useState<Account[]>([]);
 
@@ -79,6 +89,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
       const agreement: Agreement = {
         _id: '',
         account_id: account, 
+        agreement_id: '',
         container_qty: containerQty,
         demand_rate: demandRate,
         end_date: endDate,
@@ -90,10 +101,18 @@ const CreateAgreementModal: React.FC<Props> = () => {
         owner_id: id,
         recurring_rate: recurringRate,
         services: 'smash',
-        service_days: getBtnGrpValues(),
-        service_frequency: servicePer,
+        //service_days: getBtnGrpValues(),
+        //service_frequency: servicePer,
         start_date: startDate,
         url: fileUploadUrl,
+
+        sun_freq: parseInt(sunFreq),
+        mon_freq: parseInt(monFreq),
+        tue_freq: parseInt(tueFreq),
+        wed_freq: parseInt(wedFreq),
+        thu_freq: parseInt(thuFreq),
+        fri_freq: parseInt(friFreq),
+        sat_freq: parseInt(satFreq),
       }
       return agreement;
     }
@@ -131,7 +150,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
     const postNewAgreement = async () => {
       const agreement: Agreement = await getFormData();
       console.log(JSON.stringify(agreement))
-      await fetch(`${Configs.TCMC_URI}/api/agreements`, {
+      await fetch(`${Configs.TCMC_URI}/api/agreementsRecurring`, {
         method: 'POST',
         body: JSON.stringify(agreement),
         headers: {'Content-Type': 'application/json','x-access-token': token},
@@ -186,7 +205,7 @@ const CreateAgreementModal: React.FC<Props> = () => {
           />
 
           {/* Frequency */}
-          <AppPicker
+          {/* <AppPicker
             label="Frequency"
             name="frequency"
             value={servicePer}
@@ -197,13 +216,88 @@ const CreateAgreementModal: React.FC<Props> = () => {
             validations={[]}
             errors={[]}
             setErrors={() => null}
-          />
+          /> */}
 
           {/* Service Days */}
-          <View style={styles.fieldContainer}>
+          {/* <View style={styles.fieldContainer}>
             <Text style={styles.text}>Days</Text>
             <AppBtnGrp state={{btnObj, setBtnObj}} />
-          </View>
+          </View> */}
+
+          {/* Frequency */}
+          <AppTextInput
+            label="Sunday"
+            name="sun_freq"
+            value={sunFreq}
+            onChange={(val) => setSunFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+          />
+          <AppTextInput
+            label="Monday"
+            name="mon_freq"
+            value={monFreq}
+            onChange={(val) => setMonFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+
+          />
+          <AppTextInput
+            label="Tuesday"
+            name="tue_freq"
+            value={tueFreq}
+            onChange={(val) => setTueFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+
+          />
+          <AppTextInput
+            label="Wednesday"
+            name="wed_freq"
+            value={wedFreq}
+            onChange={(val) => setWedFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+
+          />
+          <AppTextInput
+            label="Thursday"
+            name="thu_freq"
+            value={thuFreq}
+            onChange={(val) => setThuFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+          />
+          <AppTextInput
+            label="Friday"
+            name="fri_freq"
+            value={friFreq}
+            onChange={(val) => setFriFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+          />
+          <AppTextInput
+            label="Saturday"
+            name="sat_freq"
+            value={satFreq}
+            onChange={(val) => setSatFreq(val)}
+            validations={[]}
+            errors={[]}
+            setErrors={() => null}
+            keyboardType='number-pad'
+          />
 
           {/* Recurring Rate */}
           <View style={styles.fieldContainer}>

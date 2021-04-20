@@ -15,10 +15,18 @@ export type Agreement = {
   owner_id: string;
   recurring_rate: string;
   services: string;
-  service_days: string[];
-  service_frequency: string;
+  //service_days: string[];
+  //service_frequency: string;
   start_date: string;
   url: string;
+
+  sun_freq: number;
+  mon_freq: number;
+  tue_freq: number;
+  wed_freq: number;
+  thu_freq: number;
+  fri_freq: number;
+  sat_freq: number;
 };
 
 export type Order = {

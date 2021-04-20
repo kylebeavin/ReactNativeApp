@@ -45,11 +45,15 @@ const useForm = <T, Z, Y>(
     Object.keys(formValidations).map((key: string, index: number) => {
       formValidations[key].map((errorsFor: any) => {
         let errorMsg = errorsFor(values[key]);
-        if (!errorObject[key]) {
-          errorObject[key] = [errorMsg];
-        } else {
-          let arr = errorObject[key];
-          errorObject[key] = arr.concat(errorMsg);
+
+        if (errorMsg) {
+          if (!errorObject[key]) {
+            errorObject[key] = [errorMsg];
+          } else {
+            let arr = errorObject[key];
+            //console.log(arr.concat(errorMsg));
+            errorObject[key] = arr.concat(errorMsg);
+          }
         }
       });
     });

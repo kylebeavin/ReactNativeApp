@@ -10,6 +10,7 @@ import {ToastContext} from '../../providers/ToastProvider';
 import { isEmail, isRequired } from '../../utils/Validators';
 import useForm from '../../hooks/useForm';
 import AppTextInput from '../../components/layout/AppTextInput';
+import { isSuccessStatusCode } from '../../utils/Helpers';
 
 interface Props {
 }
@@ -17,8 +18,8 @@ interface Props {
 const AuthScreen: React.FC<Props> = () => {
     //#region Form Initializers
     const formValues = {
-      email: 'kyle.beavin@tcmcllc.com',
-      password: 'password123',
+      email: '',
+      password: '',
     };
     const formErrors = {
       email: [],
@@ -54,7 +55,7 @@ const AuthScreen: React.FC<Props> = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        if (json.auth) {
+        if (isSuccessStatusCode(json.status)) {
           setToken(json.data.token);
           setGrpArr(json.data.group_id);
           setGrpId(json.data.group_id[0]);
@@ -64,7 +65,7 @@ const AuthScreen: React.FC<Props> = () => {
           setImage(json.data.image);
           setIsAuth(true);
         } else {
-          show({message: 'Login Failed.'}); // ToDo: need to update response json to provide message.
+          show({message: 'Login Failed.'});
         }
       })
       .catch((err) => show({message: 'Error: ' + err.message}));
